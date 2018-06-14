@@ -2,15 +2,16 @@ import 'babel-polyfill';
 
 import {join} from 'path';
 
-import {readFileSync, outputFile, existsSync, statSync, readdirSync} from 'fs-extra';
+import {
+    readFileSync, outputFile, existsSync, statSync, readdirSync, appendFile
+} from 'fs-extra';
 
 import Commander from 'commander';
 
-import {watch} from 'chokidar';
-
 import Component from './Component';
 
-import * as PuppeteerBrowser from 'puppeteer-browser';
+import PuppeteerBrowser from 'puppeteer-browser';
+
 
 
 const manifest = JSON.parse(readFileSync('package.json') + '');
@@ -32,12 +33,28 @@ async function bundle(path) {
     if (existsSync( join(path, 'index.html') ))  await build( path );
 
     if (statSync( path ).isDirectory())
-        await Promise.all(
-            readdirSync( path ).map(file  =>  build( join(path, file) ))
-        );
+        for (let file  of  readdirSync( path ))
+            await build( join(path, file) );
 }
 
 const command_bundle = bundle.bind(null, folder.lib);
+
+
+async function pack(path) {
+
+    const index = join(path, 'index.html');
+
+    await outputFile(index, '');
+
+    for (let HTML  of  readdirSync( path ))  if (HTML !== 'index.html') {
+
+        await appendFile(index,  `<!-- ${HTML} -->\n${
+            readFileSync( join(path, HTML) )
+        }`);
+
+        console.info(`√ Component "${HTML}" is packed in`);
+    }
+}
 
 
 Commander
@@ -48,13 +65,13 @@ Commander
 
         await command_bundle();
 
-        const page = await PuppeteerBrowser.getPage('.',  folder.test || 'test/');
+        await PuppeteerBrowser.getPage(
+            '.',  folder.test || 'test/',  command_bundle
+        );
+    })
+    .command('pack',  'Compress all the components into one HTML file')
+    .on('command:pack',  async () => {
 
-        watch( folder.lib ).on('all',  async () => {
-
-            await command_bundle();
-
-            await page.reload();
-        });
+        await command_bundle(),  await pack('dist/');
     })
     .parse( process.argv );

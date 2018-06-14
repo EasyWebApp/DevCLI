@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('command', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","babel-polyfill","commander","chokidar","puppeteer-browser"], factory);
+        define('command', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","babel-polyfill","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory(require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('sass'),require('less'),require('stylus'),require('babel-polyfill'),require('commander'),require('chokidar'),require('puppeteer-browser'));
+        return  module.exports = factory(require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('sass'),require('less'),require('stylus'),require('babel-polyfill'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['command'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['babel-polyfill'],this['commander'],this['chokidar'],this['puppeteer-browser']);
+        return  this['command'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['babel-polyfill'],this['commander'],this['puppeteer-browser']);
 
-})(function (fs_extra,path,jsdom,amd_bundle,sass,less,stylus,babel_polyfill,commander,chokidar,puppeteer_browser) {
+})(function (fs_extra,path,jsdom,amd_bundle,sass,less,stylus,babel_polyfill,commander,puppeteer_browser) {
 
 function merge(base, path) {
 
@@ -544,6 +544,8 @@ var _module_ = {
 
             var bundle = function () {
                 var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(path) {
+                    var _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, file;
+
                     return regeneratorRuntime.wrap(function _callee9$(_context9) {
                         while (1) {
                             switch (_context9.prev = _context9.next) {
@@ -558,25 +560,166 @@ var _module_ = {
 
                                 case 3:
                                     if (!(0, _fsExtra.statSync)(path).isDirectory()) {
-                                        _context9.next = 6;
+                                        _context9.next = 30;
                                         break;
                                     }
 
-                                    _context9.next = 6;
-                                    return Promise.all((0, _fsExtra.readdirSync)(path).map(function (file) {
-                                        return build((0, _path.join)(path, file));
-                                    }));
+                                    _iteratorNormalCompletion2 = true;
+                                    _didIteratorError2 = false;
+                                    _iteratorError2 = undefined;
+                                    _context9.prev = 7;
+                                    _iterator2 = (0, _fsExtra.readdirSync)(path)[Symbol.iterator]();
 
-                                case 6:
+                                case 9:
+                                    if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+                                        _context9.next = 16;
+                                        break;
+                                    }
+
+                                    file = _step2.value;
+                                    _context9.next = 13;
+                                    return build((0, _path.join)(path, file));
+
+                                case 13:
+                                    _iteratorNormalCompletion2 = true;
+                                    _context9.next = 9;
+                                    break;
+
+                                case 16:
+                                    _context9.next = 22;
+                                    break;
+
+                                case 18:
+                                    _context9.prev = 18;
+                                    _context9.t0 = _context9['catch'](7);
+                                    _didIteratorError2 = true;
+                                    _iteratorError2 = _context9.t0;
+
+                                case 22:
+                                    _context9.prev = 22;
+                                    _context9.prev = 23;
+
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
+                                    }
+
+                                case 25:
+                                    _context9.prev = 25;
+
+                                    if (!_didIteratorError2) {
+                                        _context9.next = 28;
+                                        break;
+                                    }
+
+                                    throw _iteratorError2;
+
+                                case 28:
+                                    return _context9.finish(25);
+
+                                case 29:
+                                    return _context9.finish(22);
+
+                                case 30:
                                 case 'end':
                                     return _context9.stop();
                             }
                         }
-                    }, _callee9, this);
+                    }, _callee9, this, [[7, 18, 22, 30], [23,, 25, 29]]);
                 }));
 
                 return function bundle(_x9) {
                     return _ref10.apply(this, arguments);
+                };
+            }();
+
+            var pack = function () {
+                var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(path) {
+                    var index, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, HTML;
+
+                    return regeneratorRuntime.wrap(function _callee10$(_context10) {
+                        while (1) {
+                            switch (_context10.prev = _context10.next) {
+                                case 0:
+                                    index = (0, _path.join)(path, 'index.html');
+                                    _context10.next = 3;
+                                    return (0, _fsExtra.outputFile)(index, '');
+
+                                case 3:
+                                    _iteratorNormalCompletion3 = true;
+                                    _didIteratorError3 = false;
+                                    _iteratorError3 = undefined;
+                                    _context10.prev = 6;
+                                    _iterator3 = (0, _fsExtra.readdirSync)(path)[Symbol.iterator]();
+
+                                case 8:
+                                    if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
+                                        _context10.next = 17;
+                                        break;
+                                    }
+
+                                    HTML = _step3.value;
+
+                                    if (!(HTML !== 'index.html')) {
+                                        _context10.next = 14;
+                                        break;
+                                    }
+
+                                    _context10.next = 13;
+                                    return (0, _fsExtra.appendFile)(index, '<!-- ' + HTML + ' -->\n' + (0, _fsExtra.readFileSync)((0, _path.join)(path, HTML)));
+
+                                case 13:
+
+                                    console.info('\u221A Component "' + HTML + '" is packed in');
+
+                                case 14:
+                                    _iteratorNormalCompletion3 = true;
+                                    _context10.next = 8;
+                                    break;
+
+                                case 17:
+                                    _context10.next = 23;
+                                    break;
+
+                                case 19:
+                                    _context10.prev = 19;
+                                    _context10.t0 = _context10['catch'](6);
+                                    _didIteratorError3 = true;
+                                    _iteratorError3 = _context10.t0;
+
+                                case 23:
+                                    _context10.prev = 23;
+                                    _context10.prev = 24;
+
+                                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                        _iterator3.return();
+                                    }
+
+                                case 26:
+                                    _context10.prev = 26;
+
+                                    if (!_didIteratorError3) {
+                                        _context10.next = 29;
+                                        break;
+                                    }
+
+                                    throw _iteratorError3;
+
+                                case 29:
+                                    return _context10.finish(26);
+
+                                case 30:
+                                    return _context10.finish(23);
+
+                                case 31:
+                                case 'end':
+                                    return _context10.stop();
+                            }
+                        }
+                    }, _callee10, this, [[6, 19, 23, 31], [24,, 26, 30]]);
+                }));
+
+                return function pack(_x10) {
+                    return _ref11.apply(this, arguments);
                 };
             }();
 
@@ -590,27 +733,13 @@ var _module_ = {
 
             var _commander2 = _interopRequireDefault(_commander);
 
-            var _chokidar = require('chokidar');
-
             var _Component = require('./Component');
 
             var _Component2 = _interopRequireDefault(_Component);
 
             var _puppeteerBrowser = require('puppeteer-browser');
 
-            var PuppeteerBrowser = _interopRequireWildcard(_puppeteerBrowser);
-
-            function _interopRequireWildcard(obj) {
-                if (obj && obj.__esModule) {
-                    return obj;
-                } else {
-                    var newObj = {};if (obj != null) {
-                        for (var key in obj) {
-                            if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-                        }
-                    }newObj.default = obj;return newObj;
-                }
-            }
+            var _puppeteerBrowser2 = _interopRequireDefault(_puppeteerBrowser);
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : { default: obj };
@@ -623,7 +752,6 @@ var _module_ = {
             var command_bundle = bundle.bind(null, folder.lib);
 
             _commander2.default.command('bundle', 'Bundle a component').on('command:bundle', command_bundle).command('preview', 'Real-time preview during development').on('command:preview', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
-                var page;
                 return regeneratorRuntime.wrap(function _callee11$(_context11) {
                     while (1) {
                         switch (_context11.prev = _context11.next) {
@@ -633,38 +761,32 @@ var _module_ = {
 
                             case 2:
                                 _context11.next = 4;
-                                return PuppeteerBrowser.getPage('.', folder.test || 'test/');
+                                return _puppeteerBrowser2.default.getPage('.', folder.test || 'test/', command_bundle);
 
                             case 4:
-                                page = _context11.sent;
-
-
-                                (0, _chokidar.watch)(folder.lib).on('all', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
-                                    return regeneratorRuntime.wrap(function _callee10$(_context10) {
-                                        while (1) {
-                                            switch (_context10.prev = _context10.next) {
-                                                case 0:
-                                                    _context10.next = 2;
-                                                    return command_bundle();
-
-                                                case 2:
-                                                    _context10.next = 4;
-                                                    return page.reload();
-
-                                                case 4:
-                                                case 'end':
-                                                    return _context10.stop();
-                                            }
-                                        }
-                                    }, _callee10, _this2);
-                                })));
-
-                            case 6:
                             case 'end':
                                 return _context11.stop();
                         }
                     }
                 }, _callee11, _this2);
+            }))).command('pack', 'Compress all the components into one HTML file').on('command:pack', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12() {
+                return regeneratorRuntime.wrap(function _callee12$(_context12) {
+                    while (1) {
+                        switch (_context12.prev = _context12.next) {
+                            case 0:
+                                _context12.next = 2;
+                                return command_bundle();
+
+                            case 2:
+                                _context12.next = 4;
+                                return pack('dist/');
+
+                            case 4:
+                            case 'end':
+                                return _context12.stop();
+                        }
+                    }
+                }, _callee12, _this2);
             }))).parse(process.argv);
         }
     },
@@ -677,7 +799,6 @@ var _module_ = {
     'stylus': { exports: stylus },
     'babel-polyfill': { exports: babel_polyfill },
     'commander': { exports: commander },
-    'chokidar': { exports: chokidar },
     'puppeteer-browser': { exports: puppeteer_browser }
 };
 
