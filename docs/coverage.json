@@ -1,0 +1,35 @@
+{
+  "coverage": "50%",
+  "expectCount": 22,
+  "actualCount": 11,
+  "files": {
+    "source/command.js": {
+      "expectCount": 2,
+      "actualCount": 2,
+      "undocumentLines": []
+    },
+    "source/Component.js": {
+      "expectCount": 18,
+      "actualCount": 9,
+      "undocumentLines": [
+        17,
+        23,
+        29,
+        31,
+        33,
+        46,
+        51,
+        56,
+        61
+      ]
+    },
+    "source/index.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        13,
+        15
+      ]
+    }
+  }
+}

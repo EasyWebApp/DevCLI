@@ -1,0 +1,1294 @@
+[
+  {
+    "__docId__": 1,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Infinity",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 2,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~NaN",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 3,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~undefined",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 4,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~null",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 5,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 6,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 7,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 8,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 10,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 11,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Symbol",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 12,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Error",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 13,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~EvalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 14,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~InternalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 15,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~RangeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 16,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~ReferenceError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 17,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~SyntaxError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 18,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~TypeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 19,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~URIError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 20,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 21,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 22,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Date",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 23,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~String",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 24,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~string",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 25,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~RegExp",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 26,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 27,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Int8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 28,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Uint8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 29,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Uint8ClampedArray",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 30,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Int16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 31,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Uint16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 32,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Int32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 33,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Uint32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Float32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Float64Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Map",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Set",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~WeakMap",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~WeakSet",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~ArrayBuffer",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~DataView",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~JSON",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Promise",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Generator",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~GeneratorFunction",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Reflect",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "source/.external-ecmascript.js",
+    "static": true,
+    "longname": "source/.external-ecmascript.js~Proxy",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 49,
+    "kind": "external",
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~CanvasRenderingContext2D",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 50,
+    "kind": "external",
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~DocumentFragment",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 51,
+    "kind": "external",
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~Element",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "external",
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~Event",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 53,
+    "kind": "external",
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~Node",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 54,
+    "kind": "external",
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~NodeList",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "external",
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~XMLHttpRequest",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "external",
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "source/.external-webapi.js",
+    "static": true,
+    "longname": "source/.external-webapi.js~AudioContext",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 57,
+    "kind": "file",
+    "name": "source/command.js",
+    "content": "import {join} from 'path';\n\nimport {\n    readFile, outputFile, existsSync, statSync, readdir, appendFile\n} from 'fs-extra';\n\nimport Component from './Component';\n\n\n/**\n * Bundle components to JS modules (or HTML files)\n *\n * @param {string} path  - Source directory\n * @param {boolean} HTML - Whether bundle as HTML\n */\nexport  async function bundle(path, HTML) {\n\n    const type = HTML ? 'HTML' : 'JS';\n\n    const _type_ = type.toLowerCase();\n\n    if (existsSync( join(path, `index.${_type_}`) )) {\n\n        const component = new Component( path );\n\n        await outputFile(\n            `dist/${component.name}.${_type_}`,  await component[`to${type}`]()\n        );\n    }\n\n    if (statSync( path ).isDirectory())\n        for (let file  of  await readdir( path ))\n            await bundle(join(path, file),  HTML);\n}\n\n\n/**\n * Pack all components into one HTML file\n *\n * @param {string} path - Output directory\n */\nexport  async function pack(path) {\n\n    const index = join(path, 'index.html');\n\n    await outputFile(index, '');\n\n    for (let HTML  of  await readdir( path ))\n        if ((HTML !== 'index.html')  &&  (HTML.slice(-5) === '.html')) {\n\n            await appendFile(index,  `<!-- ${HTML} -->\\n${\n                await readFile( join(path, HTML) )\n            }`);\n\n            console.info(`√ Component \"${HTML}\" is packed in`);\n        }\n}\n",
+    "static": true,
+    "longname": "D:/OpenSource/DevCLI/source/command.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 58,
+    "kind": "function",
+    "name": "bundle",
+    "memberof": "source/command.js",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/command.js~bundle",
+    "access": "public",
+    "export": true,
+    "importPath": "web-cell-cli/source/command.js",
+    "importStyle": "{bundle}",
+    "description": "Bundle components to JS modules (or HTML files)",
+    "lineNumber": 16,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": "Source directory"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "HTML",
+        "description": "Whether bundle as HTML"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 59,
+    "kind": "function",
+    "name": "pack",
+    "memberof": "source/command.js",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/command.js~pack",
+    "access": "public",
+    "export": true,
+    "importPath": "web-cell-cli/source/command.js",
+    "importStyle": "{pack}",
+    "description": "Pack all components into one HTML file",
+    "lineNumber": 42,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": "Output directory"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 60,
+    "kind": "file",
+    "name": "source/Component.js",
+    "content": "import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';\n\nimport {join, basename, dirname} from 'path';\n\nimport { JSDOM } from 'jsdom';\n\nimport Package from 'amd-bundle';\n\nimport * as SASS from 'sass';\n\nimport * as LESS from 'less';\n\nimport Stylus from 'stylus';\n\nimport promisify from 'promisify-node';\n\nconst renderSASS = promisify( SASS.render ),\n    renderStylus = promisify( Stylus.render ),\n    document = (new JSDOM()).window.document;\n\n\n\nexport default  class Component {\n    /**\n     * @param {string} path - Component directory\n     */\n    constructor(path) {\n\n        this.path = path;\n\n        this.name = basename( path );\n\n        this.entry = join(path, 'index');\n    }\n\n    /**\n     * @param {string} path - File path\n     *\n     * @return {string} File content\n     */\n    static async loadFile(path) {\n\n        return  path.includes('\\n')  ?  path  :  ((await readFile( path )) + '');\n    }\n\n    static async parseHTML(path) {\n\n        return  JSDOM.fragment(await Component.loadFile( path ));\n    }\n\n    static async parseSASS(path) {\n\n        return  renderSASS({data:  await Component.loadFile( path )});\n    }\n\n    static async parseLESS(path) {\n\n        return  await LESS.render(await Component.loadFile( path ));\n    }\n\n    static async parseStylus(path) {\n\n        return  await renderStylus(await Component.loadFile( path ));\n    }\n\n    /**\n     * @param {string} type - MIME type\n     * @param {string} path - File path\n     *\n     * @return {?Element} Style element\n     */\n    static async parseCSS(type, path) {\n\n        var style;\n\n        switch ( type.split('/')[1] ) {\n            case 'css':       style = await Component.loadFile( path );     break;\n            case 'sass':\n            case 'scss':      style = await Component.parseSASS( path );    break;\n            case 'less':      style = await Component.parseLESS( path );    break;\n            case 'stylus':    style = await Component.parseStylus( path );\n        }\n\n        return  style && Object.assign(\n            document.createElement('style'),  {textContent: style}\n        );\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {Element[]}\n     */\n    static findStyle(fragment) {\n\n        return [\n            ... fragment.querySelectorAll('link[rel=\"stylesheet\"]'),\n            ... [ ].concat(... Array.from(\n                fragment.querySelectorAll('template'),\n                template  =>  [... template.content.querySelectorAll('style')]\n            ))\n        ];\n    }\n\n    /**\n     * @param {string} tagName\n     *\n     * @return {string}\n     */\n    static identifierOf(tagName) {\n\n        return  tagName[0].toUpperCase() +\n            tagName.replace(/-(\\w)/g,  (_, char) => char.toUpperCase()).slice(1);\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {Element}\n     */\n    static parseJS(path) {\n\n        path = path.split('.').slice(0, -1).join('.');\n\n        return  Object.assign(document.createElement('script'), {\n            text:  `\\n${\n                (new Package( path )).bundle(\n                    this.identifierOf( basename( dirname( path ) ) )\n                )}\\n`\n        });\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {string}\n     */\n    static stringOf(fragment) {\n\n        return Array.from(\n            fragment.childNodes,\n            node  =>  node[(node.nodeType === 1) ? 'outerHTML' : 'nodeValue']\n        ).join('');\n    }\n\n    /**\n     * @return {string} HTML version bundle of this component\n     */\n    async toHTML() {\n\n        const fragment = await Component.parseHTML(this.entry + '.html');\n\n        for (let sheet  of  Component.findStyle( fragment )) {\n\n            let style = await Component.parseCSS(\n                sheet.type,\n                sheet.textContent  ||  join(this.path, sheet.getAttribute('href'))\n            );\n\n            if ( style )  sheet.replaceWith( style );\n        }\n\n        const script = fragment.querySelector('script');\n\n        if ( script )\n            script.replaceWith(\n                Component.parseJS( join(this.path, script.getAttribute('src')) )\n            );\n\n        return  Component.stringOf( fragment );\n    }\n\n    /**\n     * @return {string} JS version bundle of this component\n     */\n    async toJS() {\n\n        const temp_file = [ ];\n\n        for (let file  of  await readdir( this.path )) {\n\n            file = join(this.path, file);\n\n            if (! statSync( file ).isFile())  continue;\n\n            let type = file.split('.').slice(-1)[0], temp = `${file}.js`;\n\n            switch ( type ) {\n                case 'html':    file = await this.toHTML();    break;\n                case 'js':      continue;\n                default:\n                    file = await Component.parseCSS(type, file).textContent;\n            }\n\n            temp_file.push( temp );\n\n            await outputFile(temp,  `export default ${JSON.stringify( file )}`);\n        }\n\n        const source = (new Package( this.entry )).bundle();\n\n        await Promise.all( temp_file.map(file => remove( file )) );\n\n        return source;\n    }\n}\n",
+    "static": true,
+    "longname": "D:/OpenSource/DevCLI/source/Component.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 61,
+    "kind": "variable",
+    "name": "renderSASS",
+    "memberof": "source/Component.js",
+    "static": true,
+    "longname": "source/Component.js~renderSASS",
+    "access": "public",
+    "export": false,
+    "importPath": "web-cell-cli",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 62,
+    "kind": "class",
+    "name": "Component",
+    "memberof": "source/Component.js",
+    "static": true,
+    "longname": "source/Component.js~Component",
+    "access": "public",
+    "export": true,
+    "importPath": "web-cell-cli",
+    "importStyle": "Component",
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 63,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/Component.js~Component#constructor",
+    "access": "public",
+    "description": "",
+    "lineNumber": 27,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": "Component directory"
+      }
+    ]
+  },
+  {
+    "__docId__": 64,
+    "kind": "member",
+    "name": "path",
+    "memberof": "source/Component.js~Component",
+    "static": false,
+    "longname": "source/Component.js~Component#path",
+    "access": "public",
+    "description": null,
+    "lineNumber": 29,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "member",
+    "name": "name",
+    "memberof": "source/Component.js~Component",
+    "static": false,
+    "longname": "source/Component.js~Component#name",
+    "access": "public",
+    "description": null,
+    "lineNumber": 31,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "member",
+    "name": "entry",
+    "memberof": "source/Component.js~Component",
+    "static": false,
+    "longname": "source/Component.js~Component#entry",
+    "access": "public",
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 67,
+    "kind": "method",
+    "name": "loadFile",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/Component.js~Component.loadFile",
+    "access": "public",
+    "description": "",
+    "lineNumber": 41,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": "File path"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "File content"
+    }
+  },
+  {
+    "__docId__": 68,
+    "kind": "method",
+    "name": "parseHTML",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/Component.js~Component.parseHTML",
+    "access": "public",
+    "description": null,
+    "lineNumber": 46,
+    "undocument": true,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 69,
+    "kind": "method",
+    "name": "parseSASS",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/Component.js~Component.parseSASS",
+    "access": "public",
+    "description": null,
+    "lineNumber": 51,
+    "undocument": true,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 70,
+    "kind": "method",
+    "name": "parseLESS",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/Component.js~Component.parseLESS",
+    "access": "public",
+    "description": null,
+    "lineNumber": 56,
+    "undocument": true,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 71,
+    "kind": "method",
+    "name": "parseStylus",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/Component.js~Component.parseStylus",
+    "access": "public",
+    "description": null,
+    "lineNumber": 61,
+    "undocument": true,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 72,
+    "kind": "method",
+    "name": "parseCSS",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": true,
+    "longname": "source/Component.js~Component.parseCSS",
+    "access": "public",
+    "description": "",
+    "lineNumber": 72,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "type",
+        "description": "MIME type"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": "File path"
+      }
+    ],
+    "return": {
+      "nullable": true,
+      "types": [
+        "Element"
+      ],
+      "spread": false,
+      "description": "Style element"
+    }
+  },
+  {
+    "__docId__": 73,
+    "kind": "method",
+    "name": "findStyle",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/Component.js~Component.findStyle",
+    "access": "public",
+    "description": "",
+    "lineNumber": 94,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "DocumentFragment"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fragment",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Element[]"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 74,
+    "kind": "method",
+    "name": "identifierOf",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/Component.js~Component.identifierOf",
+    "access": "public",
+    "description": "",
+    "lineNumber": 110,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "tagName",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "method",
+    "name": "parseJS",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/Component.js~Component.parseJS",
+    "access": "public",
+    "description": "",
+    "lineNumber": 121,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Element"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 76,
+    "kind": "method",
+    "name": "stringOf",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/Component.js~Component.stringOf",
+    "access": "public",
+    "description": "",
+    "lineNumber": 138,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "DocumentFragment"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fragment",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 77,
+    "kind": "method",
+    "name": "toHTML",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "source/Component.js~Component#toHTML",
+    "access": "public",
+    "description": "",
+    "lineNumber": 149,
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "HTML version bundle of this component"
+    },
+    "params": []
+  },
+  {
+    "__docId__": 78,
+    "kind": "method",
+    "name": "toJS",
+    "memberof": "source/Component.js~Component",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "source/Component.js~Component#toJS",
+    "access": "public",
+    "description": "",
+    "lineNumber": 176,
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "JS version bundle of this component"
+    },
+    "params": []
+  },
+  {
+    "__docId__": 79,
+    "kind": "file",
+    "name": "source/index.js",
+    "content": "import 'babel-polyfill';\n\nimport {readFileSync} from 'fs';\n\nimport {bundle, pack} from './command';\n\nimport Commander from 'commander';\n\nimport PuppeteerBrowser from 'puppeteer-browser';\n\n\n\nconst manifest = JSON.parse(readFileSync('package.json') + '');\n\nconst folder = manifest.directories || '';\n\n\nCommander\n    .command('bundle',  'Bundle components to JS modules (or HTML files)')\n    .on('command:bundle',  () => bundle(folder.lib, Commander.HTML))\n    .command('preview',  'Real-time preview during development')\n    .on('command:preview',  async () => {\n\n        const command = () => bundle(folder.lib, Commander.HTML);\n\n        await command();\n\n        await PuppeteerBrowser.getPage('.',  folder.test || 'test/',  command);\n    })\n    .command('pack',  'Pack all components into one HTML file')\n    .on('command:pack',  async () => {\n\n        await bundle(folder.lib, true),  await pack('dist/');\n    })\n    .option('-H, --HTML',  'Bundle as HTML')\n    .parse( process.argv );\n",
+    "static": true,
+    "longname": "D:/OpenSource/DevCLI/source/index.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 80,
+    "kind": "variable",
+    "name": "manifest",
+    "memberof": "source/index.js",
+    "static": true,
+    "longname": "source/index.js~manifest",
+    "access": "public",
+    "export": false,
+    "importPath": "web-cell-cli/source/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 81,
+    "kind": "variable",
+    "name": "folder",
+    "memberof": "source/index.js",
+    "static": true,
+    "longname": "source/index.js~folder",
+    "access": "public",
+    "export": false,
+    "importPath": "web-cell-cli/source/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "kind": "index",
+    "content": "# WebCell DevCLI\n\nDeveloper command-line tool for [WebCell](https://web-cell.tk/)\n\n[![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)\n\n[![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)\n\n\n\n## Usage\n\n 1. `npm install web-cell-cli -D`\n\n 1. refer [BootCell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6)\n\n 3. refer [BootCell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L13)\n\n 4. `npm run your_script`\n\n\n\n[1]: https://github.com/EasyWebApp/BootCell \"Offical component library of WebCell (based on BootStrap v4)\"\n",
+    "longname": "D:\\OpenSource\\DevCLI\\README.md",
+    "name": "./README.md",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "packageJSON",
+    "content": "{\n  \"name\": \"web-cell-cli\",\n  \"version\": \"0.3.0\",\n  \"description\": \"Developer command-line tool for WebCell\",\n  \"author\": \"shiy2008@gmail.com\",\n  \"license\": \"AGPL-3.0\",\n  \"main\": \"source/Component.js\",\n  \"bin\": {\n    \"web-cell\": \"dist/command.js\"\n  },\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^6.5.0\"\n  },\n  \"scripts\": {\n    \"lint\": \"eslint ./source/ ./test/\",\n    \"precommit\": \"npm run lint\",\n    \"build\": \"amd-bundle source/index dist/command -c  &&  esdoc\",\n    \"start\": \"web-server docs/ -o\",\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"dependencies\": {\n    \"amd-bundle\": \"^1.3.1\",\n    \"babel-polyfill\": \"^6.26.0\",\n    \"commander\": \"^2.15.1\",\n    \"fs-extra\": \"^6.0.1\",\n    \"jsdom\": \"^11.11.0\",\n    \"less\": \"^3.0.4\",\n    \"promisify-node\": \"^0.5.0\",\n    \"puppeteer-browser\": \"^0.3.1\",\n    \"sass\": \"^1.5.1\",\n    \"stylus\": \"^0.54.5\"\n  },\n  \"devDependencies\": {\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^4.19.1\",\n    \"husky\": \"^0.14.3\",\n    \"koapache\": \"^0.2.3\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/DevCLI.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/DevCLI/issues\"\n  },\n  \"homepage\": \"https://easywebapp.github.io/DevCLI/\",\n  \"keywords\": [\n    \"developer\",\n    \"command-line\",\n    \"web-cell\",\n    \"component\",\n    \"package\",\n    \"bundle\"\n  ]\n}\n",
+    "longname": "D:\\OpenSource\\DevCLI\\package.json",
+    "name": "package.json",
+    "static": true,
+    "access": "public"
+  }
+]

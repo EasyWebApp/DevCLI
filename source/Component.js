@@ -1,4 +1,4 @@
-import {readFile} from 'fs-extra';
+import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';
 
 import {join, basename, dirname} from 'path';
 
@@ -12,38 +12,32 @@ import * as LESS from 'less';
 
 import Stylus from 'stylus';
 
-
-function promisify(func) {
-
-    return  function (... parameter) {
-
-        return  new Promise(
-            (resolve, reject)  =>  func.apply(this, parameter.concat(
-                (error, result)  =>
-                    error  ?  reject( error )  :  resolve( result )
-            ))
-        );
-    };
-}
+import promisify from 'promisify-node';
 
 const renderSASS = promisify( SASS.render ),
     renderStylus = promisify( Stylus.render ),
     document = (new JSDOM()).window.document;
 
 
-export default  class Component {
 
+export default  class Component {
+    /**
+     * @param {string} path - Component directory
+     */
     constructor(path) {
 
         this.path = path;
 
         this.name = basename( path );
 
-        this.entry = join(path, 'index.html');
-
-        this.fragment = null;
+        this.entry = join(path, 'index');
     }
 
+    /**
+     * @param {string} path - File path
+     *
+     * @return {string} File content
+     */
     static async loadFile(path) {
 
         return  path.includes('\n')  ?  path  :  ((await readFile( path )) + '');
@@ -69,14 +63,21 @@ export default  class Component {
         return  await renderStylus(await Component.loadFile( path ));
     }
 
+    /**
+     * @param {string} type - MIME type
+     * @param {string} path - File path
+     *
+     * @return {?Element} Style element
+     */
     static async parseCSS(type, path) {
 
         var style;
 
         switch ( type.split('/')[1] ) {
+            case 'css':       style = await Component.loadFile( path );     break;
             case 'sass':
-            case 'scss':    style = await Component.parseSASS( path );  break;
-            case 'less':    style = await Component.parseLESS( path );  break;
+            case 'scss':      style = await Component.parseSASS( path );    break;
+            case 'less':      style = await Component.parseLESS( path );    break;
             case 'stylus':    style = await Component.parseStylus( path );
         }
 
@@ -85,6 +86,11 @@ export default  class Component {
         );
     }
 
+    /**
+     * @param {DocumentFragment} fragment
+     *
+     * @return {Element[]}
+     */
     static findStyle(fragment) {
 
         return [
@@ -96,12 +102,22 @@ export default  class Component {
         ];
     }
 
+    /**
+     * @param {string} tagName
+     *
+     * @return {string}
+     */
     static identifierOf(tagName) {
 
         return  tagName[0].toUpperCase() +
             tagName.replace(/-(\w)/g,  (_, char) => char.toUpperCase()).slice(1);
     }
 
+    /**
+     * @param {string} path
+     *
+     * @return {Element}
+     */
     static parseJS(path) {
 
         path = path.split('.').slice(0, -1).join('.');
@@ -109,16 +125,32 @@ export default  class Component {
         return  Object.assign(document.createElement('script'), {
             text:  `\n${
                 (new Package( path )).bundle(
-                    Component.identifierOf( basename( dirname( path ) ) )
+                    this.identifierOf( basename( dirname( path ) ) )
                 )}\n`
         });
     }
 
-    async parse() {
+    /**
+     * @param {DocumentFragment} fragment
+     *
+     * @return {string}
+     */
+    static stringOf(fragment) {
 
-        this.fragment = await Component.parseHTML( this.entry );
+        return Array.from(
+            fragment.childNodes,
+            node  =>  node[(node.nodeType === 1) ? 'outerHTML' : 'nodeValue']
+        ).join('');
+    }
 
-        for (let sheet  of  Component.findStyle( this.fragment )) {
+    /**
+     * @return {string} HTML version bundle of this component
+     */
+    async toHTML() {
+
+        const fragment = await Component.parseHTML(this.entry + '.html');
+
+        for (let sheet  of  Component.findStyle( fragment )) {
 
             let style = await Component.parseCSS(
                 sheet.type,
@@ -128,18 +160,47 @@ export default  class Component {
             if ( style )  sheet.replaceWith( style );
         }
 
-        const script = this.fragment.querySelector('script');
+        const script = fragment.querySelector('script');
 
-        script.replaceWith(
-            Component.parseJS( join(this.path, script.getAttribute('src')) )
-        );
+        if ( script )
+            script.replaceWith(
+                Component.parseJS( join(this.path, script.getAttribute('src')) )
+            );
+
+        return  Component.stringOf( fragment );
     }
 
-    toString() {
+    /**
+     * @return {string} JS version bundle of this component
+     */
+    async toJS() {
 
-        return Array.from(
-            this.fragment.childNodes,
-            node  =>  node[(node.nodeType === 1) ? 'outerHTML' : 'nodeValue']
-        ).join('');
+        const temp_file = [ ];
+
+        for (let file  of  await readdir( this.path )) {
+
+            file = join(this.path, file);
+
+            if (! statSync( file ).isFile())  continue;
+
+            let type = file.split('.').slice(-1)[0], temp = `${file}.js`;
+
+            switch ( type ) {
+                case 'html':    file = await this.toHTML();    break;
+                case 'js':      continue;
+                default:
+                    file = await Component.parseCSS(type, file).textContent;
+            }
+
+            temp_file.push( temp );
+
+            await outputFile(temp,  `export default ${JSON.stringify( file )}`);
+        }
+
+        const source = (new Package( this.entry )).bundle();
+
+        await Promise.all( temp_file.map(file => remove( file )) );
+
+        return source;
     }
 }
