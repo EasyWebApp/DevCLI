@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -37,11 +37,9 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/command.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {join} from &apos;path&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {join, basename} from &apos;path&apos;;
 
-import {
-    readFile, outputFile, existsSync, statSync, readdir, appendFile
-} from &apos;fs-extra&apos;;
+import {outputFile, existsSync, statSync, readdir} from &apos;fs-extra&apos;;
 
 import Component from &apos;./Component&apos;;
 
@@ -49,50 +47,62 @@ import Component from &apos;./Component&apos;;
 /**
  * Bundle components to JS modules (or HTML files)
  *
- * @param {string} path  - Source directory
- * @param {boolean} HTML - Whether bundle as HTML
+ * @param {string}  path   - Source directory
+ * @param {boolean} [HTML] - Whether bundle as HTML
+ *
+ * @return {string[]} Component paths
  */
 export  async function bundle(path, HTML) {
 
     const type = HTML ? &apos;HTML&apos; : &apos;JS&apos;;
 
-    const _type_ = type.toLowerCase();
+    var _type_ = type.toLowerCase(), result = [ ];
 
     if (existsSync( join(path, `index.${_type_}`) )) {
 
         const component = new Component( path );
 
-        await outputFile(
-            `dist/${component.name}.${_type_}`,  await component[`to${type}`]()
-        );
+        result[0] = `dist/${component.name}.${_type_}`;
+
+        await outputFile(result[0],  await component[`to${type}`]());
     }
 
     if (statSync( path ).isDirectory())
-        for (let file  of  await readdir( path ))
-            await bundle(join(path, file),  HTML);
+        result = result.concat(... await Promise.all(
+            (await readdir( path )).map(file  =&gt;  bundle(join(path, file), HTML))
+        ));
+
+    return result;
 }
 
 
 /**
- * Pack all components into one HTML file
+ * Bundle components into a JS or HTML package
  *
- * @param {string} path - Output directory
+ * @param {string}  path   - Source directory
+ * @param {boolean} [HTML] - Whether bundle as HTML
+ *
+ * @return {string[]} Component paths
  */
-export  async function pack(path) {
+export  async function pack(path, HTML) {
 
-    const index = join(path, &apos;index.html&apos;);
+    const file = await bundle(path, HTML);
 
-    await outputFile(index, &apos;&apos;);
+    await outputFile(
+        `dist/index.${HTML ? &apos;html&apos; : &apos;js&apos;}`,
+        file.map(item =&gt; {
 
-    for (let HTML  of  await readdir( path ))
-        if ((HTML !== &apos;index.html&apos;)  &amp;&amp;  (HTML.slice(-5) === &apos;.html&apos;)) {
+            item = basename( item );
 
-            await appendFile(index,  `&lt;!-- ${HTML} --&gt;\n${
-                await readFile( join(path, HTML) )
-            }`);
+            console.info(`&#x221A; Component &quot;${item}&quot; is packed in`);
 
-            console.info(`&#x221A; Component &quot;${HTML}&quot; is packed in`);
-        }
+            return  HTML ?
+                `&lt;link rel=&quot;import&quot; href=&quot;${item}&quot;&gt;`  :
+                `export * from &apos;./${item}&apos;;`;
+        }).join(&apos;\n&apos;)
+    );
+
+    return file;
 }
 </code></pre>
 

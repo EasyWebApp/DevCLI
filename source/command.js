@@ -1,8 +1,6 @@
-import {join} from 'path';
+import {join, basename} from 'path';
 
-import {
-    readFile, outputFile, existsSync, statSync, readdir, appendFile
-} from 'fs-extra';
+import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
 
 import Component from './Component';
 
@@ -10,48 +8,60 @@ import Component from './Component';
 /**
  * Bundle components to JS modules (or HTML files)
  *
- * @param {string} path  - Source directory
- * @param {boolean} HTML - Whether bundle as HTML
+ * @param {string}  path   - Source directory
+ * @param {boolean} [HTML] - Whether bundle as HTML
+ *
+ * @return {string[]} Component paths
  */
 export  async function bundle(path, HTML) {
 
     const type = HTML ? 'HTML' : 'JS';
 
-    const _type_ = type.toLowerCase();
+    var _type_ = type.toLowerCase(), result = [ ];
 
     if (existsSync( join(path, `index.${_type_}`) )) {
 
         const component = new Component( path );
 
-        await outputFile(
-            `dist/${component.name}.${_type_}`,  await component[`to${type}`]()
-        );
+        result[0] = `dist/${component.name}.${_type_}`;
+
+        await outputFile(result[0],  await component[`to${type}`]());
     }
 
     if (statSync( path ).isDirectory())
-        for (let file  of  await readdir( path ))
-            await bundle(join(path, file),  HTML);
+        result = result.concat(... await Promise.all(
+            (await readdir( path )).map(file  =>  bundle(join(path, file), HTML))
+        ));
+
+    return result;
 }
 
 
 /**
- * Pack all components into one HTML file
+ * Bundle components into a JS or HTML package
  *
- * @param {string} path - Output directory
+ * @param {string}  path   - Source directory
+ * @param {boolean} [HTML] - Whether bundle as HTML
+ *
+ * @return {string[]} Component paths
  */
-export  async function pack(path) {
+export  async function pack(path, HTML) {
 
-    const index = join(path, 'index.html');
+    const file = await bundle(path, HTML);
 
-    await outputFile(index, '');
+    await outputFile(
+        `dist/index.${HTML ? 'html' : 'js'}`,
+        file.map(item => {
 
-    for (let HTML  of  await readdir( path ))
-        if ((HTML !== 'index.html')  &&  (HTML.slice(-5) === '.html')) {
+            item = basename( item );
 
-            await appendFile(index,  `<!-- ${HTML} -->\n${
-                await readFile( join(path, HTML) )
-            }`);
+            console.info(`√ Component "${item}" is packed in`);
 
-            console.info(`√ Component "${HTML}" is packed in`);
-        }
+            return  HTML ?
+                `<link rel="import" href="${item}">`  :
+                `export * from './${item}';`;
+        }).join('\n')
+    );
+
+    return file;
 }

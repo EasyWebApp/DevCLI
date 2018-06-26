@@ -20,4 +20,21 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 
 
+### Command
+
+  Usage: `web-cell [options] [command]`
+
+  Options:
+
+    -H, --HTML  Bundle as HTML
+    -h, --help  output usage information
+
+  Commands:
+
+    pack        Bundle components to a package within JS modules (or HTML files)
+    preview     Real-time preview during development
+    help [cmd]  display help for [cmd]
+
+
+
 [1]: https://github.com/EasyWebApp/BootCell "Offical component library of WebCell (based on BootStrap v4)"

@@ -1,6 +1,6 @@
 import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';
 
-import {join, basename, dirname} from 'path';
+import {join, basename, dirname, extname} from 'path';
 
 import { JSDOM } from 'jsdom';
 
@@ -64,21 +64,23 @@ export default  class Component {
     }
 
     /**
-     * @param {string} type - MIME type
-     * @param {string} path - File path
+     * @param {string} source - File path or Style source code
+     * @param {string} [type] - MIME type
      *
      * @return {?Element} Style element
      */
-    static async parseCSS(type, path) {
+    static async parseCSS(source, type) {
 
         var style;
 
-        switch ( type.split('/')[1] ) {
-            case 'css':       style = await Component.loadFile( path );     break;
+        type = type  ?  type.split('/')[1]  :  extname( source ).slice(1);
+
+        switch ( type ) {
+            case 'css':       style = await Component.loadFile( source );   break;
             case 'sass':
-            case 'scss':      style = await Component.parseSASS( path );    break;
-            case 'less':      style = await Component.parseLESS( path );    break;
-            case 'stylus':    style = await Component.parseStylus( path );
+            case 'scss':      style = await Component.parseSASS( source );  break;
+            case 'less':      style = await Component.parseLESS( source );  break;
+            case 'stylus':    style = await Component.parseStylus( source );
         }
 
         return  style && Object.assign(
@@ -153,8 +155,8 @@ export default  class Component {
         for (let sheet  of  Component.findStyle( fragment )) {
 
             let style = await Component.parseCSS(
-                sheet.type,
-                sheet.textContent  ||  join(this.path, sheet.getAttribute('href'))
+                sheet.textContent  ||  join(this.path, sheet.getAttribute('href')),
+                sheet.type
             );
 
             if ( style )  sheet.replaceWith( style );
@@ -189,7 +191,7 @@ export default  class Component {
                 case 'html':    file = await this.toHTML();    break;
                 case 'js':      continue;
                 default:
-                    file = await Component.parseCSS(type, file).textContent;
+                    file = (await Component.parseCSS( file )).textContent;
             }
 
             temp_file.push( temp );
@@ -197,7 +199,9 @@ export default  class Component {
             await outputFile(temp,  `export default ${JSON.stringify( file )}`);
         }
 
-        const source = (new Package( this.entry )).bundle();
+        const source = (new Package( this.entry )).bundle(
+            Component.identifierOf( this.name )
+        );
 
         await Promise.all( temp_file.map(file => remove( file )) );
 

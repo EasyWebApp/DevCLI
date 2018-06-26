@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -39,7 +39,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/Component.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {readFile, readdir, statSync, outputFile, remove} from &apos;fs-extra&apos;;
 
-import {join, basename, dirname} from &apos;path&apos;;
+import {join, basename, dirname, extname} from &apos;path&apos;;
 
 import { JSDOM } from &apos;jsdom&apos;;
 
@@ -103,21 +103,23 @@ export default  class Component {
     }
 
     /**
-     * @param {string} type - MIME type
-     * @param {string} path - File path
+     * @param {string} source - File path or Style source code
+     * @param {string} [type] - MIME type
      *
      * @return {?Element} Style element
      */
-    static async parseCSS(type, path) {
+    static async parseCSS(source, type) {
 
         var style;
 
-        switch ( type.split(&apos;/&apos;)[1] ) {
-            case &apos;css&apos;:       style = await Component.loadFile( path );     break;
+        type = type  ?  type.split(&apos;/&apos;)[1]  :  extname( source ).slice(1);
+
+        switch ( type ) {
+            case &apos;css&apos;:       style = await Component.loadFile( source );   break;
             case &apos;sass&apos;:
-            case &apos;scss&apos;:      style = await Component.parseSASS( path );    break;
-            case &apos;less&apos;:      style = await Component.parseLESS( path );    break;
-            case &apos;stylus&apos;:    style = await Component.parseStylus( path );
+            case &apos;scss&apos;:      style = await Component.parseSASS( source );  break;
+            case &apos;less&apos;:      style = await Component.parseLESS( source );  break;
+            case &apos;stylus&apos;:    style = await Component.parseStylus( source );
         }
 
         return  style &amp;&amp; Object.assign(
@@ -192,8 +194,8 @@ export default  class Component {
         for (let sheet  of  Component.findStyle( fragment )) {
 
             let style = await Component.parseCSS(
-                sheet.type,
-                sheet.textContent  ||  join(this.path, sheet.getAttribute(&apos;href&apos;))
+                sheet.textContent  ||  join(this.path, sheet.getAttribute(&apos;href&apos;)),
+                sheet.type
             );
 
             if ( style )  sheet.replaceWith( style );
@@ -228,7 +230,7 @@ export default  class Component {
                 case &apos;html&apos;:    file = await this.toHTML();    break;
                 case &apos;js&apos;:      continue;
                 default:
-                    file = await Component.parseCSS(type, file).textContent;
+                    file = (await Component.parseCSS( file )).textContent;
             }
 
             temp_file.push( temp );
@@ -236,7 +238,9 @@ export default  class Component {
             await outputFile(temp,  `export default ${JSON.stringify( file )}`);
         }
 
-        const source = (new Package( this.entry )).bundle();
+        const source = (new Package( this.entry )).bundle(
+            Component.identifierOf( this.name )
+        );
 
         await Promise.all( temp_file.map(file =&gt; remove( file )) );
 

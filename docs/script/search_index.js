@@ -18,6 +18,36 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "component source/component.js~component,component",
+    "test-file/test/index.js.html#lineNumber9",
+    "Core class",
+    "test"
+  ],
+  [
+    "component#tojs source/component.js~component#tojs,component#tojs",
+    "test-file/test/index.js.html#lineNumber56",
+    "Core class Bundle to JS",
+    "test"
+  ],
+  [
+    "component.loadfile component.parsecss source/component.js~component.loadfile,component.loadfile source/component.js~component.parsecss,component.parsecss",
+    "test-file/test/index.js.html#lineNumber17",
+    "Core class Parse CSS",
+    "test"
+  ],
+  [
+    "component.parsehtml component.stringof source/component.js~component.parsehtml,component.parsehtml source/component.js~component.stringof,component.stringof",
+    "test-file/test/index.js.html#lineNumber40",
+    "Core class Parse HTML",
+    "test"
+  ],
+  [
+    "component.identifierof source/component.js~component.identifierof,component.identifierof",
+    "test-file/test/index.js.html#lineNumber31",
+    "Core class Tag name to Class name",
+    "test"
+  ],
+  [
     "source/.external-ecmascript.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
     "source/.external-ecmascript.js~Array",
@@ -460,5 +490,17 @@ window.esdocSearchIndex = [
     "file/source/index.js.html",
     "source/index.js",
     "file"
+  ],
+  [
+    "test/example-js/index.js",
+    "test-file/test/example-js/index.js.html",
+    "test/example-js/index.js",
+    "testFile"
+  ],
+  [
+    "test/index.js",
+    "test-file/test/index.js.html",
+    "test/index.js",
+    "testFile"
   ]
 ]

@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -41,7 +41,7 @@
 
 import {readFileSync} from &apos;fs&apos;;
 
-import {bundle, pack} from &apos;./command&apos;;
+import {pack} from &apos;./command&apos;;
 
 import Commander from &apos;commander&apos;;
 
@@ -55,21 +55,18 @@ const folder = manifest.directories || &apos;&apos;;
 
 
 Commander
-    .command(&apos;bundle&apos;,  &apos;Bundle components to JS modules (or HTML files)&apos;)
-    .on(&apos;command:bundle&apos;,  () =&gt; bundle(folder.lib, Commander.HTML))
+    .command(
+        &apos;pack&apos;,  &apos;Bundle components to a package within JS modules (or HTML files)&apos;
+    )
+    .on(&apos;command:pack&apos;,  () =&gt; pack(folder.lib, Commander.HTML))
     .command(&apos;preview&apos;,  &apos;Real-time preview during development&apos;)
     .on(&apos;command:preview&apos;,  async () =&gt; {
 
-        const command = () =&gt; bundle(folder.lib, Commander.HTML);
+        const command = () =&gt; pack(folder.lib, Commander.HTML);
 
         await command();
 
         await PuppeteerBrowser.getPage(&apos;.&apos;,  folder.test || &apos;test/&apos;,  command);
-    })
-    .command(&apos;pack&apos;,  &apos;Pack all components into one HTML file&apos;)
-    .on(&apos;command:pack&apos;,  async () =&gt; {
-
-        await bundle(folder.lib, true),  await pack(&apos;dist/&apos;);
     })
     .option(&apos;-H, --HTML&apos;,  &apos;Bundle as HTML&apos;)
     .parse( process.argv );

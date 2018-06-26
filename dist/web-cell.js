@@ -6,11 +6,11 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('command', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","promisify-node","babel-polyfill","fs","commander","puppeteer-browser"], factory);
+        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","promisify-node","babel-polyfill","fs","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
         return  module.exports = factory(require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('sass'),require('less'),require('stylus'),require('promisify-node'),require('babel-polyfill'),require('fs'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['command'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['promisify-node'],this['babel-polyfill'],this['fs'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['promisify-node'],this['babel-polyfill'],this['fs'],this['commander'],this['puppeteer-browser']);
 
 })(function (fs_extra,path,jsdom,amd_bundle,sass,less,stylus,promisify_node,babel_polyfill,fs,commander,puppeteer_browser) {
 
@@ -172,7 +172,7 @@ var _module_ = {
 
                                             sheet = _step.value;
                                             _context.next = 12;
-                                            return Component.parseCSS(sheet.type, sheet.textContent || (0, _path.join)(this.path, sheet.getAttribute('href')));
+                                            return Component.parseCSS(sheet.textContent || (0, _path.join)(this.path, sheet.getAttribute('href')), sheet.type);
 
                                         case 12:
                                             style = _context.sent;
@@ -305,10 +305,10 @@ var _module_ = {
 
                                         case 23:
                                             _context2.next = 25;
-                                            return Component.parseCSS(type, file).textContent;
+                                            return Component.parseCSS(file);
 
                                         case 25:
-                                            file = _context2.sent;
+                                            file = _context2.sent.textContent;
 
                                         case 26:
 
@@ -357,7 +357,7 @@ var _module_ = {
                                             return _context2.finish(38);
 
                                         case 46:
-                                            source = new _amdBundle2.default(this.entry).bundle();
+                                            source = new _amdBundle2.default(this.entry).bundle(Component.identifierOf(this.name));
                                             _context2.next = 49;
                                             return Promise.all(temp_file.map(function (file) {
                                                 return (0, _fsExtra.remove)(file);
@@ -555,8 +555,8 @@ var _module_ = {
                     }()
 
                     /**
-                     * @param {string} type - MIME type
-                     * @param {string} path - File path
+                     * @param {string} source - File path or Style source code
+                     * @param {string} [type] - MIME type
                      *
                      * @return {?Element} Style element
                      */
@@ -564,51 +564,54 @@ var _module_ = {
                 }, {
                     key: 'parseCSS',
                     value: function () {
-                        var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(type, path) {
+                        var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(source, type) {
                             var style;
                             return regeneratorRuntime.wrap(function _callee8$(_context8) {
                                 while (1) {
                                     switch (_context8.prev = _context8.next) {
                                         case 0:
-                                            _context8.t0 = type.split('/')[1];
-                                            _context8.next = _context8.t0 === 'css' ? 3 : _context8.t0 === 'sass' ? 7 : _context8.t0 === 'scss' ? 7 : _context8.t0 === 'less' ? 11 : _context8.t0 === 'stylus' ? 15 : 18;
+
+                                            type = type ? type.split('/')[1] : (0, _path.extname)(source).slice(1);
+
+                                            _context8.t0 = type;
+                                            _context8.next = _context8.t0 === 'css' ? 4 : _context8.t0 === 'sass' ? 8 : _context8.t0 === 'scss' ? 8 : _context8.t0 === 'less' ? 12 : _context8.t0 === 'stylus' ? 16 : 19;
                                             break;
 
-                                        case 3:
-                                            _context8.next = 5;
-                                            return Component.loadFile(path);
+                                        case 4:
+                                            _context8.next = 6;
+                                            return Component.loadFile(source);
 
-                                        case 5:
+                                        case 6:
                                             style = _context8.sent;
-                                            return _context8.abrupt('break', 18);
+                                            return _context8.abrupt('break', 19);
 
-                                        case 7:
-                                            _context8.next = 9;
-                                            return Component.parseSASS(path);
+                                        case 8:
+                                            _context8.next = 10;
+                                            return Component.parseSASS(source);
 
-                                        case 9:
+                                        case 10:
                                             style = _context8.sent;
-                                            return _context8.abrupt('break', 18);
+                                            return _context8.abrupt('break', 19);
 
-                                        case 11:
-                                            _context8.next = 13;
-                                            return Component.parseLESS(path);
+                                        case 12:
+                                            _context8.next = 14;
+                                            return Component.parseLESS(source);
 
-                                        case 13:
+                                        case 14:
                                             style = _context8.sent;
-                                            return _context8.abrupt('break', 18);
+                                            return _context8.abrupt('break', 19);
 
-                                        case 15:
-                                            _context8.next = 17;
-                                            return Component.parseStylus(path);
-
-                                        case 17:
-                                            style = _context8.sent;
+                                        case 16:
+                                            _context8.next = 18;
+                                            return Component.parseStylus(source);
 
                                         case 18:
-                                            return _context8.abrupt('return', style && Object.assign(document.createElement('style'), { textContent: style }));
+                                            style = _context8.sent;
 
                                         case 19:
+                                            return _context8.abrupt('return', style && Object.assign(document.createElement('style'), { textContent: style }));
+
+                                        case 20:
                                         case 'end':
                                             return _context8.stop();
                                     }
@@ -701,108 +704,80 @@ var _module_ = {
             /**
              * Bundle components to JS modules (or HTML files)
              *
-             * @param {string} path  - Source directory
-             * @param {boolean} HTML - Whether bundle as HTML
+             * @param {string}  path   - Source directory
+             * @param {boolean} [HTML] - Whether bundle as HTML
+             *
+             * @return {string[]} Component paths
              */
             var bundle = function () {
                 var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(path, HTML) {
-                    var type, _type_, component, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, file;
+                    var _result;
+
+                    var type, _type_, result, component;
 
                     return regeneratorRuntime.wrap(function _callee9$(_context9) {
                         while (1) {
                             switch (_context9.prev = _context9.next) {
                                 case 0:
                                     type = HTML ? 'HTML' : 'JS';
-                                    _type_ = type.toLowerCase();
+                                    _type_ = type.toLowerCase(), result = [];
 
                                     if (!(0, _fsExtra.existsSync)((0, _path.join)(path, 'index.' + _type_))) {
-                                        _context9.next = 11;
+                                        _context9.next = 12;
                                         break;
                                     }
 
                                     component = new _Component2.default(path);
+
+
+                                    result[0] = 'dist/' + component.name + '.' + _type_;
+
                                     _context9.t0 = (0, _fsExtra.outputFile);
-                                    _context9.t1 = 'dist/' + component.name + '.' + _type_;
-                                    _context9.next = 8;
+                                    _context9.t1 = result[0];
+                                    _context9.next = 9;
                                     return component['to' + type]();
 
-                                case 8:
+                                case 9:
                                     _context9.t2 = _context9.sent;
-                                    _context9.next = 11;
+                                    _context9.next = 12;
                                     return (0, _context9.t0)(_context9.t1, _context9.t2);
 
-                                case 11:
+                                case 12:
                                     if (!(0, _fsExtra.statSync)(path).isDirectory()) {
-                                        _context9.next = 41;
+                                        _context9.next = 26;
                                         break;
                                     }
 
-                                    _iteratorNormalCompletion3 = true;
-                                    _didIteratorError3 = false;
-                                    _iteratorError3 = undefined;
-                                    _context9.prev = 15;
-                                    _context9.next = 18;
+                                    _context9.t3 = (_result = result).concat;
+                                    _context9.t4 = _result;
+                                    _context9.t5 = _toConsumableArray;
+                                    _context9.t6 = Promise;
+                                    _context9.next = 19;
                                     return (0, _fsExtra.readdir)(path);
 
-                                case 18:
-                                    _context9.t3 = Symbol.iterator;
-                                    _iterator3 = _context9.sent[_context9.t3]();
+                                case 19:
+                                    _context9.t7 = function (file) {
+                                        return bundle((0, _path.join)(path, file), HTML);
+                                    };
 
-                                case 20:
-                                    if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
-                                        _context9.next = 27;
-                                        break;
-                                    }
+                                    _context9.t8 = _context9.sent.map(_context9.t7);
+                                    _context9.next = 23;
+                                    return _context9.t6.all.call(_context9.t6, _context9.t8);
 
-                                    file = _step3.value;
-                                    _context9.next = 24;
-                                    return bundle((0, _path.join)(path, file), HTML);
+                                case 23:
+                                    _context9.t9 = _context9.sent;
+                                    _context9.t10 = (0, _context9.t5)(_context9.t9);
+                                    result = _context9.t3.apply.call(_context9.t3, _context9.t4, _context9.t10);
 
-                                case 24:
-                                    _iteratorNormalCompletion3 = true;
-                                    _context9.next = 20;
-                                    break;
+                                case 26:
+                                    return _context9.abrupt('return', result);
 
                                 case 27:
-                                    _context9.next = 33;
-                                    break;
-
-                                case 29:
-                                    _context9.prev = 29;
-                                    _context9.t4 = _context9['catch'](15);
-                                    _didIteratorError3 = true;
-                                    _iteratorError3 = _context9.t4;
-
-                                case 33:
-                                    _context9.prev = 33;
-                                    _context9.prev = 34;
-
-                                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                                        _iterator3.return();
-                                    }
-
-                                case 36:
-                                    _context9.prev = 36;
-
-                                    if (!_didIteratorError3) {
-                                        _context9.next = 39;
-                                        break;
-                                    }
-
-                                    throw _iteratorError3;
-
-                                case 39:
-                                    return _context9.finish(36);
-
-                                case 40:
-                                    return _context9.finish(33);
-
-                                case 41:
                                 case 'end':
                                     return _context9.stop();
                             }
                         }
-                    }, _callee9, this, [[15, 29, 33, 41], [34,, 36, 40]]);
+                    }, _callee9, this);
                 }));
 
                 return function bundle(_x8, _x9) {
@@ -811,113 +786,49 @@ var _module_ = {
             }();
 
             /**
-             * Pack all components into one HTML file
+             * Bundle components into a JS or HTML package
              *
-             * @param {string} path - Output directory
+             * @param {string}  path   - Source directory
+             * @param {boolean} [HTML] - Whether bundle as HTML
+             *
+             * @return {string[]} Component paths
              */
 
 
             var pack = function () {
-                var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(path) {
-                    var index, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, HTML;
-
+                var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(path, HTML) {
+                    var file;
                     return regeneratorRuntime.wrap(function _callee10$(_context10) {
                         while (1) {
                             switch (_context10.prev = _context10.next) {
                                 case 0:
-                                    index = (0, _path.join)(path, 'index.html');
-                                    _context10.next = 3;
-                                    return (0, _fsExtra.outputFile)(index, '');
+                                    _context10.next = 2;
+                                    return bundle(path, HTML);
 
-                                case 3:
-                                    _iteratorNormalCompletion4 = true;
-                                    _didIteratorError4 = false;
-                                    _iteratorError4 = undefined;
-                                    _context10.prev = 6;
-                                    _context10.next = 9;
-                                    return (0, _fsExtra.readdir)(path);
+                                case 2:
+                                    file = _context10.sent;
+                                    _context10.next = 5;
+                                    return (0, _fsExtra.outputFile)('dist/index.' + (HTML ? 'html' : 'js'), file.map(function (item) {
 
-                                case 9:
-                                    _context10.t0 = Symbol.iterator;
-                                    _iterator4 = _context10.sent[_context10.t0]();
+                                        item = (0, _path.basename)(item);
 
-                                case 11:
-                                    if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
-                                        _context10.next = 27;
-                                        break;
-                                    }
+                                        console.info('\u221A Component "' + item + '" is packed in');
 
-                                    HTML = _step4.value;
+                                        return HTML ? '<link rel="import" href="' + item + '">' : 'export * from \'./' + item + '\';';
+                                    }).join('\n'));
 
-                                    if (!(HTML !== 'index.html' && HTML.slice(-5) === '.html')) {
-                                        _context10.next = 24;
-                                        break;
-                                    }
+                                case 5:
+                                    return _context10.abrupt('return', file);
 
-                                    _context10.t1 = (0, _fsExtra.appendFile);
-                                    _context10.t2 = index;
-                                    _context10.t3 = '<!-- ' + HTML + ' -->\n';
-                                    _context10.next = 19;
-                                    return (0, _fsExtra.readFile)((0, _path.join)(path, HTML));
-
-                                case 19:
-                                    _context10.t4 = _context10.sent;
-                                    _context10.t5 = _context10.t3 + _context10.t4;
-                                    _context10.next = 23;
-                                    return (0, _context10.t1)(_context10.t2, _context10.t5);
-
-                                case 23:
-
-                                    console.info('\u221A Component "' + HTML + '" is packed in');
-
-                                case 24:
-                                    _iteratorNormalCompletion4 = true;
-                                    _context10.next = 11;
-                                    break;
-
-                                case 27:
-                                    _context10.next = 33;
-                                    break;
-
-                                case 29:
-                                    _context10.prev = 29;
-                                    _context10.t6 = _context10['catch'](6);
-                                    _didIteratorError4 = true;
-                                    _iteratorError4 = _context10.t6;
-
-                                case 33:
-                                    _context10.prev = 33;
-                                    _context10.prev = 34;
-
-                                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                                        _iterator4.return();
-                                    }
-
-                                case 36:
-                                    _context10.prev = 36;
-
-                                    if (!_didIteratorError4) {
-                                        _context10.next = 39;
-                                        break;
-                                    }
-
-                                    throw _iteratorError4;
-
-                                case 39:
-                                    return _context10.finish(36);
-
-                                case 40:
-                                    return _context10.finish(33);
-
-                                case 41:
+                                case 6:
                                 case 'end':
                                     return _context10.stop();
                             }
                         }
-                    }, _callee10, this, [[6, 29, 33, 41], [34,, 36, 40]]);
+                    }, _callee10, this);
                 }));
 
-                return function pack(_x10) {
+                return function pack(_x10, _x11) {
                     return _ref11.apply(this, arguments);
                 };
             }();
@@ -969,8 +880,8 @@ var _module_ = {
 
             var folder = manifest.directories || '';
 
-            _commander2.default.command('bundle', 'Bundle components to JS modules (or HTML files)').on('command:bundle', function () {
-                return (0, _command.bundle)(folder.lib, _commander2.default.HTML);
+            _commander2.default.command('pack', 'Bundle components to a package within JS modules (or HTML files)').on('command:pack', function () {
+                return (0, _command.pack)(folder.lib, _commander2.default.HTML);
             }).command('preview', 'Real-time preview during development').on('command:preview', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
                 var command;
                 return regeneratorRuntime.wrap(function _callee11$(_context11) {
@@ -978,7 +889,7 @@ var _module_ = {
                         switch (_context11.prev = _context11.next) {
                             case 0:
                                 command = function command() {
-                                    return (0, _command.bundle)(folder.lib, _commander2.default.HTML);
+                                    return (0, _command.pack)(folder.lib, _commander2.default.HTML);
                                 };
 
                                 _context11.next = 3;
@@ -994,24 +905,6 @@ var _module_ = {
                         }
                     }
                 }, _callee11, _this);
-            }))).command('pack', 'Pack all components into one HTML file').on('command:pack', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12() {
-                return regeneratorRuntime.wrap(function _callee12$(_context12) {
-                    while (1) {
-                        switch (_context12.prev = _context12.next) {
-                            case 0:
-                                _context12.next = 2;
-                                return (0, _command.bundle)(folder.lib, true);
-
-                            case 2:
-                                _context12.next = 4;
-                                return (0, _command.pack)('dist/');
-
-                            case 4:
-                            case 'end':
-                                return _context12.stop();
-                        }
-                    }
-                }, _callee12, _this);
             }))).option('-H, --HTML', 'Bundle as HTML').parse(process.argv);
         }
     },
