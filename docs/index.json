@@ -766,7 +766,7 @@
     "__docId__": 60,
     "kind": "file",
     "name": "source/Component.js",
-    "content": "import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';\n\nimport {join, basename, dirname, extname} from 'path';\n\nimport { JSDOM } from 'jsdom';\n\nimport Package from 'amd-bundle';\n\nimport * as SASS from 'sass';\n\nimport * as LESS from 'less';\n\nimport Stylus from 'stylus';\n\nimport promisify from 'promisify-node';\n\nconst renderSASS = promisify( SASS.render ),\n    renderStylus = promisify( Stylus.render ),\n    document = (new JSDOM()).window.document;\n\n\n\nexport default  class Component {\n    /**\n     * @param {string} path - Component directory\n     */\n    constructor(path) {\n\n        this.path = path;\n\n        this.name = basename( path );\n\n        this.entry = join(path, 'index');\n    }\n\n    /**\n     * @param {string} path - File path\n     *\n     * @return {string} File content\n     */\n    static async loadFile(path) {\n\n        return  path.includes('\\n')  ?  path  :  ((await readFile( path )) + '');\n    }\n\n    static async parseHTML(path) {\n\n        return  JSDOM.fragment(await Component.loadFile( path ));\n    }\n\n    static async parseSASS(path) {\n\n        return  renderSASS({data:  await Component.loadFile( path )});\n    }\n\n    static async parseLESS(path) {\n\n        return  await LESS.render(await Component.loadFile( path ));\n    }\n\n    static async parseStylus(path) {\n\n        return  await renderStylus(await Component.loadFile( path ));\n    }\n\n    /**\n     * @param {string} source - File path or Style source code\n     * @param {string} [type] - MIME type\n     *\n     * @return {?Element} Style element\n     */\n    static async parseCSS(source, type) {\n\n        var style;\n\n        type = type  ?  type.split('/')[1]  :  extname( source ).slice(1);\n\n        switch ( type ) {\n            case 'css':       style = await Component.loadFile( source );   break;\n            case 'sass':\n            case 'scss':      style = await Component.parseSASS( source );  break;\n            case 'less':      style = await Component.parseLESS( source );  break;\n            case 'stylus':    style = await Component.parseStylus( source );\n        }\n\n        return  style && Object.assign(\n            document.createElement('style'),  {textContent: style}\n        );\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {Element[]}\n     */\n    static findStyle(fragment) {\n\n        return [\n            ... fragment.querySelectorAll('link[rel=\"stylesheet\"]'),\n            ... [ ].concat(... Array.from(\n                fragment.querySelectorAll('template'),\n                template  =>  [... template.content.querySelectorAll('style')]\n            ))\n        ];\n    }\n\n    /**\n     * @param {string} tagName\n     *\n     * @return {string}\n     */\n    static identifierOf(tagName) {\n\n        return  tagName[0].toUpperCase() +\n            tagName.replace(/-(\\w)/g,  (_, char) => char.toUpperCase()).slice(1);\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {Element}\n     */\n    static parseJS(path) {\n\n        path = path.split('.').slice(0, -1).join('.');\n\n        return  Object.assign(document.createElement('script'), {\n            text:  `\\n${\n                (new Package( path )).bundle(\n                    this.identifierOf( basename( dirname( path ) ) )\n                )}\\n`\n        });\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {string}\n     */\n    static stringOf(fragment) {\n\n        return Array.from(\n            fragment.childNodes,\n            node  =>  node[(node.nodeType === 1) ? 'outerHTML' : 'nodeValue']\n        ).join('');\n    }\n\n    /**\n     * @return {string} HTML version bundle of this component\n     */\n    async toHTML() {\n\n        const fragment = await Component.parseHTML(this.entry + '.html');\n\n        for (let sheet  of  Component.findStyle( fragment )) {\n\n            let style = await Component.parseCSS(\n                sheet.textContent  ||  join(this.path, sheet.getAttribute('href')),\n                sheet.type\n            );\n\n            if ( style )  sheet.replaceWith( style );\n        }\n\n        const script = fragment.querySelector('script');\n\n        if ( script )\n            script.replaceWith(\n                Component.parseJS( join(this.path, script.getAttribute('src')) )\n            );\n\n        return  Component.stringOf( fragment );\n    }\n\n    /**\n     * @return {string} JS version bundle of this component\n     */\n    async toJS() {\n\n        const temp_file = [ ];\n\n        for (let file  of  await readdir( this.path )) {\n\n            file = join(this.path, file);\n\n            if (! statSync( file ).isFile())  continue;\n\n            let type = file.split('.').slice(-1)[0], temp = `${file}.js`;\n\n            switch ( type ) {\n                case 'html':    file = await this.toHTML();    break;\n                case 'js':      continue;\n                default:\n                    file = (await Component.parseCSS( file )).textContent;\n            }\n\n            temp_file.push( temp );\n\n            await outputFile(temp,  `export default ${JSON.stringify( file )}`);\n        }\n\n        const source = (new Package( this.entry )).bundle(\n            Component.identifierOf( this.name )\n        );\n\n        await Promise.all( temp_file.map(file => remove( file )) );\n\n        return source;\n    }\n}\n",
+    "content": "import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';\n\nimport {join, basename, dirname, extname} from 'path';\n\nimport { JSDOM } from 'jsdom';\n\nimport Package from 'amd-bundle';\n\nimport * as SASS from 'sass';\n\nimport * as LESS from 'less';\n\nimport Stylus from 'stylus';\n\nimport promisify from 'promisify-node';\n\nconst renderSASS = promisify( SASS.render ),\n    renderStylus = promisify( Stylus.render ),\n    document = (new JSDOM()).window.document;\n\n\n\nexport default  class Component {\n    /**\n     * @param {string} path - Component directory\n     */\n    constructor(path) {\n\n        this.path = path;\n\n        this.name = basename( path );\n\n        this.entry = join(path, 'index');\n    }\n\n    /**\n     * @param {string} path - File path\n     *\n     * @return {string} File content\n     */\n    static async loadFile(path) {\n\n        return  path.includes('\\n')  ?  path  :  ((await readFile( path )) + '');\n    }\n\n    static async parseHTML(path) {\n\n        return  JSDOM.fragment(await Component.loadFile( path ));\n    }\n\n    static async parseSASS(path) {\n\n        return  renderSASS({data:  await Component.loadFile( path )});\n    }\n\n    static async parseLESS(path) {\n\n        return  await LESS.render(await Component.loadFile( path ));\n    }\n\n    static async parseStylus(path) {\n\n        return  await renderStylus(await Component.loadFile( path ));\n    }\n\n    /**\n     * @param {string} source - File path or Style source code\n     * @param {string} [type] - MIME type\n     *\n     * @return {?Element} Style element\n     */\n    static async parseCSS(source, type) {\n\n        var style;\n\n        type = type  ?  type.split('/')[1]  :  extname( source ).slice(1);\n\n        switch ( type ) {\n            case 'css':       style = await Component.loadFile( source );   break;\n            case 'sass':\n            case 'scss':      style = await Component.parseSASS( source );  break;\n            case 'less':      style = await Component.parseLESS( source );  break;\n            case 'stylus':    style = await Component.parseStylus( source );\n        }\n\n        return  style && Object.assign(\n            document.createElement('style'),  {textContent: style}\n        );\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {Element[]}\n     */\n    static findStyle(fragment) {\n\n        return [\n            ... fragment.querySelectorAll('link[rel=\"stylesheet\"]'),\n            ... [ ].concat(... Array.from(\n                fragment.querySelectorAll('template'),\n                template  =>  [... template.content.querySelectorAll('style')]\n            ))\n        ];\n    }\n\n    /**\n     * @param {string} tagName\n     *\n     * @return {string}\n     */\n    static identifierOf(tagName) {\n\n        return  tagName[0].toUpperCase() +\n            tagName.replace(/-(\\w)/g,  (_, char) => char.toUpperCase()).slice(1);\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {Element}\n     */\n    static parseJS(path) {\n\n        path = path.split('.').slice(0, -1).join('.');\n\n        return  Object.assign(document.createElement('script'), {\n            text:  `\\n${\n                (new Package( path )).bundle(\n                    this.identifierOf( basename( dirname( path ) ) )\n                )}\\n`\n        });\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {string}\n     */\n    static stringOf(fragment) {\n\n        return Array.from(\n            fragment.childNodes,\n            node  =>  node[(node.nodeType === 1) ? 'outerHTML' : 'nodeValue']\n        ).join('');\n    }\n\n    /**\n     * @return {DocumentFragment} HTML version bundle of this component\n     */\n    async toHTML() {\n\n        const fragment = await Component.parseHTML(this.entry + '.html'),\n            CSS = [ ];\n\n        for (let sheet  of  Component.findStyle( fragment )) {\n\n            let style = await Component.parseCSS(\n                sheet.textContent  ||  join(this.path, sheet.getAttribute('href')),\n                sheet.type\n            );\n\n            if (! style)  continue;\n\n            sheet.replaceWith( style );\n\n            if (style.parentNode === fragment)  CSS.push( style );\n        }\n\n        fragment.querySelector('template').content.prepend(... CSS);\n\n        const script = fragment.querySelector('script');\n\n        if ( script )\n            script.replaceWith(\n                Component.parseJS( join(this.path, script.getAttribute('src')) )\n            );\n\n        return fragment;\n    }\n\n    /**\n     * @return {string} JS version bundle of this component\n     */\n    async toJS() {\n\n        const temp_file = [ ];\n\n        for (let file  of  await readdir( this.path )) {\n\n            file = join(this.path, file);\n\n            if (! statSync( file ).isFile())  continue;\n\n            let type = file.split('.').slice(-1)[0], temp = `${file}.js`;\n\n            switch ( type ) {\n                case 'html':\n                    file = JSON.stringify(\n                        Component.stringOf(await this.toHTML())\n                    );\n                    break;\n                case 'js':\n                    continue;\n                case 'json':\n                    file = await Component.loadFile( file );    break;\n                default:\n                    file = JSON.stringify(\n                        (await Component.parseCSS( file )).textContent\n                    );\n            }\n\n            temp_file.push( temp );\n\n            await outputFile(temp,  `export default ${file}`);\n        }\n\n        const source = (new Package( this.entry )).bundle(\n            Component.identifierOf( this.name )\n        );\n\n        await Promise.all( temp_file.map(file => remove( file )) );\n\n        return source;\n    }\n}\n",
     "static": true,
     "longname": "D:/OpenSource/DevCLI/source/Component.js",
     "access": "public",
@@ -1217,7 +1217,7 @@
     "return": {
       "nullable": null,
       "types": [
-        "string"
+        "DocumentFragment"
       ],
       "spread": false,
       "description": "HTML version bundle of this component"
@@ -1235,7 +1235,7 @@
     "longname": "source/Component.js~Component#toJS",
     "access": "public",
     "description": "",
-    "lineNumber": 178,
+    "lineNumber": 185,
     "return": {
       "nullable": null,
       "types": [
@@ -1250,7 +1250,7 @@
     "__docId__": 79,
     "kind": "file",
     "name": "source/index.js",
-    "content": "import 'babel-polyfill';\n\nimport {readFileSync} from 'fs';\n\nimport {pack} from './command';\n\nimport Commander from 'commander';\n\nimport PuppeteerBrowser from 'puppeteer-browser';\n\n\n\nconst manifest = JSON.parse(readFileSync('package.json') + '');\n\nconst folder = manifest.directories || '';\n\n\nCommander\n    .command(\n        'pack',  'Bundle components to a package within JS modules (or HTML files)'\n    )\n    .on('command:pack',  () => pack(folder.lib, Commander.HTML))\n    .command('preview',  'Real-time preview during development')\n    .on('command:preview',  async () => {\n\n        const command = () => pack(folder.lib, Commander.HTML);\n\n        await command();\n\n        await PuppeteerBrowser.getPage('.',  folder.test || 'test/',  command);\n    })\n    .option('-H, --HTML',  'Bundle as HTML')\n    .parse( process.argv );\n",
+    "content": "import 'babel-polyfill';\n\nimport {readFileSync} from 'fs';\n\nimport {pack} from './command';\n\nimport Commander from 'commander';\n\nimport PuppeteerBrowser from 'puppeteer-browser';\n\n\n\nconst manifest = JSON.parse(readFileSync('package.json') + '');\n\nconst folder = manifest.directories || '';\n\n\nCommander\n    .command(\n        'pack',\n        'Bundle components to a package with JS modules (or HTML files) in it'\n    )\n    .on('command:pack',  () => pack(folder.lib, Commander.HTML))\n    .command('preview',  'Real-time preview during development')\n    .on('command:preview',  async () => {\n\n        const command = () => pack(folder.lib, Commander.HTML);\n\n        await command();\n\n        await PuppeteerBrowser.getPage('.',  folder.test || 'test/',  command);\n    })\n    .option('-H, --HTML',  'Bundle as HTML')\n    .parse( process.argv );\n",
     "static": true,
     "longname": "D:/OpenSource/DevCLI/source/index.js",
     "access": "public",
@@ -1301,7 +1301,7 @@
   },
   {
     "kind": "index",
-    "content": "# WebCell DevCLI\n\nDeveloper command-line tool for [WebCell](https://web-cell.tk/)\n\n[![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)\n\n[![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)\n\n\n\n## Usage\n\n 1. `npm install web-cell-cli -D`\n\n 1. refer [BootCell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6)\n\n 3. refer [BootCell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L13)\n\n 4. `npm run your_script`\n\n\n\n### Command\n\n  Usage: `web-cell [options] [command]`\n\n  Options:\n\n    -H, --HTML  Bundle as HTML\n    -h, --help  output usage information\n\n  Commands:\n\n    pack        Bundle components to a package within JS modules (or HTML files)\n    preview     Real-time preview during development\n    help [cmd]  display help for [cmd]\n\n\n\n[1]: https://github.com/EasyWebApp/BootCell \"Offical component library of WebCell (based on BootStrap v4)\"\n",
+    "content": "# WebCell DevCLI\n\nDeveloper command-line tool for [WebCell](https://web-cell.tk/)\n\n[![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)\n\n[![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)\n\n\n\n## Usage\n\n 1. `npm install web-cell-cli -D`\n\n 1. refer [BootCell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6)\n\n 3. refer [BootCell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L13)\n\n 4. `npm run your_script`\n\n\n\n### Command\n\n  Usage: `web-cell [options] [command]`\n\n  Options:\n\n    -H, --HTML  Bundle as HTML\n    -h, --help  output usage information\n\n  Commands:\n\n    pack        Bundle components to a package with JS modules (or HTML files) in it\n    preview     Real-time preview during development\n    help [cmd]  display help for [cmd]\n\n\n\n[1]: https://github.com/EasyWebApp/BootCell \"Offical component library of WebCell (based on BootStrap v4)\"\n",
     "longname": "D:\\OpenSource\\DevCLI\\README.md",
     "name": "./README.md",
     "static": true,
@@ -1309,7 +1309,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"web-cell-cli\",\n  \"version\": \"0.4.0\",\n  \"description\": \"Developer command-line tool for WebCell\",\n  \"keywords\": [\n    \"developer\",\n    \"command-line\",\n    \"web-cell\",\n    \"component\",\n    \"package\",\n    \"bundle\"\n  ],\n  \"author\": \"shiy2008@gmail.com\",\n  \"license\": \"AGPL-3.0\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/DevCLI.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/DevCLI/issues\"\n  },\n  \"homepage\": \"https://easywebapp.github.io/DevCLI/\",\n  \"main\": \"source/Component.js\",\n  \"bin\": {\n    \"web-cell\": \"dist/web-cell.js\"\n  },\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^6.5.0\"\n  },\n  \"scripts\": {\n    \"lint\": \"eslint ./source/ ./test/\",\n    \"build\": \"amd-bundle source/index dist/web-cell -c  &&  esdoc\",\n    \"prepublishOnly\": \"npm run build\",\n    \"start\": \"web-server docs/ -o\",\n    \"check\": \"mocha -r babel-register -r babel-polyfill -c --inline-diffs\",\n    \"test\": \"npm run check -- --exit\",\n    \"debug\": \"npm run check -- --inspect-brk\",\n    \"precommit\": \"npm run lint  &&  npm test\"\n  },\n  \"dependencies\": {\n    \"amd-bundle\": \"^1.3.1\",\n    \"babel-polyfill\": \"^6.26.0\",\n    \"commander\": \"^2.15.1\",\n    \"fs-extra\": \"^6.0.1\",\n    \"jsdom\": \"^11.11.0\",\n    \"less\": \"^3.0.4\",\n    \"promisify-node\": \"^0.5.0\",\n    \"puppeteer-browser\": \"^0.3.1\",\n    \"sass\": \"^1.5.1\",\n    \"stylus\": \"^0.54.5\"\n  },\n  \"devDependencies\": {\n    \"babel-preset-env\": \"^1.7.0\",\n    \"babel-register\": \"^6.26.0\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^4.19.1\",\n    \"husky\": \"^0.14.3\",\n    \"koapache\": \"^0.2.3\",\n    \"mocha\": \"^5.2.0\",\n    \"should\": \"^13.2.1\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"env\"\n    ]\n  }\n}\n",
+    "content": "{\n  \"name\": \"web-cell-cli\",\n  \"version\": \"0.4.1\",\n  \"description\": \"Developer command-line tool for WebCell\",\n  \"keywords\": [\n    \"developer\",\n    \"command-line\",\n    \"web-cell\",\n    \"component\",\n    \"package\",\n    \"bundle\"\n  ],\n  \"author\": \"shiy2008@gmail.com\",\n  \"license\": \"AGPL-3.0\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/DevCLI.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/DevCLI/issues\"\n  },\n  \"homepage\": \"https://easywebapp.github.io/DevCLI/\",\n  \"main\": \"source/Component.js\",\n  \"bin\": {\n    \"web-cell\": \"dist/web-cell.js\"\n  },\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^6.5.0\"\n  },\n  \"scripts\": {\n    \"lint\": \"eslint ./source/ ./test/\",\n    \"build\": \"amd-bundle source/index dist/web-cell -c  &&  esdoc\",\n    \"prepublishOnly\": \"npm run build\",\n    \"start\": \"web-server docs/ -o\",\n    \"check\": \"mocha -r babel-register -r babel-polyfill -c --inline-diffs\",\n    \"test\": \"npm run check -- --exit\",\n    \"debug\": \"npm run check -- --inspect-brk\",\n    \"precommit\": \"npm run lint  &&  npm test\"\n  },\n  \"dependencies\": {\n    \"amd-bundle\": \"^1.3.1\",\n    \"babel-polyfill\": \"^6.26.0\",\n    \"commander\": \"^2.15.1\",\n    \"fs-extra\": \"^6.0.1\",\n    \"jsdom\": \"^11.11.0\",\n    \"less\": \"^3.0.4\",\n    \"promisify-node\": \"^0.5.0\",\n    \"puppeteer-browser\": \"^0.3.1\",\n    \"sass\": \"^1.5.1\",\n    \"stylus\": \"^0.54.5\"\n  },\n  \"devDependencies\": {\n    \"babel-preset-env\": \"^1.7.0\",\n    \"babel-register\": \"^6.26.0\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^4.19.1\",\n    \"husky\": \"^0.14.3\",\n    \"koapache\": \"^0.2.3\",\n    \"mocha\": \"^5.2.0\",\n    \"should\": \"^13.2.1\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"env\"\n    ]\n  }\n}\n",
     "longname": "D:\\OpenSource\\DevCLI\\package.json",
     "name": "package.json",
     "static": true,
@@ -1318,10 +1318,10 @@
   {
     "__docId__": 82,
     "kind": "testFile",
-    "name": "test/example-js/index.js",
-    "content": "import {component} from 'web-cell';\n\nimport HTML from './index.html';\n\nimport CSS from './index.css';\n\n\nexport default  component(class ExampleJs extends HTMLElement {\n\n    constructor() {  super().buildDOM(HTML, CSS);  }\n\n    static get data() {  return  {name: 'Web components'};  }\n\n    get value() {  return this.$('textarea')[0].value;  }\n\n    set value(raw) {  this.$('textarea')[0].value = raw;  }\n});\n",
+    "name": "test/example-html/index.js",
+    "content": "import {component} from 'web-cell';\n\n\nexport default  component(class ExampleHtml extends HTMLElement {\n\n    constructor() {  super().buildDOM();  }\n\n    static get data() {  return  {name: 'Web components'};  }\n\n    get value() {  return this.$('textarea')[0].value;  }\n\n    set value(raw) {  this.$('textarea')[0].value = raw;  }\n});\n",
     "static": true,
-    "longname": "D:/OpenSource/DevCLI/test/example-js/index.js",
+    "longname": "D:/OpenSource/DevCLI/test/example-html/index.js",
     "access": null,
     "description": null,
     "lineNumber": 1
@@ -1329,8 +1329,19 @@
   {
     "__docId__": 83,
     "kind": "testFile",
+    "name": "test/example-js/index.js",
+    "content": "import {component} from 'web-cell';\n\nimport template from './index.html';\n\nimport style from './index.css';\n\nimport data from './index.json';\n\n\nexport default  component(class ExampleJs extends HTMLElement {\n\n    constructor() {  super().buildDOM(template, style);  }\n\n    static get data() {  return data;  }\n\n    get value() {  return this.$('textarea')[0].value;  }\n\n    set value(raw) {  this.$('textarea')[0].value = raw;  }\n});\n",
+    "static": true,
+    "longname": "D:/OpenSource/DevCLI/test/example-js/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 84,
+    "kind": "testFile",
     "name": "test/index.js",
-    "content": "import Component from '../source/Component';\n\nimport Should from 'should';\n\n\n/**\n * @test {Component}\n */\ndescribe('Core class',  () => {\n\n    var CSS, HTML;\n\n    /**\n     * @test {Component.loadFile}\n     * @test {Component.parseCSS}\n     */\n    it('Parse CSS',  async () => {\n\n        const file = 'test/example-js/index.css';\n\n        const style = await Component.parseCSS( file );\n\n        style.tagName.should.be.equal('STYLE');\n\n        style.textContent.should.be.equal(CSS = await Component.loadFile( file ));\n    });\n\n    /**\n     * @test {Component.identifierOf}\n     */\n    it(\n        'Tag name to Class name',\n        () => Component.identifierOf('example-js').should.be.equal('ExampleJs')\n    );\n\n    /**\n     * @test {Component.parseHTML}\n     * @test {Component.stringOf}\n     */\n    it('Parse HTML',  async () => {\n\n        const file = 'test/example-js/index.html';\n\n        const template = await Component.parseHTML( file );\n\n        template.nodeType.should.be.equal( 11 );\n\n        Component.stringOf( template ).should.be.equal(\n            HTML = await Component.loadFile( file )\n        );\n    });\n\n    /**\n     * @test {Component#toJS}\n     */\n    it('Bundle to JS',  async () => {\n\n        var component = new Component('test/example-js');\n\n        component = await component.toJS();\n\n        component.includes( JSON.stringify( CSS ) ).should.be.true();\n\n        component.includes( JSON.stringify( HTML ) ).should.be.true();\n\n        try {\n            Should.doesNotThrow(() => eval( component ),  SyntaxError);\n\n        } catch(error) {\n\n            console.warn(`Expected error: ${error.message}`);\n        }\n    });\n});\n",
+    "content": "import Component from '../source/Component';\n\nimport Should from 'should';\n\nimport {join} from 'path';\n\n\nfunction SyntaxRight(code) {\n    try {\n        Should.doesNotThrow(() => eval( code ),  SyntaxError);\n\n    } catch (error) {\n\n        console.warn(`Expected error: ${error.message}`);\n    }\n}\n\n\n/**\n * @test {Component}\n */\ndescribe('Core class',  () => {\n\n    var CSS, HTML;\n\n    /**\n     * @test {Component.loadFile}\n     * @test {Component.parseCSS}\n     */\n    it('Parse CSS',  async () => {\n\n        const file = 'test/example-js/index.css';\n\n        const style = await Component.parseCSS( file );\n\n        style.tagName.should.be.equal('STYLE');\n\n        style.textContent.should.be.equal(CSS = await Component.loadFile( file ));\n    });\n\n    /**\n     * @test {Component.identifierOf}\n     */\n    it(\n        'Tag name to Class name',\n        () => Component.identifierOf('example-js').should.be.equal('ExampleJs')\n    );\n\n    /**\n     * @test {Component.parseHTML}\n     * @test {Component.stringOf}\n     */\n    it('Parse HTML',  async () => {\n\n        const file = 'test/example-js/index.html';\n\n        const template = await Component.parseHTML( file );\n\n        template.nodeType.should.be.equal( 11 );\n\n        Component.stringOf( template ).should.be.equal(\n            HTML = await Component.loadFile( file )\n        );\n    });\n\n    /**\n     * @test {Component.findStyle}\n     * @test {Component.parseJS}\n     */\n    it('Find styles & Parse script',  async () => {\n\n        const fragment = await Component.parseHTML('test/example-html/index.html');\n\n        Component.findStyle( fragment ).map(element => element.tagName)\n            .should.be.eql(['LINK', 'STYLE']);\n\n        SyntaxRight(\n            Component.parseJS(join(\n                'test/example-html/', fragment.lastElementChild.getAttribute('src')\n            )).text\n        );\n    });\n\n    /**\n     * @test {Component#toHTML}\n     */\n    it('Bundle to HTML',  async () => {\n\n        const fragment = await (new Component('test/example-html')).toHTML(),\n            tagName = element => element.tagName;\n\n        Array.from(fragment.children, tagName).should.be.eql(\n            ['TEMPLATE', 'SCRIPT']\n        );\n\n        Array.from(fragment.firstElementChild.content.children, tagName)\n            .should.be.eql(['STYLE', 'STYLE', 'TEXTAREA']);\n    });\n\n    /**\n     * @test {Component#toJS}\n     */\n    it('Bundle to JS',  async () => {\n\n        var component = new Component('test/example-js');\n\n        component = await component.toJS();\n\n        component.includes( JSON.stringify( CSS ) ).should.be.true();\n\n        component.includes( JSON.stringify( HTML ) ).should.be.true();\n\n        component.includes('\"name\": \"Web components\"').should.be.true();\n\n        SyntaxRight( component );\n    });\n});\n",
     "static": true,
     "longname": "D:/OpenSource/DevCLI/test/index.js",
     "access": null,
@@ -1338,7 +1349,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 84,
+    "__docId__": 85,
     "kind": "test",
     "name": "describe0",
     "testId": 0,
@@ -1348,13 +1359,13 @@
     "longname": "test/index.js~describe0",
     "access": null,
     "description": "Core class",
-    "lineNumber": 9,
+    "lineNumber": 22,
     "testTargets": [
       "Component"
     ]
   },
   {
-    "__docId__": 85,
+    "__docId__": 86,
     "kind": "test",
     "name": "it1",
     "testId": 1,
@@ -1364,14 +1375,14 @@
     "longname": "test/index.js~describe0.it1",
     "access": null,
     "description": "Parse CSS",
-    "lineNumber": 17,
+    "lineNumber": 30,
     "testTargets": [
       "Component.loadFile",
       "Component.parseCSS"
     ]
   },
   {
-    "__docId__": 86,
+    "__docId__": 87,
     "kind": "test",
     "name": "it2",
     "testId": 2,
@@ -1381,13 +1392,13 @@
     "longname": "test/index.js~describe0.it2",
     "access": null,
     "description": "Tag name to Class name",
-    "lineNumber": 31,
+    "lineNumber": 44,
     "testTargets": [
       "Component.identifierOf"
     ]
   },
   {
-    "__docId__": 87,
+    "__docId__": 88,
     "kind": "test",
     "name": "it3",
     "testId": 3,
@@ -1397,14 +1408,14 @@
     "longname": "test/index.js~describe0.it3",
     "access": null,
     "description": "Parse HTML",
-    "lineNumber": 40,
+    "lineNumber": 53,
     "testTargets": [
       "Component.parseHTML",
       "Component.stringOf"
     ]
   },
   {
-    "__docId__": 88,
+    "__docId__": 89,
     "kind": "test",
     "name": "it4",
     "testId": 4,
@@ -1413,8 +1424,41 @@
     "static": true,
     "longname": "test/index.js~describe0.it4",
     "access": null,
+    "description": "Find styles & Parse script",
+    "lineNumber": 70,
+    "testTargets": [
+      "Component.findStyle",
+      "Component.parseJS"
+    ]
+  },
+  {
+    "__docId__": 90,
+    "kind": "test",
+    "name": "it5",
+    "testId": 5,
+    "memberof": "test/index.js~describe0",
+    "testDepth": 1,
+    "static": true,
+    "longname": "test/index.js~describe0.it5",
+    "access": null,
+    "description": "Bundle to HTML",
+    "lineNumber": 87,
+    "testTargets": [
+      "Component#toHTML"
+    ]
+  },
+  {
+    "__docId__": 91,
+    "kind": "test",
+    "name": "it6",
+    "testId": 6,
+    "memberof": "test/index.js~describe0",
+    "testDepth": 1,
+    "static": true,
+    "longname": "test/index.js~describe0.it6",
+    "access": null,
     "description": "Bundle to JS",
-    "lineNumber": 56,
+    "lineNumber": 103,
     "testTargets": [
       "Component#toJS"
     ]

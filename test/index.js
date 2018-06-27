@@ -2,6 +2,19 @@ import Component from '../source/Component';
 
 import Should from 'should';
 
+import {join} from 'path';
+
+
+function SyntaxRight(code) {
+    try {
+        Should.doesNotThrow(() => eval( code ),  SyntaxError);
+
+    } catch (error) {
+
+        console.warn(`Expected error: ${error.message}`);
+    }
+}
+
 
 /**
  * @test {Component}
@@ -51,6 +64,40 @@ describe('Core class',  () => {
     });
 
     /**
+     * @test {Component.findStyle}
+     * @test {Component.parseJS}
+     */
+    it('Find styles & Parse script',  async () => {
+
+        const fragment = await Component.parseHTML('test/example-html/index.html');
+
+        Component.findStyle( fragment ).map(element => element.tagName)
+            .should.be.eql(['LINK', 'STYLE']);
+
+        SyntaxRight(
+            Component.parseJS(join(
+                'test/example-html/', fragment.lastElementChild.getAttribute('src')
+            )).text
+        );
+    });
+
+    /**
+     * @test {Component#toHTML}
+     */
+    it('Bundle to HTML',  async () => {
+
+        const fragment = await (new Component('test/example-html')).toHTML(),
+            tagName = element => element.tagName;
+
+        Array.from(fragment.children, tagName).should.be.eql(
+            ['TEMPLATE', 'SCRIPT']
+        );
+
+        Array.from(fragment.firstElementChild.content.children, tagName)
+            .should.be.eql(['STYLE', 'STYLE', 'TEXTAREA']);
+    });
+
+    /**
      * @test {Component#toJS}
      */
     it('Bundle to JS',  async () => {
@@ -63,12 +110,8 @@ describe('Core class',  () => {
 
         component.includes( JSON.stringify( HTML ) ).should.be.true();
 
-        try {
-            Should.doesNotThrow(() => eval( component ),  SyntaxError);
+        component.includes('"name": "Web components"').should.be.true();
 
-        } catch(error) {
-
-            console.warn(`Expected error: ${error.message}`);
-        }
+        SyntaxRight( component );
     });
 });

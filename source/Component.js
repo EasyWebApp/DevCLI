@@ -146,11 +146,12 @@ export default  class Component {
     }
 
     /**
-     * @return {string} HTML version bundle of this component
+     * @return {DocumentFragment} HTML version bundle of this component
      */
     async toHTML() {
 
-        const fragment = await Component.parseHTML(this.entry + '.html');
+        const fragment = await Component.parseHTML(this.entry + '.html'),
+            CSS = [ ];
 
         for (let sheet  of  Component.findStyle( fragment )) {
 
@@ -159,8 +160,14 @@ export default  class Component {
                 sheet.type
             );
 
-            if ( style )  sheet.replaceWith( style );
+            if (! style)  continue;
+
+            sheet.replaceWith( style );
+
+            if (style.parentNode === fragment)  CSS.push( style );
         }
+
+        fragment.querySelector('template').content.prepend(... CSS);
 
         const script = fragment.querySelector('script');
 
@@ -169,7 +176,7 @@ export default  class Component {
                 Component.parseJS( join(this.path, script.getAttribute('src')) )
             );
 
-        return  Component.stringOf( fragment );
+        return fragment;
     }
 
     /**
@@ -188,15 +195,24 @@ export default  class Component {
             let type = file.split('.').slice(-1)[0], temp = `${file}.js`;
 
             switch ( type ) {
-                case 'html':    file = await this.toHTML();    break;
-                case 'js':      continue;
+                case 'html':
+                    file = JSON.stringify(
+                        Component.stringOf(await this.toHTML())
+                    );
+                    break;
+                case 'js':
+                    continue;
+                case 'json':
+                    file = await Component.loadFile( file );    break;
                 default:
-                    file = (await Component.parseCSS( file )).textContent;
+                    file = JSON.stringify(
+                        (await Component.parseCSS( file )).textContent
+                    );
             }
 
             temp_file.push( temp );
 
-            await outputFile(temp,  `export default ${JSON.stringify( file )}`);
+            await outputFile(temp,  `export default ${file}`);
         }
 
         const source = (new Package( this.entry )).bundle(

@@ -17,7 +17,8 @@ const folder = manifest.directories || '';
 
 Commander
     .command(
-        'pack',  'Bundle components to a package within JS modules (or HTML files)'
+        'pack',
+        'Bundle components to a package with JS modules (or HTML files) in it'
     )
     .on('command:pack',  () => pack(folder.lib, Commander.HTML))
     .command('preview',  'Real-time preview during development')

@@ -19,31 +19,43 @@ window.esdocSearchIndex = [
   ],
   [
     "component source/component.js~component,component",
-    "test-file/test/index.js.html#lineNumber9",
+    "test-file/test/index.js.html#lineNumber22",
     "Core class",
     "test"
   ],
   [
+    "component#tohtml source/component.js~component#tohtml,component#tohtml",
+    "test-file/test/index.js.html#lineNumber87",
+    "Core class Bundle to HTML",
+    "test"
+  ],
+  [
     "component#tojs source/component.js~component#tojs,component#tojs",
-    "test-file/test/index.js.html#lineNumber56",
+    "test-file/test/index.js.html#lineNumber103",
     "Core class Bundle to JS",
     "test"
   ],
   [
+    "component.findstyle component.parsejs source/component.js~component.findstyle,component.findstyle source/component.js~component.parsejs,component.parsejs",
+    "test-file/test/index.js.html#lineNumber70",
+    "Core class Find styles & Parse script",
+    "test"
+  ],
+  [
     "component.loadfile component.parsecss source/component.js~component.loadfile,component.loadfile source/component.js~component.parsecss,component.parsecss",
-    "test-file/test/index.js.html#lineNumber17",
+    "test-file/test/index.js.html#lineNumber30",
     "Core class Parse CSS",
     "test"
   ],
   [
     "component.parsehtml component.stringof source/component.js~component.parsehtml,component.parsehtml source/component.js~component.stringof,component.stringof",
-    "test-file/test/index.js.html#lineNumber40",
+    "test-file/test/index.js.html#lineNumber53",
     "Core class Parse HTML",
     "test"
   ],
   [
     "component.identifierof source/component.js~component.identifierof,component.identifierof",
-    "test-file/test/index.js.html#lineNumber31",
+    "test-file/test/index.js.html#lineNumber44",
     "Core class Tag name to Class name",
     "test"
   ],
@@ -490,6 +502,12 @@ window.esdocSearchIndex = [
     "file/source/index.js.html",
     "source/index.js",
     "file"
+  ],
+  [
+    "test/example-html/index.js",
+    "test-file/test/example-html/index.js.html",
+    "test/example-html/index.js",
+    "testFile"
   ],
   [
     "test/example-js/index.js",

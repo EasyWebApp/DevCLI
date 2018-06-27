@@ -143,11 +143,13 @@ var _module_ = {
 
 
                     /**
-                     * @return {string} HTML version bundle of this component
+                     * @return {DocumentFragment} HTML version bundle of this component
                      */
                     value: function () {
                         var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-                            var fragment, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, sheet, style, script;
+                            var _fragment$querySelect;
+
+                            var fragment, CSS, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, sheet, style, script;
 
                             return regeneratorRuntime.wrap(function _callee$(_context) {
                                 while (1) {
@@ -158,81 +160,95 @@ var _module_ = {
 
                                         case 2:
                                             fragment = _context.sent;
+                                            CSS = [];
                                             _iteratorNormalCompletion = true;
                                             _didIteratorError = false;
                                             _iteratorError = undefined;
-                                            _context.prev = 6;
+                                            _context.prev = 7;
                                             _iterator = Component.findStyle(fragment)[Symbol.iterator]();
 
-                                        case 8:
+                                        case 9:
                                             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                                                _context.next = 17;
+                                                _context.next = 21;
                                                 break;
                                             }
 
                                             sheet = _step.value;
-                                            _context.next = 12;
+                                            _context.next = 13;
                                             return Component.parseCSS(sheet.textContent || (0, _path.join)(this.path, sheet.getAttribute('href')), sheet.type);
 
-                                        case 12:
+                                        case 13:
                                             style = _context.sent;
 
+                                            if (style) {
+                                                _context.next = 16;
+                                                break;
+                                            }
 
-                                            if (style) sheet.replaceWith(style);
+                                            return _context.abrupt('continue', 18);
 
-                                        case 14:
+                                        case 16:
+
+                                            sheet.replaceWith(style);
+
+                                            if (style.parentNode === fragment) CSS.push(style);
+
+                                        case 18:
                                             _iteratorNormalCompletion = true;
-                                            _context.next = 8;
+                                            _context.next = 9;
                                             break;
 
-                                        case 17:
-                                            _context.next = 23;
+                                        case 21:
+                                            _context.next = 27;
                                             break;
-
-                                        case 19:
-                                            _context.prev = 19;
-                                            _context.t0 = _context['catch'](6);
-                                            _didIteratorError = true;
-                                            _iteratorError = _context.t0;
 
                                         case 23:
                                             _context.prev = 23;
-                                            _context.prev = 24;
+                                            _context.t0 = _context['catch'](7);
+                                            _didIteratorError = true;
+                                            _iteratorError = _context.t0;
+
+                                        case 27:
+                                            _context.prev = 27;
+                                            _context.prev = 28;
 
                                             if (!_iteratorNormalCompletion && _iterator.return) {
                                                 _iterator.return();
                                             }
 
-                                        case 26:
-                                            _context.prev = 26;
+                                        case 30:
+                                            _context.prev = 30;
 
                                             if (!_didIteratorError) {
-                                                _context.next = 29;
+                                                _context.next = 33;
                                                 break;
                                             }
 
                                             throw _iteratorError;
 
-                                        case 29:
-                                            return _context.finish(26);
+                                        case 33:
+                                            return _context.finish(30);
 
-                                        case 30:
-                                            return _context.finish(23);
+                                        case 34:
+                                            return _context.finish(27);
 
-                                        case 31:
+                                        case 35:
+
+                                            (_fragment$querySelect = fragment.querySelector('template').content).prepend.apply(_fragment$querySelect, CSS);
+
                                             script = fragment.querySelector('script');
 
 
                                             if (script) script.replaceWith(Component.parseJS((0, _path.join)(this.path, script.getAttribute('src'))));
 
-                                            return _context.abrupt('return', Component.stringOf(fragment));
+                                            return _context.abrupt('return', fragment);
 
-                                        case 34:
+                                        case 39:
                                         case 'end':
                                             return _context.stop();
                                     }
                                 }
-                            }, _callee, this, [[6, 19, 23, 31], [24,, 26, 30]]);
+                            }, _callee, this, [[7, 23, 27, 35], [28,, 30, 34]]);
                         }));
 
                         function toHTML() {
@@ -270,7 +286,7 @@ var _module_ = {
 
                                         case 9:
                                             if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-                                                _context2.next = 32;
+                                                _context2.next = 42;
                                                 break;
                                             }
 
@@ -284,94 +300,108 @@ var _module_ = {
                                                 break;
                                             }
 
-                                            return _context2.abrupt('continue', 29);
+                                            return _context2.abrupt('continue', 39);
 
                                         case 14:
                                             type = file.split('.').slice(-1)[0], temp = file + '.js';
                                             _context2.t1 = type;
-                                            _context2.next = _context2.t1 === 'html' ? 18 : _context2.t1 === 'js' ? 22 : 23;
+                                            _context2.next = _context2.t1 === 'html' ? 18 : _context2.t1 === 'js' ? 26 : _context2.t1 === 'json' ? 27 : 31;
                                             break;
 
                                         case 18:
-                                            _context2.next = 20;
+                                            _context2.t2 = JSON;
+                                            _context2.t3 = Component;
+                                            _context2.next = 22;
                                             return this.toHTML();
 
-                                        case 20:
-                                            file = _context2.sent;
-                                            return _context2.abrupt('break', 26);
-
                                         case 22:
-                                            return _context2.abrupt('continue', 29);
-
-                                        case 23:
-                                            _context2.next = 25;
-                                            return Component.parseCSS(file);
-
-                                        case 25:
-                                            file = _context2.sent.textContent;
+                                            _context2.t4 = _context2.sent;
+                                            _context2.t5 = _context2.t3.stringOf.call(_context2.t3, _context2.t4);
+                                            file = _context2.t2.stringify.call(_context2.t2, _context2.t5);
+                                            return _context2.abrupt('break', 36);
 
                                         case 26:
+                                            return _context2.abrupt('continue', 39);
+
+                                        case 27:
+                                            _context2.next = 29;
+                                            return Component.loadFile(file);
+
+                                        case 29:
+                                            file = _context2.sent;
+                                            return _context2.abrupt('break', 36);
+
+                                        case 31:
+                                            _context2.t6 = JSON;
+                                            _context2.next = 34;
+                                            return Component.parseCSS(file);
+
+                                        case 34:
+                                            _context2.t7 = _context2.sent.textContent;
+                                            file = _context2.t6.stringify.call(_context2.t6, _context2.t7);
+
+                                        case 36:
 
                                             temp_file.push(temp);
 
-                                            _context2.next = 29;
-                                            return (0, _fsExtra.outputFile)(temp, 'export default ' + JSON.stringify(file));
+                                            _context2.next = 39;
+                                            return (0, _fsExtra.outputFile)(temp, 'export default ' + file);
 
-                                        case 29:
+                                        case 39:
                                             _iteratorNormalCompletion2 = true;
                                             _context2.next = 9;
                                             break;
 
-                                        case 32:
-                                            _context2.next = 38;
+                                        case 42:
+                                            _context2.next = 48;
                                             break;
 
-                                        case 34:
-                                            _context2.prev = 34;
-                                            _context2.t2 = _context2['catch'](4);
+                                        case 44:
+                                            _context2.prev = 44;
+                                            _context2.t8 = _context2['catch'](4);
                                             _didIteratorError2 = true;
-                                            _iteratorError2 = _context2.t2;
+                                            _iteratorError2 = _context2.t8;
 
-                                        case 38:
-                                            _context2.prev = 38;
-                                            _context2.prev = 39;
+                                        case 48:
+                                            _context2.prev = 48;
+                                            _context2.prev = 49;
 
                                             if (!_iteratorNormalCompletion2 && _iterator2.return) {
                                                 _iterator2.return();
                                             }
 
-                                        case 41:
-                                            _context2.prev = 41;
+                                        case 51:
+                                            _context2.prev = 51;
 
                                             if (!_didIteratorError2) {
-                                                _context2.next = 44;
+                                                _context2.next = 54;
                                                 break;
                                             }
 
                                             throw _iteratorError2;
 
-                                        case 44:
-                                            return _context2.finish(41);
+                                        case 54:
+                                            return _context2.finish(51);
 
-                                        case 45:
-                                            return _context2.finish(38);
+                                        case 55:
+                                            return _context2.finish(48);
 
-                                        case 46:
+                                        case 56:
                                             source = new _amdBundle2.default(this.entry).bundle(Component.identifierOf(this.name));
-                                            _context2.next = 49;
+                                            _context2.next = 59;
                                             return Promise.all(temp_file.map(function (file) {
                                                 return (0, _fsExtra.remove)(file);
                                             }));
 
-                                        case 49:
+                                        case 59:
                                             return _context2.abrupt('return', source);
 
-                                        case 50:
+                                        case 60:
                                         case 'end':
                                             return _context2.stop();
                                     }
                                 }
-                            }, _callee2, this, [[4, 34, 38, 46], [39,, 41, 45]]);
+                            }, _callee2, this, [[4, 44, 48, 56], [49,, 51, 55]]);
                         }));
 
                         function toJS() {
@@ -880,7 +910,7 @@ var _module_ = {
 
             var folder = manifest.directories || '';
 
-            _commander2.default.command('pack', 'Bundle components to a package within JS modules (or HTML files)').on('command:pack', function () {
+            _commander2.default.command('pack', 'Bundle components to a package with JS modules (or HTML files) in it').on('command:pack', function () {
                 return (0, _command.pack)(folder.lib, _commander2.default.HTML);
             }).command('preview', 'Real-time preview during development').on('command:preview', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
                 var command;

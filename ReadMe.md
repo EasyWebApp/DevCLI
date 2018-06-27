@@ -31,7 +31,7 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
   Commands:
 
-    pack        Bundle components to a package within JS modules (or HTML files)
+    pack        Bundle components to a package with JS modules (or HTML files) in it
     preview     Real-time preview during development
     help [cmd]  display help for [cmd]
 

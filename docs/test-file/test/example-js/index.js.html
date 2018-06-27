@@ -39,16 +39,18 @@
 <div class="content" data-ice="content"><h1 data-ice="title">test/example-js/index.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {component} from &apos;web-cell&apos;;
 
-import HTML from &apos;./index.html&apos;;
+import template from &apos;./index.html&apos;;
 
-import CSS from &apos;./index.css&apos;;
+import style from &apos;./index.css&apos;;
+
+import data from &apos;./index.json&apos;;
 
 
 export default  component(class ExampleJs extends HTMLElement {
 
-    constructor() {  super().buildDOM(HTML, CSS);  }
+    constructor() {  super().buildDOM(template, style);  }
 
-    static get data() {  return  {name: &apos;Web components&apos;};  }
+    static get data() {  return data;  }
 
     get value() {  return this.$(&apos;textarea&apos;)[0].value;  }
 

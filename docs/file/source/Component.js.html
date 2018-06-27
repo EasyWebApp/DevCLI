@@ -185,11 +185,12 @@ export default  class Component {
     }
 
     /**
-     * @return {string} HTML version bundle of this component
+     * @return {DocumentFragment} HTML version bundle of this component
      */
     async toHTML() {
 
-        const fragment = await Component.parseHTML(this.entry + &apos;.html&apos;);
+        const fragment = await Component.parseHTML(this.entry + &apos;.html&apos;),
+            CSS = [ ];
 
         for (let sheet  of  Component.findStyle( fragment )) {
 
@@ -198,8 +199,14 @@ export default  class Component {
                 sheet.type
             );
 
-            if ( style )  sheet.replaceWith( style );
+            if (! style)  continue;
+
+            sheet.replaceWith( style );
+
+            if (style.parentNode === fragment)  CSS.push( style );
         }
+
+        fragment.querySelector(&apos;template&apos;).content.prepend(... CSS);
 
         const script = fragment.querySelector(&apos;script&apos;);
 
@@ -208,7 +215,7 @@ export default  class Component {
                 Component.parseJS( join(this.path, script.getAttribute(&apos;src&apos;)) )
             );
 
-        return  Component.stringOf( fragment );
+        return fragment;
     }
 
     /**
@@ -227,15 +234,24 @@ export default  class Component {
             let type = file.split(&apos;.&apos;).slice(-1)[0], temp = `${file}.js`;
 
             switch ( type ) {
-                case &apos;html&apos;:    file = await this.toHTML();    break;
-                case &apos;js&apos;:      continue;
+                case &apos;html&apos;:
+                    file = JSON.stringify(
+                        Component.stringOf(await this.toHTML())
+                    );
+                    break;
+                case &apos;js&apos;:
+                    continue;
+                case &apos;json&apos;:
+                    file = await Component.loadFile( file );    break;
                 default:
-                    file = (await Component.parseCSS( file )).textContent;
+                    file = JSON.stringify(
+                        (await Component.parseCSS( file )).textContent
+                    );
             }
 
             temp_file.push( temp );
 
-            await outputFile(temp,  `export default ${JSON.stringify( file )}`);
+            await outputFile(temp,  `export default ${file}`);
         }
 
         const source = (new Package( this.entry )).bundle(

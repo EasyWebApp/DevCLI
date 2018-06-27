@@ -41,6 +41,19 @@
 
 import Should from &apos;should&apos;;
 
+import {join} from &apos;path&apos;;
+
+
+function SyntaxRight(code) {
+    try {
+        Should.doesNotThrow(() =&gt; eval( code ),  SyntaxError);
+
+    } catch (error) {
+
+        console.warn(`Expected error: ${error.message}`);
+    }
+}
+
 
 /**
  * @test {Component}
@@ -90,6 +103,40 @@ describe(&apos;Core class&apos;,  () =&gt; {
     });
 
     /**
+     * @test {Component.findStyle}
+     * @test {Component.parseJS}
+     */
+    it(&apos;Find styles &amp; Parse script&apos;,  async () =&gt; {
+
+        const fragment = await Component.parseHTML(&apos;test/example-html/index.html&apos;);
+
+        Component.findStyle( fragment ).map(element =&gt; element.tagName)
+            .should.be.eql([&apos;LINK&apos;, &apos;STYLE&apos;]);
+
+        SyntaxRight(
+            Component.parseJS(join(
+                &apos;test/example-html/&apos;, fragment.lastElementChild.getAttribute(&apos;src&apos;)
+            )).text
+        );
+    });
+
+    /**
+     * @test {Component#toHTML}
+     */
+    it(&apos;Bundle to HTML&apos;,  async () =&gt; {
+
+        const fragment = await (new Component(&apos;test/example-html&apos;)).toHTML(),
+            tagName = element =&gt; element.tagName;
+
+        Array.from(fragment.children, tagName).should.be.eql(
+            [&apos;TEMPLATE&apos;, &apos;SCRIPT&apos;]
+        );
+
+        Array.from(fragment.firstElementChild.content.children, tagName)
+            .should.be.eql([&apos;STYLE&apos;, &apos;STYLE&apos;, &apos;TEXTAREA&apos;]);
+    });
+
+    /**
      * @test {Component#toJS}
      */
     it(&apos;Bundle to JS&apos;,  async () =&gt; {
@@ -102,13 +149,9 @@ describe(&apos;Core class&apos;,  () =&gt; {
 
         component.includes( JSON.stringify( HTML ) ).should.be.true();
 
-        try {
-            Should.doesNotThrow(() =&gt; eval( component ),  SyntaxError);
+        component.includes(&apos;&quot;name&quot;: &quot;Web components&quot;&apos;).should.be.true();
 
-        } catch(error) {
-
-            console.warn(`Expected error: ${error.message}`);
-        }
+        SyntaxRight( component );
     });
 });
 </code></pre>
