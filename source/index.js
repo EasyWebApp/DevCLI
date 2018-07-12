@@ -1,5 +1,3 @@
-import 'babel-polyfill';
-
 import {readFileSync} from 'fs';
 
 import {pack} from './command';

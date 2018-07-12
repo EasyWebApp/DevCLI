@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","promisify-node","babel-polyfill","fs","commander","puppeteer-browser"], factory);
+        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","promisify-node","fs","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory(require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('sass'),require('less'),require('stylus'),require('promisify-node'),require('babel-polyfill'),require('fs'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory(require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('sass'),require('less'),require('stylus'),require('promisify-node'),require('fs'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['promisify-node'],this['babel-polyfill'],this['fs'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['promisify-node'],this['fs'],this['commander'],this['puppeteer-browser']);
 
-})(function (fs_extra,path,jsdom,amd_bundle,sass,less,stylus,promisify_node,babel_polyfill,fs,commander,puppeteer_browser) {
+})(function (fs_extra,path,jsdom,amd_bundle,sass,less,stylus,promisify_node,fs,commander,puppeteer_browser) {
 
 function merge(base, path) {
 
@@ -22,12 +22,17 @@ function merge(base, path) {
     });
 }
 
+function outPackage(name) {
+    return (/^[^./]/.test(name)
+    );
+}
+
     var require = _require_.bind(null, './');
 
     function _require_(base, path) {
 
         var module = _module_[
-                /^\w/.test( path )  ?  path  :  ('./' + merge(base, path))
+                outPackage( path )  ?  path  :  ('./' + merge(base, path))
             ],
             exports;
 
@@ -888,8 +893,6 @@ var _module_ = {
         factory: function factory(require, exports, module) {
             var _this = this;
 
-            require('babel-polyfill');
-
             var _fs = require('fs');
 
             var _command = require('./command');
@@ -946,7 +949,6 @@ var _module_ = {
     'less': { exports: less },
     'stylus': { exports: stylus },
     'promisify-node': { exports: promisify_node },
-    'babel-polyfill': { exports: babel_polyfill },
     'fs': { exports: fs },
     'commander': { exports: commander },
     'puppeteer-browser': { exports: puppeteer_browser }
