@@ -6,20 +6,18 @@ import { JSDOM } from 'jsdom';
 
 import Package from 'amd-bundle';
 
+import LESS from 'less';
+
 import * as SASS from 'sass';
 
-import * as LESS from 'less';
+import { parseStylus } from './utility';
 
-import Stylus from 'stylus';
-
-import promisify from 'promisify-node';
-
-const renderSASS = promisify( SASS.render ),
-    renderStylus = promisify( Stylus.render ),
-    document = (new JSDOM()).window.document;
+const document = (new JSDOM()).window.document;
 
 
-
+/**
+ * Component packer
+ */
 export default  class Component {
     /**
      * @param {string} path - Component directory
@@ -34,53 +32,47 @@ export default  class Component {
     }
 
     /**
-     * @param {string} path - File path
+     * @param {string} path
      *
-     * @return {string} File content
+     * @return {DocumentFragment}
      */
-    static async loadFile(path) {
-
-        return  path.includes('\n')  ?  path  :  ((await readFile( path )) + '');
-    }
-
     static async parseHTML(path) {
 
-        return  JSDOM.fragment(await Component.loadFile( path ));
-    }
-
-    static async parseSASS(path) {
-
-        return  renderSASS({data:  await Component.loadFile( path )});
-    }
-
-    static async parseLESS(path) {
-
-        return  await LESS.render(await Component.loadFile( path ));
-    }
-
-    static async parseStylus(path) {
-
-        return  await renderStylus(await Component.loadFile( path ));
+        return  JSDOM.fragment((await readFile( path )) + '');
     }
 
     /**
-     * @param {string} source - File path or Style source code
-     * @param {string} [type] - MIME type
+     * @param {string}  source - File path or Style source code
+     * @param {?string} type   - MIME type
+     * @param {string}  [base] - Path of the file which `@import` located in
      *
      * @return {?Element} Style element
      */
-    static async parseCSS(source, type) {
+    static async parseCSS(source, type, base) {
 
         var style;
 
         type = type  ?  type.split('/')[1]  :  extname( source ).slice(1);
 
+        if (! source.includes('\n'))
+            source = await readFile(base = source) + '';
+
+        const paths = [dirname( base )];
+
         switch ( type ) {
-            case 'css':       style = await Component.loadFile( source );   break;
+            case 'css':       style = source;  break;
             case 'sass':
-            case 'scss':      style = await Component.parseSASS( source );  break;
-            case 'less':      style = await Component.parseLESS( source );  break;
-            case 'stylus':    style = await Component.parseStylus( source );
+            case 'scss':
+                style = SASS.renderSync({
+                    data:          source,
+                    includePaths:  paths
+                }).css;
+                break;
+            case 'less':
+                style = (await LESS.render(source,  { paths })).css;
+                break;
+            case 'stylus':
+                style = await parseStylus(source,  { paths });
         }
 
         return  style && Object.assign(
@@ -157,7 +149,8 @@ export default  class Component {
 
             let style = await Component.parseCSS(
                 sheet.textContent  ||  join(this.path, sheet.getAttribute('href')),
-                sheet.type
+                sheet.type,
+                this.entry + '.css'
             );
 
             if (! style)  continue;
@@ -203,7 +196,7 @@ export default  class Component {
                 case 'js':
                     continue;
                 case 'json':
-                    file = await Component.loadFile( file );    break;
+                    file = (await readFile( file )) + '';    break;
                 default:
                     file = JSON.stringify(
                         (await Component.parseCSS( file )).textContent

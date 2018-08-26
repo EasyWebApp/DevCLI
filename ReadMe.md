@@ -8,13 +8,23 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 
 
+## Feature
+
+ 1. Bundle components to a package with **JS modules** (or HTML files) in it
+
+ 2. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** as an `Object` in ES module
+
+ 3. **Real-time preview** during development in Chrome, Firefox or IE
+
+
+
 ## Usage
 
  1. `npm install web-cell-cli -D`
 
- 1. refer [BootCell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6)
+ 2. refer [BootCell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/BootCell/blob/master/package.json#L6)
 
- 3. refer [BootCell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L13)
+ 3. refer [BootCell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/BootCell/blob/master/package.json#L13)
 
  4. `npm run your_script`
 

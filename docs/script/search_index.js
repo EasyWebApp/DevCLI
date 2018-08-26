@@ -12,50 +12,80 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell-cli/source/utility.js~getnpmconfig",
+    "function/index.html#static-function-getNPMConfig",
+    "<span>getNPMConfig</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "function"
+  ],
+  [
     "web-cell-cli/source/command.js~pack",
     "function/index.html#static-function-pack",
     "<span>pack</span> <span class=\"search-result-import-path\">web-cell-cli/source/command.js</span>",
     "function"
   ],
   [
+    "web-cell-cli/source/utility.js~parsestylus",
+    "function/index.html#static-function-parseStylus",
+    "<span>parseStylus</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "function"
+  ],
+  [
+    "web-cell-cli/source/utility.js~setnpmconfig",
+    "function/index.html#static-function-setNPMConfig",
+    "<span>setNPMConfig</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "function"
+  ],
+  [
     "component source/component.js~component,component",
-    "test-file/test/index.js.html#lineNumber22",
+    "test-file/test/index.js.html#lineNumber24",
     "Core class",
     "test"
   ],
   [
     "component#tohtml source/component.js~component#tohtml,component#tohtml",
-    "test-file/test/index.js.html#lineNumber87",
+    "test-file/test/index.js.html#lineNumber114",
     "Core class Bundle to HTML",
     "test"
   ],
   [
     "component#tojs source/component.js~component#tojs,component#tojs",
-    "test-file/test/index.js.html#lineNumber103",
+    "test-file/test/index.js.html#lineNumber130",
     "Core class Bundle to JS",
     "test"
   ],
   [
-    "component.findstyle component.parsejs source/component.js~component.findstyle,component.findstyle source/component.js~component.parsejs,component.parsejs",
-    "test-file/test/index.js.html#lineNumber70",
-    "Core class Find styles & Parse script",
+    "component.parsecss source/component.js~component.parsecss,component.parsecss",
+    "test-file/test/index.js.html#lineNumber31",
+    "Core class Parse CSS files",
     "test"
   ],
   [
-    "component.loadfile component.parsecss source/component.js~component.loadfile,component.loadfile source/component.js~component.parsecss,component.parsecss",
-    "test-file/test/index.js.html#lineNumber30",
-    "Core class Parse CSS",
+    "",
+    "test-file/test/index.js.html#lineNumber67",
+    "Core class Parse mixed HTML",
+    "test"
+  ],
+  [
+    "component.findstyle component.parsecss source/component.js~component.findstyle,component.findstyle source/component.js~component.parsecss,component.parsecss",
+    "test-file/test/index.js.html#lineNumber77",
+    "Core class Parse mixed HTML Find & Parse styles",
+    "test"
+  ],
+  [
+    "component.parsejs source/component.js~component.parsejs,component.parsejs",
+    "test-file/test/index.js.html#lineNumber101",
+    "Core class Parse mixed HTML Parse script",
     "test"
   ],
   [
     "component.parsehtml component.stringof source/component.js~component.parsehtml,component.parsehtml source/component.js~component.stringof,component.stringof",
-    "test-file/test/index.js.html#lineNumber53",
-    "Core class Parse HTML",
+    "test-file/test/index.js.html#lineNumber54",
+    "Core class Parse pure HTML",
     "test"
   ],
   [
     "component.identifierof source/component.js~component.identifierof,component.identifierof",
-    "test-file/test/index.js.html#lineNumber44",
+    "test-file/test/index.js.html#lineNumber45",
     "Core class Tag name to Class name",
     "test"
   ],
@@ -444,12 +474,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/component.js~component.loadfile",
-    "class/source/Component.js~Component.html#static-method-loadFile",
-    "source/Component.js~Component.loadFile",
-    "method"
-  ],
-  [
     "source/component.js~component.parsecss",
     "class/source/Component.js~Component.html#static-method-parseCSS",
     "source/Component.js~Component.parseCSS",
@@ -468,24 +492,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/component.js~component.parseless",
-    "class/source/Component.js~Component.html#static-method-parseLESS",
-    "source/Component.js~Component.parseLESS",
-    "method"
-  ],
-  [
-    "source/component.js~component.parsesass",
-    "class/source/Component.js~Component.html#static-method-parseSASS",
-    "source/Component.js~Component.parseSASS",
-    "method"
-  ],
-  [
-    "source/component.js~component.parsestylus",
-    "class/source/Component.js~Component.html#static-method-parseStylus",
-    "source/Component.js~Component.parseStylus",
-    "method"
-  ],
-  [
     "source/component.js~component.stringof",
     "class/source/Component.js~Component.html#static-method-stringOf",
     "source/Component.js~Component.stringOf",
@@ -501,6 +507,18 @@ window.esdocSearchIndex = [
     "source/index.js",
     "file/source/index.js.html",
     "source/index.js",
+    "file"
+  ],
+  [
+    "source/install.js",
+    "file/source/install.js.html",
+    "source/install.js",
+    "file"
+  ],
+  [
+    "source/utility.js",
+    "file/source/utility.js.html",
+    "source/utility.js",
     "file"
   ],
   [

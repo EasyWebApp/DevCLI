@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","sass","less","stylus","promisify-node","fs","commander","puppeteer-browser"], factory);
+        define('web-cell', ["child_process","stylus","fs-extra","path","jsdom","amd-bundle","less","sass","fs","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory(require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('sass'),require('less'),require('stylus'),require('promisify-node'),require('fs'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory(require('child_process'),require('stylus'),require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('less'),require('sass'),require('fs'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory(this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['sass'],this['less'],this['stylus'],this['promisify-node'],this['fs'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory(this['child_process'],this['stylus'],this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['less'],this['sass'],this['fs'],this['commander'],this['puppeteer-browser']);
 
-})(function (fs_extra,path,jsdom,amd_bundle,sass,less,stylus,promisify_node,fs,commander,puppeteer_browser) {
+})(function (child_process,stylus,fs_extra,path,jsdom,amd_bundle,less,sass,fs,commander,puppeteer_browser) {
 
 function merge(base, path) {
 
@@ -68,6 +68,72 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _module_ = {
+    './utility': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, "__esModule", {
+                value: true
+            });
+            exports.getNPMConfig = getNPMConfig;
+            exports.setNPMConfig = setNPMConfig;
+            exports.parseStylus = parseStylus;
+
+            var _child_process = require('child_process');
+
+            var _stylus = require('stylus');
+
+            var _stylus2 = _interopRequireDefault(_stylus);
+
+            function _interopRequireDefault(obj) {
+                return obj && obj.__esModule ? obj : { default: obj };
+            }
+
+            /**
+             * @param {string} key
+             *
+             * @return {?*}
+             */
+            function getNPMConfig(key) {
+
+                var value = ((0, _child_process.execSync)('npm get ' + key) + '').trim();
+
+                if (value !== 'undefined') try {
+                    return JSON.parse(value);
+                } catch (error) {
+                    return value;
+                }
+            }
+
+            /**
+             * @param {string} key
+             * @param {*}      value
+             */
+            function setNPMConfig(key, value) {
+
+                (0, _child_process.execSync)('npm set ' + key + ' ' + value);
+
+                console.info(key + ' = ' + value);
+            }
+
+            /**
+             * @param {string} source
+             * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
+             *
+             * @return {Promise<string>} CSS source code
+             */
+            function parseStylus(source) {
+                var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+
+                return new Promise(function (resolve, reject) {
+                    return _stylus2.default.render(source, option, function (error, CSS) {
+                        return error ? reject(error) : resolve(CSS);
+                    });
+                });
+            }
+        }
+    },
     './Component': {
         base: '.',
         dependency: [],
@@ -86,21 +152,15 @@ var _module_ = {
 
             var _amdBundle2 = _interopRequireDefault(_amdBundle);
 
+            var _less = require('less');
+
+            var _less2 = _interopRequireDefault(_less);
+
             var _sass = require('sass');
 
             var SASS = _interopRequireWildcard(_sass);
 
-            var _less = require('less');
-
-            var LESS = _interopRequireWildcard(_less);
-
-            var _stylus = require('stylus');
-
-            var _stylus2 = _interopRequireDefault(_stylus);
-
-            var _promisifyNode = require('promisify-node');
-
-            var _promisifyNode2 = _interopRequireDefault(_promisifyNode);
+            var _utility = require('./utility');
 
             function _interopRequireWildcard(obj) {
                 if (obj && obj.__esModule) {
@@ -118,9 +178,11 @@ var _module_ = {
                 return obj && obj.__esModule ? obj : { default: obj };
             }
 
-            var renderSASS = (0, _promisifyNode2.default)(SASS.render),
-                renderStylus = (0, _promisifyNode2.default)(_stylus2.default.render),
-                document = new _jsdom.JSDOM().window.document;
+            var document = new _jsdom.JSDOM().window.document;
+
+            /**
+             * Component packer
+             */
 
             var Component = function () {
                 /**
@@ -137,9 +199,9 @@ var _module_ = {
                 }
 
                 /**
-                 * @param {string} path - File path
+                 * @param {string} path
                  *
-                 * @return {string} File content
+                 * @return {DocumentFragment}
                  */
 
 
@@ -180,7 +242,7 @@ var _module_ = {
 
                                             sheet = _step.value;
                                             _context.next = 13;
-                                            return Component.parseCSS(sheet.textContent || (0, _path.join)(this.path, sheet.getAttribute('href')), sheet.type);
+                                            return Component.parseCSS(sheet.textContent || (0, _path.join)(this.path, sheet.getAttribute('href')), sheet.type, this.entry + '.css');
 
                                         case 13:
                                             style = _context.sent;
@@ -291,7 +353,7 @@ var _module_ = {
 
                                         case 9:
                                             if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-                                                _context2.next = 42;
+                                                _context2.next = 43;
                                                 break;
                                             }
 
@@ -305,12 +367,12 @@ var _module_ = {
                                                 break;
                                             }
 
-                                            return _context2.abrupt('continue', 39);
+                                            return _context2.abrupt('continue', 40);
 
                                         case 14:
                                             type = file.split('.').slice(-1)[0], temp = file + '.js';
                                             _context2.t1 = type;
-                                            _context2.next = _context2.t1 === 'html' ? 18 : _context2.t1 === 'js' ? 26 : _context2.t1 === 'json' ? 27 : 31;
+                                            _context2.next = _context2.t1 === 'html' ? 18 : _context2.t1 === 'js' ? 26 : _context2.t1 === 'json' ? 27 : 32;
                                             break;
 
                                         case 18:
@@ -323,90 +385,91 @@ var _module_ = {
                                             _context2.t4 = _context2.sent;
                                             _context2.t5 = _context2.t3.stringOf.call(_context2.t3, _context2.t4);
                                             file = _context2.t2.stringify.call(_context2.t2, _context2.t5);
-                                            return _context2.abrupt('break', 36);
+                                            return _context2.abrupt('break', 37);
 
                                         case 26:
-                                            return _context2.abrupt('continue', 39);
+                                            return _context2.abrupt('continue', 40);
 
                                         case 27:
                                             _context2.next = 29;
-                                            return Component.loadFile(file);
+                                            return (0, _fsExtra.readFile)(file);
 
                                         case 29:
-                                            file = _context2.sent;
-                                            return _context2.abrupt('break', 36);
+                                            _context2.t6 = _context2.sent;
+                                            file = _context2.t6 + '';
+                                            return _context2.abrupt('break', 37);
 
-                                        case 31:
-                                            _context2.t6 = JSON;
-                                            _context2.next = 34;
+                                        case 32:
+                                            _context2.t7 = JSON;
+                                            _context2.next = 35;
                                             return Component.parseCSS(file);
 
-                                        case 34:
-                                            _context2.t7 = _context2.sent.textContent;
-                                            file = _context2.t6.stringify.call(_context2.t6, _context2.t7);
+                                        case 35:
+                                            _context2.t8 = _context2.sent.textContent;
+                                            file = _context2.t7.stringify.call(_context2.t7, _context2.t8);
 
-                                        case 36:
+                                        case 37:
 
                                             temp_file.push(temp);
 
-                                            _context2.next = 39;
+                                            _context2.next = 40;
                                             return (0, _fsExtra.outputFile)(temp, 'export default ' + file);
 
-                                        case 39:
+                                        case 40:
                                             _iteratorNormalCompletion2 = true;
                                             _context2.next = 9;
                                             break;
 
-                                        case 42:
-                                            _context2.next = 48;
+                                        case 43:
+                                            _context2.next = 49;
                                             break;
 
-                                        case 44:
-                                            _context2.prev = 44;
-                                            _context2.t8 = _context2['catch'](4);
+                                        case 45:
+                                            _context2.prev = 45;
+                                            _context2.t9 = _context2['catch'](4);
                                             _didIteratorError2 = true;
-                                            _iteratorError2 = _context2.t8;
+                                            _iteratorError2 = _context2.t9;
 
-                                        case 48:
-                                            _context2.prev = 48;
+                                        case 49:
                                             _context2.prev = 49;
+                                            _context2.prev = 50;
 
                                             if (!_iteratorNormalCompletion2 && _iterator2.return) {
                                                 _iterator2.return();
                                             }
 
-                                        case 51:
-                                            _context2.prev = 51;
+                                        case 52:
+                                            _context2.prev = 52;
 
                                             if (!_didIteratorError2) {
-                                                _context2.next = 54;
+                                                _context2.next = 55;
                                                 break;
                                             }
 
                                             throw _iteratorError2;
 
-                                        case 54:
-                                            return _context2.finish(51);
-
                                         case 55:
-                                            return _context2.finish(48);
+                                            return _context2.finish(52);
 
                                         case 56:
+                                            return _context2.finish(49);
+
+                                        case 57:
                                             source = new _amdBundle2.default(this.entry).bundle(Component.identifierOf(this.name));
-                                            _context2.next = 59;
+                                            _context2.next = 60;
                                             return Promise.all(temp_file.map(function (file) {
                                                 return (0, _fsExtra.remove)(file);
                                             }));
 
-                                        case 59:
+                                        case 60:
                                             return _context2.abrupt('return', source);
 
-                                        case 60:
+                                        case 61:
                                         case 'end':
                                             return _context2.stop();
                                     }
                                 }
-                            }, _callee2, this, [[4, 44, 48, 56], [49,, 51, 55]]);
+                            }, _callee2, this, [[4, 45, 49, 57], [50,, 52, 56]]);
                         }));
 
                         function toJS() {
@@ -416,34 +479,23 @@ var _module_ = {
                         return toJS;
                     }()
                 }], [{
-                    key: 'loadFile',
+                    key: 'parseHTML',
                     value: function () {
                         var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(path) {
                             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                                 while (1) {
                                     switch (_context3.prev = _context3.next) {
                                         case 0:
-                                            if (!path.includes('\n')) {
-                                                _context3.next = 4;
-                                                break;
-                                            }
-
-                                            _context3.t0 = path;
-                                            _context3.next = 8;
-                                            break;
-
-                                        case 4:
-                                            _context3.next = 6;
+                                            _context3.t0 = _jsdom.JSDOM;
+                                            _context3.next = 3;
                                             return (0, _fsExtra.readFile)(path);
 
-                                        case 6:
+                                        case 3:
                                             _context3.t1 = _context3.sent;
-                                            _context3.t0 = _context3.t1 + '';
+                                            _context3.t2 = _context3.t1 + '';
+                                            return _context3.abrupt('return', _context3.t0.fragment.call(_context3.t0, _context3.t2));
 
-                                        case 8:
-                                            return _context3.abrupt('return', _context3.t0);
-
-                                        case 9:
+                                        case 6:
                                         case 'end':
                                             return _context3.stop();
                                     }
@@ -451,147 +503,17 @@ var _module_ = {
                             }, _callee3, this);
                         }));
 
-                        function loadFile(_x) {
-                            return _ref3.apply(this, arguments);
-                        }
-
-                        return loadFile;
-                    }()
-                }, {
-                    key: 'parseHTML',
-                    value: function () {
-                        var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(path) {
-                            return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                                while (1) {
-                                    switch (_context4.prev = _context4.next) {
-                                        case 0:
-                                            _context4.t0 = _jsdom.JSDOM;
-                                            _context4.next = 3;
-                                            return Component.loadFile(path);
-
-                                        case 3:
-                                            _context4.t1 = _context4.sent;
-                                            return _context4.abrupt('return', _context4.t0.fragment.call(_context4.t0, _context4.t1));
-
-                                        case 5:
-                                        case 'end':
-                                            return _context4.stop();
-                                    }
-                                }
-                            }, _callee4, this);
-                        }));
-
                         function parseHTML(_x2) {
-                            return _ref4.apply(this, arguments);
+                            return _ref3.apply(this, arguments);
                         }
 
                         return parseHTML;
                     }()
-                }, {
-                    key: 'parseSASS',
-                    value: function () {
-                        var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(path) {
-                            return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                                while (1) {
-                                    switch (_context5.prev = _context5.next) {
-                                        case 0:
-                                            _context5.t0 = renderSASS;
-                                            _context5.next = 3;
-                                            return Component.loadFile(path);
-
-                                        case 3:
-                                            _context5.t1 = _context5.sent;
-                                            _context5.t2 = {
-                                                data: _context5.t1
-                                            };
-                                            return _context5.abrupt('return', (0, _context5.t0)(_context5.t2));
-
-                                        case 6:
-                                        case 'end':
-                                            return _context5.stop();
-                                    }
-                                }
-                            }, _callee5, this);
-                        }));
-
-                        function parseSASS(_x3) {
-                            return _ref5.apply(this, arguments);
-                        }
-
-                        return parseSASS;
-                    }()
-                }, {
-                    key: 'parseLESS',
-                    value: function () {
-                        var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(path) {
-                            return regeneratorRuntime.wrap(function _callee6$(_context6) {
-                                while (1) {
-                                    switch (_context6.prev = _context6.next) {
-                                        case 0:
-                                            _context6.t0 = LESS;
-                                            _context6.next = 3;
-                                            return Component.loadFile(path);
-
-                                        case 3:
-                                            _context6.t1 = _context6.sent;
-                                            _context6.next = 6;
-                                            return _context6.t0.render.call(_context6.t0, _context6.t1);
-
-                                        case 6:
-                                            return _context6.abrupt('return', _context6.sent);
-
-                                        case 7:
-                                        case 'end':
-                                            return _context6.stop();
-                                    }
-                                }
-                            }, _callee6, this);
-                        }));
-
-                        function parseLESS(_x4) {
-                            return _ref6.apply(this, arguments);
-                        }
-
-                        return parseLESS;
-                    }()
-                }, {
-                    key: 'parseStylus',
-                    value: function () {
-                        var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(path) {
-                            return regeneratorRuntime.wrap(function _callee7$(_context7) {
-                                while (1) {
-                                    switch (_context7.prev = _context7.next) {
-                                        case 0:
-                                            _context7.t0 = renderStylus;
-                                            _context7.next = 3;
-                                            return Component.loadFile(path);
-
-                                        case 3:
-                                            _context7.t1 = _context7.sent;
-                                            _context7.next = 6;
-                                            return (0, _context7.t0)(_context7.t1);
-
-                                        case 6:
-                                            return _context7.abrupt('return', _context7.sent);
-
-                                        case 7:
-                                        case 'end':
-                                            return _context7.stop();
-                                    }
-                                }
-                            }, _callee7, this);
-                        }));
-
-                        function parseStylus(_x5) {
-                            return _ref7.apply(this, arguments);
-                        }
-
-                        return parseStylus;
-                    }()
 
                     /**
-                     * @param {string} source - File path or Style source code
-                     * @param {string} [type] - MIME type
+                     * @param {string}  source - File path or Style source code
+                     * @param {?string} type   - MIME type
+                     * @param {string}  [base] - Path of the file which `@import` located in
                      *
                      * @return {?Element} Style element
                      */
@@ -599,63 +521,71 @@ var _module_ = {
                 }, {
                     key: 'parseCSS',
                     value: function () {
-                        var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(source, type) {
-                            var style;
-                            return regeneratorRuntime.wrap(function _callee8$(_context8) {
+                        var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(source, type, base) {
+                            var style, paths;
+                            return regeneratorRuntime.wrap(function _callee4$(_context4) {
                                 while (1) {
-                                    switch (_context8.prev = _context8.next) {
+                                    switch (_context4.prev = _context4.next) {
                                         case 0:
 
                                             type = type ? type.split('/')[1] : (0, _path.extname)(source).slice(1);
 
-                                            _context8.t0 = type;
-                                            _context8.next = _context8.t0 === 'css' ? 4 : _context8.t0 === 'sass' ? 8 : _context8.t0 === 'scss' ? 8 : _context8.t0 === 'less' ? 12 : _context8.t0 === 'stylus' ? 16 : 19;
-                                            break;
+                                            if (source.includes('\n')) {
+                                                _context4.next = 6;
+                                                break;
+                                            }
+
+                                            _context4.next = 4;
+                                            return (0, _fsExtra.readFile)(base = source);
 
                                         case 4:
-                                            _context8.next = 6;
-                                            return Component.loadFile(source);
+                                            _context4.t0 = _context4.sent;
+                                            source = _context4.t0 + '';
 
                                         case 6:
-                                            style = _context8.sent;
-                                            return _context8.abrupt('break', 19);
-
-                                        case 8:
-                                            _context8.next = 10;
-                                            return Component.parseSASS(source);
+                                            paths = [(0, _path.dirname)(base)];
+                                            _context4.t1 = type;
+                                            _context4.next = _context4.t1 === 'css' ? 10 : _context4.t1 === 'sass' ? 12 : _context4.t1 === 'scss' ? 12 : _context4.t1 === 'less' ? 14 : _context4.t1 === 'stylus' ? 18 : 21;
+                                            break;
 
                                         case 10:
-                                            style = _context8.sent;
-                                            return _context8.abrupt('break', 19);
+                                            style = source;return _context4.abrupt('break', 21);
 
                                         case 12:
-                                            _context8.next = 14;
-                                            return Component.parseLESS(source);
+                                            style = SASS.renderSync({
+                                                data: source,
+                                                includePaths: paths
+                                            }).css;
+                                            return _context4.abrupt('break', 21);
 
                                         case 14:
-                                            style = _context8.sent;
-                                            return _context8.abrupt('break', 19);
+                                            _context4.next = 16;
+                                            return _less2.default.render(source, { paths: paths });
 
                                         case 16:
-                                            _context8.next = 18;
-                                            return Component.parseStylus(source);
+                                            style = _context4.sent.css;
+                                            return _context4.abrupt('break', 21);
 
                                         case 18:
-                                            style = _context8.sent;
-
-                                        case 19:
-                                            return _context8.abrupt('return', style && Object.assign(document.createElement('style'), { textContent: style }));
+                                            _context4.next = 20;
+                                            return (0, _utility.parseStylus)(source, { paths: paths });
 
                                         case 20:
+                                            style = _context4.sent;
+
+                                        case 21:
+                                            return _context4.abrupt('return', style && Object.assign(document.createElement('style'), { textContent: style }));
+
+                                        case 22:
                                         case 'end':
-                                            return _context8.stop();
+                                            return _context4.stop();
                                     }
                                 }
-                            }, _callee8, this);
+                            }, _callee4, this);
                         }));
 
-                        function parseCSS(_x6, _x7) {
-                            return _ref8.apply(this, arguments);
+                        function parseCSS(_x3, _x4, _x5) {
+                            return _ref4.apply(this, arguments);
                         }
 
                         return parseCSS;
@@ -670,9 +600,9 @@ var _module_ = {
                 }, {
                     key: 'findStyle',
                     value: function findStyle(fragment) {
-                        var _ref9;
+                        var _ref5;
 
-                        return [].concat(_toConsumableArray(fragment.querySelectorAll('link[rel="stylesheet"]')), _toConsumableArray((_ref9 = []).concat.apply(_ref9, _toConsumableArray(Array.from(fragment.querySelectorAll('template'), function (template) {
+                        return [].concat(_toConsumableArray(fragment.querySelectorAll('link[rel="stylesheet"]')), _toConsumableArray((_ref5 = []).concat.apply(_ref5, _toConsumableArray(Array.from(fragment.querySelectorAll('template'), function (template) {
                             return [].concat(_toConsumableArray(template.content.querySelectorAll('style')));
                         })))));
                     }
@@ -745,20 +675,20 @@ var _module_ = {
              * @return {string[]} Component paths
              */
             var bundle = function () {
-                var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(path, HTML) {
+                var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(path, HTML) {
                     var _result;
 
                     var type, _type_, result, component;
 
-                    return regeneratorRuntime.wrap(function _callee9$(_context9) {
+                    return regeneratorRuntime.wrap(function _callee5$(_context5) {
                         while (1) {
-                            switch (_context9.prev = _context9.next) {
+                            switch (_context5.prev = _context5.next) {
                                 case 0:
                                     type = HTML ? 'HTML' : 'JS';
                                     _type_ = type.toLowerCase(), result = [];
 
                                     if (!(0, _fsExtra.existsSync)((0, _path.join)(path, 'index.' + _type_))) {
-                                        _context9.next = 12;
+                                        _context5.next = 12;
                                         break;
                                     }
 
@@ -767,56 +697,56 @@ var _module_ = {
 
                                     result[0] = 'dist/' + component.name + '.' + _type_;
 
-                                    _context9.t0 = (0, _fsExtra.outputFile);
-                                    _context9.t1 = result[0];
-                                    _context9.next = 9;
+                                    _context5.t0 = (0, _fsExtra.outputFile);
+                                    _context5.t1 = result[0];
+                                    _context5.next = 9;
                                     return component['to' + type]();
 
                                 case 9:
-                                    _context9.t2 = _context9.sent;
-                                    _context9.next = 12;
-                                    return (0, _context9.t0)(_context9.t1, _context9.t2);
+                                    _context5.t2 = _context5.sent;
+                                    _context5.next = 12;
+                                    return (0, _context5.t0)(_context5.t1, _context5.t2);
 
                                 case 12:
                                     if (!(0, _fsExtra.statSync)(path).isDirectory()) {
-                                        _context9.next = 26;
+                                        _context5.next = 26;
                                         break;
                                     }
 
-                                    _context9.t3 = (_result = result).concat;
-                                    _context9.t4 = _result;
-                                    _context9.t5 = _toConsumableArray;
-                                    _context9.t6 = Promise;
-                                    _context9.next = 19;
+                                    _context5.t3 = (_result = result).concat;
+                                    _context5.t4 = _result;
+                                    _context5.t5 = _toConsumableArray;
+                                    _context5.t6 = Promise;
+                                    _context5.next = 19;
                                     return (0, _fsExtra.readdir)(path);
 
                                 case 19:
-                                    _context9.t7 = function (file) {
+                                    _context5.t7 = function (file) {
                                         return bundle((0, _path.join)(path, file), HTML);
                                     };
 
-                                    _context9.t8 = _context9.sent.map(_context9.t7);
-                                    _context9.next = 23;
-                                    return _context9.t6.all.call(_context9.t6, _context9.t8);
+                                    _context5.t8 = _context5.sent.map(_context5.t7);
+                                    _context5.next = 23;
+                                    return _context5.t6.all.call(_context5.t6, _context5.t8);
 
                                 case 23:
-                                    _context9.t9 = _context9.sent;
-                                    _context9.t10 = (0, _context9.t5)(_context9.t9);
-                                    result = _context9.t3.apply.call(_context9.t3, _context9.t4, _context9.t10);
+                                    _context5.t9 = _context5.sent;
+                                    _context5.t10 = (0, _context5.t5)(_context5.t9);
+                                    result = _context5.t3.apply.call(_context5.t3, _context5.t4, _context5.t10);
 
                                 case 26:
-                                    return _context9.abrupt('return', result);
+                                    return _context5.abrupt('return', result);
 
                                 case 27:
                                 case 'end':
-                                    return _context9.stop();
+                                    return _context5.stop();
                             }
                         }
-                    }, _callee9, this);
+                    }, _callee5, this);
                 }));
 
-                return function bundle(_x8, _x9) {
-                    return _ref10.apply(this, arguments);
+                return function bundle(_x6, _x7) {
+                    return _ref6.apply(this, arguments);
                 };
             }();
 
@@ -831,18 +761,29 @@ var _module_ = {
 
 
             var pack = function () {
-                var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(path, HTML) {
+                var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(path, HTML) {
                     var file;
-                    return regeneratorRuntime.wrap(function _callee10$(_context10) {
+                    return regeneratorRuntime.wrap(function _callee6$(_context6) {
                         while (1) {
-                            switch (_context10.prev = _context10.next) {
+                            switch (_context6.prev = _context6.next) {
                                 case 0:
-                                    _context10.next = 2;
+                                    _context6.prev = 0;
+                                    _context6.next = 3;
                                     return bundle(path, HTML);
 
-                                case 2:
-                                    file = _context10.sent;
-                                    _context10.next = 5;
+                                case 3:
+                                    file = _context6.sent;
+                                    _context6.next = 9;
+                                    break;
+
+                                case 6:
+                                    _context6.prev = 6;
+                                    _context6.t0 = _context6['catch'](0);
+
+                                    console.error(_context6.t0);
+
+                                case 9:
+                                    _context6.next = 11;
                                     return (0, _fsExtra.outputFile)('dist/index.' + (HTML ? 'html' : 'js'), file.map(function (item) {
 
                                         item = (0, _path.basename)(item);
@@ -852,19 +793,19 @@ var _module_ = {
                                         return HTML ? '<link rel="import" href="' + item + '">' : 'export * from \'./' + item + '\';';
                                     }).join('\n'));
 
-                                case 5:
-                                    return _context10.abrupt('return', file);
+                                case 11:
+                                    return _context6.abrupt('return', file);
 
-                                case 6:
+                                case 12:
                                 case 'end':
-                                    return _context10.stop();
+                                    return _context6.stop();
                             }
                         }
-                    }, _callee10, this);
+                    }, _callee6, this, [[0, 6]]);
                 }));
 
-                return function pack(_x10, _x11) {
-                    return _ref11.apply(this, arguments);
+                return function pack(_x8, _x9) {
+                    return _ref7.apply(this, arguments);
                 };
             }();
 
@@ -915,40 +856,40 @@ var _module_ = {
 
             _commander2.default.command('pack', 'Bundle components to a package with JS modules (or HTML files) in it').on('command:pack', function () {
                 return (0, _command.pack)(folder.lib, _commander2.default.HTML);
-            }).command('preview', 'Real-time preview during development').on('command:preview', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
+            }).command('preview', 'Real-time preview during development').on('command:preview', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
                 var command;
-                return regeneratorRuntime.wrap(function _callee11$(_context11) {
+                return regeneratorRuntime.wrap(function _callee7$(_context7) {
                     while (1) {
-                        switch (_context11.prev = _context11.next) {
+                        switch (_context7.prev = _context7.next) {
                             case 0:
                                 command = function command() {
                                     return (0, _command.pack)(folder.lib, _commander2.default.HTML);
                                 };
 
-                                _context11.next = 3;
+                                _context7.next = 3;
                                 return command();
 
                             case 3:
-                                _context11.next = 5;
+                                _context7.next = 5;
                                 return _puppeteerBrowser2.default.getPage('.', folder.test || 'test/', command);
 
                             case 5:
                             case 'end':
-                                return _context11.stop();
+                                return _context7.stop();
                         }
                     }
-                }, _callee11, _this);
+                }, _callee7, _this);
             }))).option('-H, --HTML', 'Bundle as HTML').parse(process.argv);
         }
     },
+    'child_process': { exports: child_process },
+    'stylus': { exports: stylus },
     'fs-extra': { exports: fs_extra },
     'path': { exports: path },
     'jsdom': { exports: jsdom },
     'amd-bundle': { exports: amd_bundle },
-    'sass': { exports: sass },
     'less': { exports: less },
-    'stylus': { exports: stylus },
-    'promisify-node': { exports: promisify_node },
+    'sass': { exports: sass },
     'fs': { exports: fs },
     'commander': { exports: commander },
     'puppeteer-browser': { exports: puppeteer_browser }

@@ -32,6 +32,9 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getNPMConfig">getNPMConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setNPMConfig">setNPMConfig</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -45,20 +48,18 @@ import { JSDOM } from &apos;jsdom&apos;;
 
 import Package from &apos;amd-bundle&apos;;
 
+import LESS from &apos;less&apos;;
+
 import * as SASS from &apos;sass&apos;;
 
-import * as LESS from &apos;less&apos;;
+import { parseStylus } from &apos;./utility&apos;;
 
-import Stylus from &apos;stylus&apos;;
-
-import promisify from &apos;promisify-node&apos;;
-
-const renderSASS = promisify( SASS.render ),
-    renderStylus = promisify( Stylus.render ),
-    document = (new JSDOM()).window.document;
+const document = (new JSDOM()).window.document;
 
 
-
+/**
+ * Component packer
+ */
 export default  class Component {
     /**
      * @param {string} path - Component directory
@@ -73,53 +74,47 @@ export default  class Component {
     }
 
     /**
-     * @param {string} path - File path
+     * @param {string} path
      *
-     * @return {string} File content
+     * @return {DocumentFragment}
      */
-    static async loadFile(path) {
-
-        return  path.includes(&apos;\n&apos;)  ?  path  :  ((await readFile( path )) + &apos;&apos;);
-    }
-
     static async parseHTML(path) {
 
-        return  JSDOM.fragment(await Component.loadFile( path ));
-    }
-
-    static async parseSASS(path) {
-
-        return  renderSASS({data:  await Component.loadFile( path )});
-    }
-
-    static async parseLESS(path) {
-
-        return  await LESS.render(await Component.loadFile( path ));
-    }
-
-    static async parseStylus(path) {
-
-        return  await renderStylus(await Component.loadFile( path ));
+        return  JSDOM.fragment((await readFile( path )) + &apos;&apos;);
     }
 
     /**
-     * @param {string} source - File path or Style source code
-     * @param {string} [type] - MIME type
+     * @param {string}  source - File path or Style source code
+     * @param {?string} type   - MIME type
+     * @param {string}  [base] - Path of the file which `@import` located in
      *
      * @return {?Element} Style element
      */
-    static async parseCSS(source, type) {
+    static async parseCSS(source, type, base) {
 
         var style;
 
         type = type  ?  type.split(&apos;/&apos;)[1]  :  extname( source ).slice(1);
 
+        if (! source.includes(&apos;\n&apos;))
+            source = await readFile(base = source) + &apos;&apos;;
+
+        const paths = [dirname( base )];
+
         switch ( type ) {
-            case &apos;css&apos;:       style = await Component.loadFile( source );   break;
+            case &apos;css&apos;:       style = source;  break;
             case &apos;sass&apos;:
-            case &apos;scss&apos;:      style = await Component.parseSASS( source );  break;
-            case &apos;less&apos;:      style = await Component.parseLESS( source );  break;
-            case &apos;stylus&apos;:    style = await Component.parseStylus( source );
+            case &apos;scss&apos;:
+                style = SASS.renderSync({
+                    data:          source,
+                    includePaths:  paths
+                }).css;
+                break;
+            case &apos;less&apos;:
+                style = (await LESS.render(source,  { paths })).css;
+                break;
+            case &apos;stylus&apos;:
+                style = await parseStylus(source,  { paths });
         }
 
         return  style &amp;&amp; Object.assign(
@@ -196,7 +191,8 @@ export default  class Component {
 
             let style = await Component.parseCSS(
                 sheet.textContent  ||  join(this.path, sheet.getAttribute(&apos;href&apos;)),
-                sheet.type
+                sheet.type,
+                this.entry + &apos;.css&apos;
             );
 
             if (! style)  continue;
@@ -242,7 +238,7 @@ export default  class Component {
                 case &apos;js&apos;:
                     continue;
                 case &apos;json&apos;:
-                    file = await Component.loadFile( file );    break;
+                    file = (await readFile( file )) + &apos;&apos;;    break;
                 default:
                     file = JSON.stringify(
                         (await Component.parseCSS( file )).textContent

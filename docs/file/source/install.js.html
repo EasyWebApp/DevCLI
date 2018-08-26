@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/command.js | web-cell-cli</title>
+  <title data-ice="title">source/install.js | web-cell-cli</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -39,76 +39,20 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/command.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {join, basename} from &apos;path&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">source/install.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getNPMConfig, setNPMConfig } from &apos;./utility&apos;;
 
-import {outputFile, existsSync, statSync, readdir} from &apos;fs-extra&apos;;
-
-import Component from &apos;./Component&apos;;
+var browser;
 
 
-/**
- * Bundle components to JS modules (or HTML files)
- *
- * @param {string}  path   - Source directory
- * @param {boolean} [HTML] - Whether bundle as HTML
- *
- * @return {string[]} Component paths
- */
-export  async function bundle(path, HTML) {
+for (let name  of  [&apos;chrome&apos;, &apos;firefox&apos;])  if (getNPMConfig( name )) {
 
-    const type = HTML ? &apos;HTML&apos; : &apos;JS&apos;;
-
-    var _type_ = type.toLowerCase(), result = [ ];
-
-    if (existsSync( join(path, `index.${_type_}`) )) {
-
-        const component = new Component( path );
-
-        result[0] = `dist/${component.name}.${_type_}`;
-
-        await outputFile(result[0],  await component[`to${type}`]());
-    }
-
-    if (statSync( path ).isDirectory())
-        result = result.concat(... await Promise.all(
-            (await readdir( path )).map(file  =&gt;  bundle(join(path, file), HTML))
-        ));
-
-    return result;
+    browser = name;    break;
 }
 
 
-/**
- * Bundle components into a JS or HTML package
- *
- * @param {string}  path   - Source directory
- * @param {boolean} [HTML] - Whether bundle as HTML
- *
- * @return {string[]} Component paths
- */
-export  async function pack(path, HTML) {
-    try {
-        var file = await bundle(path, HTML);
-
-    } catch (error) {  console.error( error );  }
-
-    await outputFile(
-        `dist/index.${HTML ? &apos;html&apos; : &apos;js&apos;}`,
-        file.map(item =&gt; {
-
-            item = basename( item );
-
-            console.info(`&#x221A; Component &quot;${item}&quot; is packed in`);
-
-            return  HTML ?
-                `&lt;link rel=&quot;import&quot; href=&quot;${item}&quot;&gt;`  :
-                `export * from &apos;./${item}&apos;;`;
-        }).join(&apos;\n&apos;)
-    );
-
-    return file;
-}
+if (browser = browser  ||  ((process.platform === &apos;win32&apos;) &amp;&amp; &apos;IE&apos;))
+    setNPMConfig(&apos;PUPPETEER_BROWSER&apos;, browser);
 </code></pre>
 
 </div>

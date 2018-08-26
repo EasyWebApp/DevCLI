@@ -2,7 +2,9 @@ import Component from '../source/Component';
 
 import Should from 'should';
 
-import {join} from 'path';
+import { readFile } from 'fs-extra';
+
+import { join } from 'path';
 
 
 function SyntaxRight(code) {
@@ -21,21 +23,20 @@ function SyntaxRight(code) {
  */
 describe('Core class',  () => {
 
-    var CSS, HTML;
+    var style, template, fragment;
 
     /**
-     * @test {Component.loadFile}
      * @test {Component.parseCSS}
      */
-    it('Parse CSS',  async () => {
+    it('Parse CSS files',  async () => {
 
         const file = 'test/example-js/index.css';
 
-        const style = await Component.parseCSS( file );
+        style = await Component.parseCSS( file );
 
         style.tagName.should.be.equal('STYLE');
 
-        style.textContent.should.be.equal(CSS = await Component.loadFile( file ));
+        style.textContent.should.be.equal((await readFile( file )) + '');
     });
 
     /**
@@ -50,35 +51,61 @@ describe('Core class',  () => {
      * @test {Component.parseHTML}
      * @test {Component.stringOf}
      */
-    it('Parse HTML',  async () => {
+    it('Parse pure HTML',  async () => {
 
         const file = 'test/example-js/index.html';
 
-        const template = await Component.parseHTML( file );
+        template = await Component.parseHTML( file );
 
         template.nodeType.should.be.equal( 11 );
 
         Component.stringOf( template ).should.be.equal(
-            HTML = await Component.loadFile( file )
+            (await readFile( file )) + ''
         );
     });
 
-    /**
-     * @test {Component.findStyle}
-     * @test {Component.parseJS}
-     */
-    it('Find styles & Parse script',  async () => {
+    describe('Parse mixed HTML',  () => {
 
-        const fragment = await Component.parseHTML('test/example-html/index.html');
-
-        Component.findStyle( fragment ).map(element => element.tagName)
-            .should.be.eql(['LINK', 'STYLE']);
-
-        SyntaxRight(
-            Component.parseJS(join(
-                'test/example-html/', fragment.lastElementChild.getAttribute('src')
-            )).text
+        before(async () =>
+            fragment = await Component.parseHTML('test/example-html/index.html')
         );
+
+        /**
+         * @test {Component.findStyle}
+         * @test {Component.parseCSS}
+         */
+        it('Find & Parse styles',  async () => {
+
+            const styles = Component.findStyle( fragment );
+
+            styles.map(element => element.tagName).should.be.eql([
+                'LINK', 'STYLE'
+            ]);
+
+            const element = await Component.parseCSS(
+                styles[1].textContent,
+                styles[1].type,
+                'test/example-html/index.css'
+            );
+
+            element.textContent.trim().should.be.equal(`
+textarea {
+  display: block;
+}`.trim()
+            );
+        });
+
+        /**
+         * @test {Component.parseJS}
+         */
+        it('Parse script',  async () => {
+
+            SyntaxRight(
+                Component.parseJS(join(
+                    'test/example-html/', fragment.lastElementChild.getAttribute('src')
+                )).text
+            );
+        });
     });
 
     /**
@@ -106,9 +133,13 @@ describe('Core class',  () => {
 
         component = await component.toJS();
 
-        component.includes( JSON.stringify( CSS ) ).should.be.true();
+        component.includes(
+            JSON.stringify( style.textContent )
+        ).should.be.true();
 
-        component.includes( JSON.stringify( HTML ) ).should.be.true();
+        component.includes(
+            JSON.stringify( Component.stringOf( template ) )
+        ).should.be.true();
 
         component.includes('"name": "Web components"').should.be.true();
 

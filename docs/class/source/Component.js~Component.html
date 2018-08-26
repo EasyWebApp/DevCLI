@@ -32,18 +32,21 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getNPMConfig">getNPMConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setNPMConfig">setNPMConfig</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Component from &apos;<span><a href="file/source/Component.js.html#lineNumber23">web-cell-cli</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Component from &apos;<span><a href="file/source/Component.js.html#lineNumber21">web-cell-cli</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/source/Component.js.html#lineNumber23">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/source/Component.js.html#lineNumber21">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -63,7 +66,8 @@
 
   
   
-  
+  <div class="description" data-ice="description"><p>Component packer</p>
+</div>
   
 
   
@@ -74,7 +78,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber22">Core class</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber24">Core class</a></span></li>
 </ul>
   </div>
 
@@ -156,7 +160,7 @@
           
           <span data-ice="async">async</span>
           
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-loadFile">loadFile</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseCSS">parseCSS</a></span></span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, base: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
         </p>
       </div>
       <div>
@@ -184,35 +188,7 @@
           
           <span data-ice="async">async</span>
           
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseCSS">parseCSS</a></span></span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          <span data-ice="async">async</span>
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseHTML">parseHTML</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseHTML">parseHTML</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span></span>
         </p>
       </div>
       <div>
@@ -241,90 +217,6 @@
           
           
           <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseJS">parseJS</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          <span data-ice="async">async</span>
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseLESS">parseLESS</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          <span data-ice="async">async</span>
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseSASS">parseSASS</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          <span data-ice="async">async</span>
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-parseStylus">parseStylus</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -576,7 +468,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber96">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber88">source</a></span></span>
     </span>
   </h3>
 
@@ -634,7 +526,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber70">Core class Find styles &amp; Parse script</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber77">Core class Parse mixed HTML Find &amp; Parse styles</a></span></li>
 </ul>
   </div>
 
@@ -653,7 +545,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber112">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber104">source</a></span></span>
     </span>
   </h3>
 
@@ -711,86 +603,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber44">Core class Tag name to Class name</a></span></li>
-</ul>
-  </div>
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-loadFile">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    <span data-ice="async">async</span>
-    
-    <span class="code" data-ice="name">loadFile</span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber41">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">path</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>File path</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>File content</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="tests">
-    <h4>Test:</h4>
-    <ul>
-      
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber30">Core class Parse CSS</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber45">Core class Tag name to Class name</a></span></li>
 </ul>
   </div>
 
@@ -805,11 +618,11 @@
     
     <span data-ice="async">async</span>
     
-    <span class="code" data-ice="name">parseCSS</span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
+    <span class="code" data-ice="name">parseCSS</span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, base: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber72">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber51">source</a></span></span>
     </span>
   </h3>
 
@@ -838,8 +651,15 @@
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">type</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
       <td data-ice="description"><p>MIME type</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">base</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Path of the file which <code>@import</code> located in</p>
 </td>
     </tr>
 </tbody>
@@ -876,7 +696,8 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber30">Core class Parse CSS</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber31">Core class Parse CSS files</a></span></li>
+<li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber77">Core class Parse mixed HTML Find &amp; Parse styles</a></span></li>
 </ul>
   </div>
 
@@ -891,11 +712,11 @@
     
     <span data-ice="async">async</span>
     
-    <span class="code" data-ice="name">parseHTML</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+    <span class="code" data-ice="name">parseHTML</span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber46">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber39">source</a></span></span>
     </span>
   </h3>
 
@@ -916,7 +737,7 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">path</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -930,7 +751,7 @@
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span></td>
           
         </tr>
       </tbody>
@@ -953,7 +774,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber53">Core class Parse HTML</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber54">Core class Parse pure HTML</a></span></li>
 </ul>
   </div>
 
@@ -972,7 +793,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber123">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber115">source</a></span></span>
     </span>
   </h3>
 
@@ -1030,222 +851,9 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber70">Core class Find styles &amp; Parse script</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber101">Core class Parse mixed HTML Parse script</a></span></li>
 </ul>
   </div>
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-parseLESS">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    <span data-ice="async">async</span>
-    
-    <span class="code" data-ice="name">parseLESS</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber56">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">path</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-parseSASS">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    <span data-ice="async">async</span>
-    
-    <span class="code" data-ice="name">parseSASS</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber51">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">path</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-parseStylus">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    <span data-ice="async">async</span>
-    
-    <span class="code" data-ice="name">parseStylus</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber61">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">path</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
   
   
@@ -1262,7 +870,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber140">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber132">source</a></span></span>
     </span>
   </h3>
 
@@ -1320,7 +928,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber53">Core class Parse HTML</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber54">Core class Parse pure HTML</a></span></li>
 </ul>
   </div>
 
@@ -1342,7 +950,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber27">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber25">source</a></span></span>
     </span>
   </h3>
 
@@ -1405,7 +1013,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber33">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber31">source</a></span></span>
     </span>
   </h3>
 
@@ -1448,7 +1056,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber31">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber29">source</a></span></span>
     </span>
   </h3>
 
@@ -1491,7 +1099,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber29">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber27">source</a></span></span>
     </span>
   </h3>
 
@@ -1537,7 +1145,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber151">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber143">source</a></span></span>
     </span>
   </h3>
 
@@ -1580,7 +1188,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber87">Core class Bundle to HTML</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber114">Core class Bundle to HTML</a></span></li>
 </ul>
   </div>
 
@@ -1599,7 +1207,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber185">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber178">source</a></span></span>
     </span>
   </h3>
 
@@ -1642,7 +1250,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber103">Core class Bundle to JS</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/index.js.html#lineNumber130">Core class Bundle to JS</a></span></li>
 </ul>
   </div>
 

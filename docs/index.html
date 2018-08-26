@@ -32,6 +32,9 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getNPMConfig">getNPMConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setNPMConfig">setNPMConfig</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -39,12 +42,20 @@
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="webcell-devcli">WebCell DevCLI</h1><p>Developer command-line tool for <a href="https://web-cell.tk/">WebCell</a></p>
 <p><a href="https://david-dm.org/EasyWebApp/DevCLI"><img src="https://david-dm.org/EasyWebApp/DevCLI.svg" alt="NPM Dependency"></a></p>
 <p><a href="https://nodei.co/npm/web-cell-cli/"><img src="https://nodei.co/npm/web-cell-cli.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
+<h2 id="feature">Feature</h2><ol>
+<li><p>Bundle components to a package with <strong>JS modules</strong> (or HTML files) in it</p>
+</li>
+<li><p>Support to import <strong>HTML</strong> &amp; <strong>CSS</strong> (LESS, SASS/SCSS or Stylus) as a <code>String</code>, <strong>JSON</strong> as an <code>Object</code> in ES module</p>
+</li>
+<li><p><strong>Real-time preview</strong> during development in Chrome, Firefox or IE</p>
+</li>
+</ol>
 <h2 id="usage">Usage</h2><ol>
 <li><p><code>npm install web-cell-cli -D</code></p>
 </li>
-<li><p>refer <a href="https://github.com/EasyWebApp/BootCell" title="Offical component library of WebCell (based on BootStrap v4)">BootCell</a> to <a href="https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6">configure the <strong>Source directory</strong></a></p>
+<li><p>refer <a href="https://github.com/EasyWebApp/BootCell" title="Offical component library of WebCell (based on BootStrap v4)">BootCell</a> to <a href="https://github.com/EasyWebApp/BootCell/blob/master/package.json#L6">configure the <strong>Source directory</strong></a></p>
 </li>
-<li><p>refer <a href="https://github.com/EasyWebApp/BootCell" title="Offical component library of WebCell (based on BootStrap v4)">BootCell</a> to <a href="https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L13">configure the <strong>NPM script</strong></a></p>
+<li><p>refer <a href="https://github.com/EasyWebApp/BootCell" title="Offical component library of WebCell (based on BootStrap v4)">BootCell</a> to <a href="https://github.com/EasyWebApp/BootCell/blob/master/package.json#L13">configure the <strong>NPM script</strong></a></p>
 </li>
 <li><p><code>npm run your_script</code></p>
 </li>

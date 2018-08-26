@@ -22,6 +22,9 @@
             "allow": ["info", "warn", "error", "time", "timeEnd"]
         }],
         "valid-jsdoc": ["error", {
+            "prefer": {
+                "returns": "return"
+            },
             "requireParamDescription": false,
             "requireReturn": false,
             "requireReturnDescription": false

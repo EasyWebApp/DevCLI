@@ -46,8 +46,10 @@ export  async function bundle(path, HTML) {
  * @return {string[]} Component paths
  */
 export  async function pack(path, HTML) {
+    try {
+        var file = await bundle(path, HTML);
 
-    const file = await bundle(path, HTML);
+    } catch (error) {  console.error( error );  }
 
     await outputFile(
         `dist/index.${HTML ? 'html' : 'js'}`,
