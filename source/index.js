@@ -1,19 +1,23 @@
-import {readFileSync} from 'fs';
+#! /usr/bin/env node
 
-import {pack} from './command';
+import { packageOf, currentModulePath } from '@tech_query/node-toolkit';
 
 import Commander from 'commander';
+
+import { pack } from './command';
 
 import PuppeteerBrowser from 'puppeteer-browser';
 
 
 
-const manifest = JSON.parse(readFileSync('package.json') + '');
+const meta = packageOf( currentModulePath() ).meta,
+    manifest = packageOf('./test').meta;
 
 const folder = manifest.directories || '';
 
 
 Commander
+    .version( meta.version ).description( meta.description )
     .command(
         'pack',
         'Bundle components to a package with JS modules (or HTML files) in it'

@@ -22,9 +22,9 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
  1. `npm install web-cell-cli -D`
 
- 2. refer [BootCell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/BootCell/blob/master/package.json#L6)
+ 2. refer [Material Cell][1] to [configure the **Source directory**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24)
 
- 3. refer [BootCell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/BootCell/blob/master/package.json#L13)
+ 3. refer [Material Cell][1] to [configure the **NPM script**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29)
 
  4. `npm run your_script`
 
@@ -32,19 +32,20 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 ### Command
 
-  Usage: `web-cell [options] [command]`
+    Usage: web-cell [options] [command]
 
-  Options:
+    Options:
 
-    -H, --HTML  Bundle as HTML
-    -h, --help  output usage information
+        -V, --version  output the version number
+        -H, --HTML     Bundle as HTML
+        -h, --help     output usage information
 
-  Commands:
+    Commands:
 
-    pack        Bundle components to a package with JS modules (or HTML files) in it
-    preview     Real-time preview during development
-    help [cmd]  display help for [cmd]
+        pack           Bundle components to a package with JS modules (or HTML files) in it
+        preview        Real-time preview during development
+        help [cmd]     display help for [cmd]
 
 
 
-[1]: https://github.com/EasyWebApp/BootCell "Offical component library of WebCell (based on BootStrap v4)"
+[1]: https://github.com/EasyWebApp/material-cell "Offical component library of WebCell (based on Material Design lite v1.3)"

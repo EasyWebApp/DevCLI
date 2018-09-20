@@ -1,35 +1,22 @@
-import { execSync } from 'child_process';
+import { packageOf } from '@tech_query/node-toolkit';
+
+import { JSDOM } from 'jsdom';
 
 import Stylus from 'stylus';
 
 
 /**
- * @param {string} key
+ * `package.json` data of `process.cwd()`
  *
- * @return {?*}
+ * @type {Object}
  */
-export function getNPMConfig(key) {
-
-    const value = (execSync(`npm get ${key}`) + '').trim();
-
-    if (value !== 'undefined')
-        try {
-            return  JSON.parse( value );
-
-        } catch (error) {  return value;  }
-}
+export const meta = packageOf('./test').meta;
 
 
 /**
- * @param {string} key
- * @param {*}      value
+ * @type {Document}
  */
-export function setNPMConfig(key, value) {
-
-    execSync(`npm set ${key} ${value}`);
-
-    console.info(`${key} = ${value}`);
-}
+export const document = (new JSDOM()).window.document;
 
 
 /**

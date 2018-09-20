@@ -12,10 +12,16 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell-cli/source/utility.js~getnpmconfig",
-    "function/index.html#static-function-getNPMConfig",
-    "<span>getNPMConfig</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
-    "function"
+    "web-cell-cli/source/utility.js~document",
+    "variable/index.html#static-variable-document",
+    "<span>document</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "variable"
+  ],
+  [
+    "web-cell-cli/source/utility.js~meta",
+    "variable/index.html#static-variable-meta",
+    "<span>meta</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "variable"
   ],
   [
     "web-cell-cli/source/command.js~pack",
@@ -30,12 +36,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell-cli/source/utility.js~setnpmconfig",
-    "function/index.html#static-function-setNPMConfig",
-    "<span>setNPMConfig</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
-    "function"
-  ],
-  [
     "component source/component.js~component,component",
     "test-file/test/index.js.html#lineNumber24",
     "Core class",
@@ -43,13 +43,13 @@ window.esdocSearchIndex = [
   ],
   [
     "component#tohtml source/component.js~component#tohtml,component#tohtml",
-    "test-file/test/index.js.html#lineNumber114",
+    "test-file/test/index.js.html#lineNumber116",
     "Core class Bundle to HTML",
     "test"
   ],
   [
     "component#tojs source/component.js~component#tojs,component#tojs",
-    "test-file/test/index.js.html#lineNumber130",
+    "test-file/test/index.js.html#lineNumber132",
     "Core class Bundle to JS",
     "test"
   ],
@@ -72,7 +72,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component.parsejs source/component.js~component.parsejs,component.parsejs",
+    "component.packjs source/component.js~component.packjs,component.packjs",
     "test-file/test/index.js.html#lineNumber101",
     "Core class Parse mixed HTML Parse script",
     "test"
@@ -471,6 +471,12 @@ window.esdocSearchIndex = [
     "source/component.js~component.identifierof",
     "class/source/Component.js~Component.html#static-method-identifierOf",
     "source/Component.js~Component.identifierOf",
+    "method"
+  ],
+  [
+    "source/component.js~component.packjs",
+    "class/source/Component.js~Component.html#static-method-packJS",
+    "source/Component.js~Component.packJS",
     "method"
   ],
   [

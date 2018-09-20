@@ -32,46 +32,33 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getNPMConfig">getNPMConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setNPMConfig">setNPMConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-document">document</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/utility.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { execSync } from &apos;child_process&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { packageOf } from &apos;@tech_query/node-toolkit&apos;;
+
+import { JSDOM } from &apos;jsdom&apos;;
 
 import Stylus from &apos;stylus&apos;;
 
 
 /**
- * @param {string} key
+ * `package.json` data of `process.cwd()`
  *
- * @return {?*}
+ * @type {Object}
  */
-export function getNPMConfig(key) {
-
-    const value = (execSync(`npm get ${key}`) + &apos;&apos;).trim();
-
-    if (value !== &apos;undefined&apos;)
-        try {
-            return  JSON.parse( value );
-
-        } catch (error) {  return value;  }
-}
+export const meta = packageOf(&apos;./test&apos;).meta;
 
 
 /**
- * @param {string} key
- * @param {*}      value
+ * @type {Document}
  */
-export function setNPMConfig(key, value) {
-
-    execSync(`npm set ${key} ${value}`);
-
-    console.info(`${key} = ${value}`);
-}
+export const document = (new JSDOM()).window.document;
 
 
 /**

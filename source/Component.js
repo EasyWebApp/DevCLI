@@ -10,9 +10,10 @@ import LESS from 'less';
 
 import * as SASS from 'sass';
 
-import { parseStylus } from './utility';
+import { meta, document, parseStylus } from './utility';
 
-const document = (new JSDOM()).window.document;
+
+const single_entry = join(meta.directories.lib || '',  'index.js');
 
 
 /**
@@ -108,19 +109,30 @@ export default  class Component {
     }
 
     /**
+     * @param {String} path - Full name of a JS file
+     *
+     * @return {String} Packed JS source code
+     */
+    static packJS(path) {
+
+        const name = (path === single_entry)  &&  meta.name;
+
+        path = path.split('.').slice(0, -1).join('.');
+
+        return  (new Package( path )).bundle(
+            name  ||  this.identifierOf( basename( dirname( path ) ) )
+        );
+    }
+
+    /**
      * @param {string} path
      *
      * @return {Element}
      */
     static parseJS(path) {
 
-        path = path.split('.').slice(0, -1).join('.');
-
         return  Object.assign(document.createElement('script'), {
-            text:  `\n${
-                (new Package( path )).bundle(
-                    this.identifierOf( basename( dirname( path ) ) )
-                )}\n`
+            text:  `\n${this.packJS( path )}\n`
         });
     }
 
@@ -208,9 +220,7 @@ export default  class Component {
             await outputFile(temp,  `export default ${file}`);
         }
 
-        const source = (new Package( this.entry )).bundle(
-            Component.identifierOf( this.name )
-        );
+        const source = Component.packJS(this.entry + '.js');
 
         await Promise.all( temp_file.map(file => remove( file )) );
 

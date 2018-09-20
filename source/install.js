@@ -1,4 +1,6 @@
-import { getNPMConfig, setNPMConfig } from './utility';
+#! /usr/bin/env node
+
+import { getNPMConfig, setNPMConfig } from '@tech_query/node-toolkit';
 
 var browser;
 

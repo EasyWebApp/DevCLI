@@ -6,25 +6,22 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('install', ["child_process","stylus"], factory);
+        define('install', ["@tech_query/node-toolkit"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory(require('child_process'),require('stylus'));
+        return  module.exports = factory(require('@tech_query/node-toolkit'));
     else
-        return  this['install'] = factory(this['child_process'],this['stylus']);
+        return  this['install'] = factory(this['@tech_query/node-toolkit']);
 
-})(function (child_process,stylus) {
+})(function (_tech_query_node_toolkit) {
 
 function merge(base, path) {
-
-    return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
-
-        return input[index - 1] === '.' ? match : '';
-    });
+  return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
+    return input[index - 1] === '.' ? match : '';
+  });
 }
 
 function outPackage(name) {
-    return (/^[^./]/.test(name)
-    );
+  return /^[^./]/.test(name);
 }
 
     var require = _require_.bind(null, './');
@@ -60,91 +57,30 @@ function outPackage(name) {
     }
 
 var _module_ = {
-    './utility': {
-        base: '.',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.getNPMConfig = getNPMConfig;
-            exports.setNPMConfig = setNPMConfig;
-            exports.parseStylus = parseStylus;
+  './install': {
+    base: '.',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      var _nodeToolkit = require('@tech_query/node-toolkit');
 
-            var _child_process = require('child_process');
+      var browser;
+      var _arr = ['chrome', 'firefox'];
 
-            var _stylus = require('stylus');
+      for (var _i = 0; _i < _arr.length; _i++) {
+        var name = _arr[_i];
 
-            var _stylus2 = _interopRequireDefault(_stylus);
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule ? obj : { default: obj };
-            }
-
-            /**
-             * @param {string} key
-             *
-             * @return {?*}
-             */
-            function getNPMConfig(key) {
-
-                var value = ((0, _child_process.execSync)('npm get ' + key) + '').trim();
-
-                if (value !== 'undefined') try {
-                    return JSON.parse(value);
-                } catch (error) {
-                    return value;
-                }
-            }
-
-            /**
-             * @param {string} key
-             * @param {*}      value
-             */
-            function setNPMConfig(key, value) {
-
-                (0, _child_process.execSync)('npm set ' + key + ' ' + value);
-
-                console.info(key + ' = ' + value);
-            }
-
-            /**
-             * @param {string} source
-             * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
-             *
-             * @return {Promise<string>} CSS source code
-             */
-            function parseStylus(source) {
-                var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-
-                return new Promise(function (resolve, reject) {
-                    return _stylus2.default.render(source, option, function (error, CSS) {
-                        return error ? reject(error) : resolve(CSS);
-                    });
-                });
-            }
+        if ((0, _nodeToolkit.getNPMConfig)(name)) {
+          browser = name;
+          break;
         }
-    },
-    './install': {
-        base: '.',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            var _utility = require('./utility');
+      }
 
-            var browser;
-
-            var _arr = ['chrome', 'firefox'];
-            for (var _i = 0; _i < _arr.length; _i++) {
-                var name = _arr[_i];if ((0, _utility.getNPMConfig)(name)) {
-
-                    browser = name;break;
-                }
-            }if (browser = browser || process.platform === 'win32' && 'IE') (0, _utility.setNPMConfig)('PUPPETEER_BROWSER', browser);
-        }
-    },
-    'child_process': { exports: child_process },
-    'stylus': { exports: stylus }
+      if (browser = browser || process.platform === 'win32' && 'IE') (0, _nodeToolkit.setNPMConfig)('PUPPETEER_BROWSER', browser);
+    }
+  },
+  '@tech_query/node-toolkit': {
+    exports: _tech_query_node_toolkit
+  }
 };
 
     return require('./install');

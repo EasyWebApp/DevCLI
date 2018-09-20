@@ -96,15 +96,17 @@ textarea {
         });
 
         /**
-         * @test {Component.parseJS}
+         * @test {Component.packJS}
          */
-        it('Parse script',  async () => {
+        it('Parse script',  () => {
 
-            SyntaxRight(
-                Component.parseJS(join(
-                    'test/example-html/', fragment.lastElementChild.getAttribute('src')
-                )).text
-            );
+            const code = Component.packJS(join(
+                'test/example-html/', fragment.lastElementChild.getAttribute('src')
+            ));
+
+            SyntaxRight( code );
+
+            code.should.containEql('\'ExampleHtml\'');
         });
     });
 

@@ -32,9 +32,9 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getNPMConfig">getNPMConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setNPMConfig">setNPMConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-document">document</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -138,15 +138,17 @@ textarea {
         });
 
         /**
-         * @test {Component.parseJS}
+         * @test {Component.packJS}
          */
-        it(&apos;Parse script&apos;,  async () =&gt; {
+        it(&apos;Parse script&apos;,  () =&gt; {
 
-            SyntaxRight(
-                Component.parseJS(join(
-                    &apos;test/example-html/&apos;, fragment.lastElementChild.getAttribute(&apos;src&apos;)
-                )).text
-            );
+            const code = Component.packJS(join(
+                &apos;test/example-html/&apos;, fragment.lastElementChild.getAttribute(&apos;src&apos;)
+            ));
+
+            SyntaxRight( code );
+
+            code.should.containEql(&apos;\&apos;ExampleHtml\&apos;&apos;);
         });
     });
 

@@ -1,6 +1,6 @@
 {
   "name": "web-cell-cli",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Developer command-line tool for WebCell",
   "keywords": [
     "developer",
@@ -33,12 +33,12 @@
     "node": "^6.5.0"
   },
   "scripts": {
-    "check": "mocha -r babel-register -r babel-polyfill -c --inline-diffs",
+    "check": "mocha -r @babel/register -r @babel/polyfill -c --inline-diffs",
     "test": "npm run check -- --exit",
     "debug": "npm run check -- --inspect-brk",
     "lint": "eslint ./source/ ./test/ --fix",
-    "pack": "amd-bundle source/install dist/install -c",
-    "bundle": "amd-bundle source/index dist/web-cell -c",
+    "pack": "amd-bundle source/install dist/install",
+    "bundle": "amd-bundle source/index dist/web-cell",
     "prepublishOnly": "npm test  &&  npm run lint  &&  npm run bundle  &&  npm run pack",
     "build": "npm run prepublishOnly  &&  esdoc",
     "precommit": "npm run build  &&  git add .",
@@ -46,19 +46,22 @@
     "install": "node dist/install"
   },
   "dependencies": {
-    "amd-bundle": "^1.3.2",
-    "commander": "^2.17.1",
+    "@tech_query/node-toolkit": "^0.6.0",
+    "amd-bundle": "^1.6.0",
+    "commander": "^2.18.0",
     "fs-extra": "^6.0.1",
     "jsdom": "^11.12.0",
     "less": "^3.8.1",
     "puppeteer-browser": "^0.3.3",
-    "sass": "^1.13.0",
+    "sass": "^1.13.4",
     "stylus": "^0.54.5"
   },
   "devDependencies": {
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
     "esdoc": "^1.1.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
@@ -70,7 +73,7 @@
   },
   "babel": {
     "presets": [
-      "env"
+      "@babel/preset-env"
     ]
   }
 }
