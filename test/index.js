@@ -1,21 +1,8 @@
 import Component from '../source/Component';
 
-import Should from 'should';
-
 import { readFile } from 'fs-extra';
 
 import { join } from 'path';
-
-
-function SyntaxRight(code) {
-    try {
-        Should.doesNotThrow(() => eval( code ),  SyntaxError);
-
-    } catch (error) {
-
-        console.warn(`Expected error: ${error.message}`);
-    }
-}
 
 
 /**
@@ -104,7 +91,7 @@ textarea {
                 'test/example-html/', fragment.lastElementChild.getAttribute('src')
             ));
 
-            SyntaxRight( code );
+            (() => eval( code )).should.not.throw( SyntaxError );
 
             code.should.containEql('\'ExampleHtml\'');
         });
@@ -145,6 +132,6 @@ textarea {
 
         component.includes('"name": "Web components"').should.be.true();
 
-        SyntaxRight( component );
+        (() => eval( component )).should.not.throw( SyntaxError );
     });
 });

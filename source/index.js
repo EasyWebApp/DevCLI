@@ -15,6 +15,17 @@ const meta = packageOf( currentModulePath() ).meta,
 
 const folder = manifest.directories || '';
 
+async function safePack(exit) {
+    try {
+        await pack(folder.lib, Commander.HTML);
+
+    } catch (error) {
+
+        console.error( error );
+
+        if (exit === true)  process.exit( 1 );
+    }
+}
 
 Commander
     .version( meta.version ).description( meta.description )
@@ -22,15 +33,15 @@ Commander
         'pack',
         'Bundle components to a package with JS modules (or HTML files) in it'
     )
-    .on('command:pack',  () => pack(folder.lib, Commander.HTML))
+    .on('command:pack',  safePack.bind(null, true))
     .command('preview',  'Real-time preview during development')
     .on('command:preview',  async () => {
 
-        const command = () => pack(folder.lib, Commander.HTML);
+        await safePack( true );
 
-        await command();
-
-        await PuppeteerBrowser.getPage('.',  folder.test || 'test/',  command);
+        await PuppeteerBrowser.getPage(
+            '.',  folder.test || 'test/',  safePack
+        );
     })
     .option('-H, --HTML',  'Bundle as HTML')
     .parse( process.argv );

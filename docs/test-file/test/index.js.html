@@ -42,22 +42,9 @@
 <div class="content" data-ice="content"><h1 data-ice="title">test/index.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;../source/Component&apos;;
 
-import Should from &apos;should&apos;;
-
 import { readFile } from &apos;fs-extra&apos;;
 
 import { join } from &apos;path&apos;;
-
-
-function SyntaxRight(code) {
-    try {
-        Should.doesNotThrow(() =&gt; eval( code ),  SyntaxError);
-
-    } catch (error) {
-
-        console.warn(`Expected error: ${error.message}`);
-    }
-}
 
 
 /**
@@ -146,7 +133,7 @@ textarea {
                 &apos;test/example-html/&apos;, fragment.lastElementChild.getAttribute(&apos;src&apos;)
             ));
 
-            SyntaxRight( code );
+            (() =&gt; eval( code )).should.not.throw( SyntaxError );
 
             code.should.containEql(&apos;\&apos;ExampleHtml\&apos;&apos;);
         });
@@ -187,7 +174,7 @@ textarea {
 
         component.includes(&apos;&quot;name&quot;: &quot;Web components&quot;&apos;).should.be.true();
 
-        SyntaxRight( component );
+        (() =&gt; eval( component )).should.not.throw( SyntaxError );
     });
 });
 </code></pre>
