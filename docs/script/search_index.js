@@ -37,55 +37,55 @@ window.esdocSearchIndex = [
   ],
   [
     "component source/component.js~component,component",
-    "test-file/test/index.js.html#lineNumber11",
+    "test-file/test/index.test.js.html#lineNumber13",
     "Core class",
     "test"
   ],
   [
     "component#tohtml source/component.js~component#tohtml,component#tohtml",
-    "test-file/test/index.js.html#lineNumber103",
+    "test-file/test/index.test.js.html#lineNumber105",
     "Core class Bundle to HTML",
     "test"
   ],
   [
     "component#tojs source/component.js~component#tojs,component#tojs",
-    "test-file/test/index.js.html#lineNumber119",
+    "test-file/test/index.test.js.html#lineNumber121",
     "Core class Bundle to JS",
     "test"
   ],
   [
     "component.parsecss source/component.js~component.parsecss,component.parsecss",
-    "test-file/test/index.js.html#lineNumber18",
+    "test-file/test/index.test.js.html#lineNumber20",
     "Core class Parse CSS files",
     "test"
   ],
   [
     "",
-    "test-file/test/index.js.html#lineNumber54",
+    "test-file/test/index.test.js.html#lineNumber56",
     "Core class Parse mixed HTML",
     "test"
   ],
   [
     "component.findstyle component.parsecss source/component.js~component.findstyle,component.findstyle source/component.js~component.parsecss,component.parsecss",
-    "test-file/test/index.js.html#lineNumber64",
+    "test-file/test/index.test.js.html#lineNumber66",
     "Core class Parse mixed HTML Find & Parse styles",
     "test"
   ],
   [
     "component.packjs source/component.js~component.packjs,component.packjs",
-    "test-file/test/index.js.html#lineNumber88",
+    "test-file/test/index.test.js.html#lineNumber90",
     "Core class Parse mixed HTML Parse script",
     "test"
   ],
   [
     "component.parsehtml component.stringof source/component.js~component.parsehtml,component.parsehtml source/component.js~component.stringof,component.stringof",
-    "test-file/test/index.js.html#lineNumber41",
+    "test-file/test/index.test.js.html#lineNumber43",
     "Core class Parse pure HTML",
     "test"
   ],
   [
     "component.identifierof source/component.js~component.identifierof,component.identifierof",
-    "test-file/test/index.js.html#lineNumber32",
+    "test-file/test/index.test.js.html#lineNumber34",
     "Core class Tag name to Class name",
     "test"
   ],
@@ -426,6 +426,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "source/component.js~component#assetof",
+    "class/source/Component.js~Component.html#instance-method-assetOf",
+    "source/Component.js~Component#assetOf",
+    "method"
+  ],
+  [
     "source/component.js~component#constructor",
     "class/source/Component.js~Component.html#instance-constructor-constructor",
     "source/Component.js~Component#constructor",
@@ -528,21 +534,9 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "test/example-html/index.js",
-    "test-file/test/example-html/index.js.html",
-    "test/example-html/index.js",
-    "testFile"
-  ],
-  [
-    "test/example-js/index.js",
-    "test-file/test/example-js/index.js.html",
-    "test/example-js/index.js",
-    "testFile"
-  ],
-  [
-    "test/index.js",
-    "test-file/test/index.js.html",
-    "test/index.js",
+    "test/index.test.js",
+    "test-file/test/index.test.js.html",
+    "test/index.test.js",
     "testFile"
   ]
 ]

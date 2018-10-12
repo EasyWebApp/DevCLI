@@ -54,6 +54,8 @@ import * as SASS from &apos;sass&apos;;
 
 import { meta, document, parseStylus } from &apos;./utility&apos;;
 
+import { toDataURI } from &apos;@tech_query/node-toolkit&apos;;
+
 
 const single_entry = join(meta.directories.lib || &apos;&apos;,  &apos;index.js&apos;);
 
@@ -227,6 +229,35 @@ export default  class Component {
     }
 
     /**
+     * @protected
+     *
+     * @param {String} file - File path
+     *
+     * @return {String} Legal ECMAScript source code
+     */
+    async assetOf(file) {
+
+        switch ( extname( file ).slice(1) ) {
+            case &apos;html&apos;:
+                file = Component.stringOf(await this.toHTML());  break;
+            case &apos;css&apos;:
+            case &apos;less&apos;:
+            case &apos;sass&apos;:
+            case &apos;scss&apos;:
+            case &apos;stylus&apos;:
+                file = (await Component.parseCSS( file )).textContent;  break;
+            case &apos;js&apos;:
+                return;
+            case &apos;json&apos;:
+                return  (await readFile( file )) + &apos;&apos;;
+            default:
+                file = toDataURI( file );
+        }
+
+        return  JSON.stringify( file );
+    }
+
+    /**
      * @return {string} JS version bundle of this component
      */
     async toJS() {
@@ -239,23 +270,11 @@ export default  class Component {
 
             if (! statSync( file ).isFile())  continue;
 
-            let type = file.split(&apos;.&apos;).slice(-1)[0], temp = `${file}.js`;
+            let temp = `${file}.js`;
 
-            switch ( type ) {
-                case &apos;html&apos;:
-                    file = JSON.stringify(
-                        Component.stringOf(await this.toHTML())
-                    );
-                    break;
-                case &apos;js&apos;:
-                    continue;
-                case &apos;json&apos;:
-                    file = (await readFile( file )) + &apos;&apos;;    break;
-                default:
-                    file = JSON.stringify(
-                        (await Component.parseCSS( file )).textContent
-                    );
-            }
+            file = await this.assetOf( file );
+
+            if (!(file != null))  continue;
 
             temp_file.push( temp );
 

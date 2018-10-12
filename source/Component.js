@@ -12,6 +12,8 @@ import * as SASS from 'sass';
 
 import { meta, document, parseStylus } from './utility';
 
+import { toDataURI } from '@tech_query/node-toolkit';
+
 
 const single_entry = join(meta.directories.lib || '',  'index.js');
 
@@ -185,6 +187,35 @@ export default  class Component {
     }
 
     /**
+     * @protected
+     *
+     * @param {String} file - File path
+     *
+     * @return {String} Legal ECMAScript source code
+     */
+    async assetOf(file) {
+
+        switch ( extname( file ).slice(1) ) {
+            case 'html':
+                file = Component.stringOf(await this.toHTML());  break;
+            case 'css':
+            case 'less':
+            case 'sass':
+            case 'scss':
+            case 'stylus':
+                file = (await Component.parseCSS( file )).textContent;  break;
+            case 'js':
+                return;
+            case 'json':
+                return  (await readFile( file )) + '';
+            default:
+                file = toDataURI( file );
+        }
+
+        return  JSON.stringify( file );
+    }
+
+    /**
      * @return {string} JS version bundle of this component
      */
     async toJS() {
@@ -197,23 +228,11 @@ export default  class Component {
 
             if (! statSync( file ).isFile())  continue;
 
-            let type = file.split('.').slice(-1)[0], temp = `${file}.js`;
+            let temp = `${file}.js`;
 
-            switch ( type ) {
-                case 'html':
-                    file = JSON.stringify(
-                        Component.stringOf(await this.toHTML())
-                    );
-                    break;
-                case 'js':
-                    continue;
-                case 'json':
-                    file = (await readFile( file )) + '';    break;
-                default:
-                    file = JSON.stringify(
-                        (await Component.parseCSS( file )).textContent
-                    );
-            }
+            file = await this.assetOf( file );
+
+            if (!(file != null))  continue;
 
             temp_file.push( temp );
 

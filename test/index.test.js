@@ -4,6 +4,8 @@ import { readFile } from 'fs-extra';
 
 import { join } from 'path';
 
+import { toDataURI } from '@tech_query/node-toolkit';
+
 
 /**
  * @test {Component}
@@ -123,14 +125,19 @@ textarea {
         component = await component.toJS();
 
         component.includes(
-            JSON.stringify( style.textContent )
+            JSON.stringify( style.textContent ).slice(1, -1)
         ).should.be.true();
 
         component.includes(
             JSON.stringify( Component.stringOf( template ) )
+                .slice(1, -1).replace(/\\"/g, '"')
         ).should.be.true();
 
-        component.includes('"name": "Web components"').should.be.true();
+        component.includes('name: \'Web components\'').should.be.true();
+
+        component.includes(
+            toDataURI('test/example-js/icon.svg')
+        ).should.be.true();
 
         (() => eval( component )).should.not.throw( SyntaxError );
     });

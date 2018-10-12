@@ -59,7 +59,7 @@ const folder = manifest.directories || &apos;&apos;;
 
 async function safePack(exit) {
     try {
-        await pack(folder.lib, Commander.HTML);
+        await pack( folder.lib );
 
     } catch (error) {
 
@@ -73,7 +73,7 @@ Commander
     .version( meta.version ).description( meta.description )
     .command(
         &apos;pack&apos;,
-        &apos;Bundle components to a package with JS modules (or HTML files) in it&apos;
+        &apos;Bundle components to a package with JS modules in it&apos;
     )
     .on(&apos;command:pack&apos;,  safePack.bind(null, true))
     .command(&apos;preview&apos;,  &apos;Real-time preview during development&apos;)
@@ -85,7 +85,6 @@ Commander
             &apos;.&apos;,  folder.test || &apos;test/&apos;,  safePack
         );
     })
-    .option(&apos;-H, --HTML&apos;,  &apos;Bundle as HTML&apos;)
     .parse( process.argv );
 </code></pre>
 

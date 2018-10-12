@@ -48,31 +48,28 @@ import Component from &apos;./Component&apos;;
 
 
 /**
- * Bundle components to JS modules (or HTML files)
+ * Bundle components to JS modules
  *
- * @param {string}  path   - Source directory
- * @param {boolean} [HTML] - Whether bundle as HTML
+ * @param {string} path - Source directory
  *
  * @return {string[]} Component paths
  */
-export  async function bundle(path, HTML) {
+export  async function bundle(path) {
 
-    const type = HTML ? &apos;HTML&apos; : &apos;JS&apos;;
+    var result = [ ];
 
-    var _type_ = type.toLowerCase(), result = [ ];
-
-    if (existsSync( join(path, `index.${_type_}`) )) {
+    if (existsSync( join(path, &apos;index.js&apos;) )) {
 
         const component = new Component( path );
 
-        result[0] = `dist/${component.name}.${_type_}`;
+        result[0] = `dist/${component.name}.js`;
 
-        await outputFile(result[0],  await component[`to${type}`]());
+        await outputFile(result[0],  await component.toJS());
     }
 
     if (statSync( path ).isDirectory())
         result = result.concat(... await Promise.all(
-            (await readdir( path )).map(file  =&gt;  bundle(join(path, file), HTML))
+            (await readdir( path )).map(file  =&gt;  bundle( join(path, file) ))
         ));
 
     return result;
@@ -80,28 +77,26 @@ export  async function bundle(path, HTML) {
 
 
 /**
- * Bundle components into a JS or HTML package
+ * Bundle components into a JS package
  *
- * @param {string}  path   - Source directory
- * @param {boolean} [HTML] - Whether bundle as HTML
+ * @param {string} path - Source directory
  *
  * @return {string[]} Component paths
  */
-export  async function pack(path, HTML) {
+export  async function pack(path) {
 
-    const file = await bundle(path, HTML);
+    const file = await bundle( path );
 
     await outputFile(
-        `dist/index.${HTML ? &apos;html&apos; : &apos;js&apos;}`,
+        &apos;dist/index.js&apos;,
         file.map(item =&gt; {
 
             item = basename( item );
 
             console.info(`&#x221A; Component &quot;${item}&quot; is packed in`);
 
-            return  HTML ?
-                `&lt;link rel=&quot;import&quot; href=&quot;${item}&quot;&gt;`  :
-                `export * from &apos;./${item}&apos;;`;
+            return  `export * from &apos;./${item}&apos;;`;
+
         }).join(&apos;\n&apos;)
     );
 

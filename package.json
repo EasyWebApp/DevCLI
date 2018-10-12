@@ -1,6 +1,6 @@
 {
   "name": "web-cell-cli",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Developer command-line tool for WebCell",
   "keywords": [
     "developer",
@@ -44,32 +44,39 @@
     "install": "node dist/install"
   },
   "husky": {
-    "hook": {
+    "hooks": {
       "pre-commit": "npm run build  &&  git add ."
     }
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.1.2",
-    "@tech_query/node-toolkit": "^0.6.2",
-    "amd-bundle": "^1.6.1",
-    "commander": "^2.18.0",
+    "@tech_query/node-toolkit": "^0.7.1",
+    "amd-bundle": "^1.7.1",
+    "commander": "^2.19.0",
     "fs-extra": "^7.0.0",
     "jsdom": "^11.12.0",
     "less": "^3.8.1",
-    "puppeteer-browser": "^0.3.4",
+    "puppeteer-browser": "^0.3.5",
     "sass": "^1.14.1",
     "stylus": "^0.54.5"
   },
+  "peerDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "web-cell": "^0.10.2"
+  },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
+    "babel-eslint": "^10.0.1",
     "esdoc": "^1.1.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^5.6.1",
-    "husky": "^1.0.1",
+    "husky": "^1.1.1",
     "koapache": "^1.0.4",
     "mocha": "^5.2.0",
     "should": "^13.2.3"
@@ -79,6 +86,12 @@
       "@babel/preset-env"
     ],
     "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "decoratorsBeforeExport": true
+        }
+      ],
       "@babel/plugin-transform-runtime"
     ]
   }

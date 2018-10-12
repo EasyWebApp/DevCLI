@@ -6,31 +6,28 @@ import Component from './Component';
 
 
 /**
- * Bundle components to JS modules (or HTML files)
+ * Bundle components to JS modules
  *
- * @param {string}  path   - Source directory
- * @param {boolean} [HTML] - Whether bundle as HTML
+ * @param {string} path - Source directory
  *
  * @return {string[]} Component paths
  */
-export  async function bundle(path, HTML) {
+export  async function bundle(path) {
 
-    const type = HTML ? 'HTML' : 'JS';
+    var result = [ ];
 
-    var _type_ = type.toLowerCase(), result = [ ];
-
-    if (existsSync( join(path, `index.${_type_}`) )) {
+    if (existsSync( join(path, 'index.js') )) {
 
         const component = new Component( path );
 
-        result[0] = `dist/${component.name}.${_type_}`;
+        result[0] = `dist/${component.name}.js`;
 
-        await outputFile(result[0],  await component[`to${type}`]());
+        await outputFile(result[0],  await component.toJS());
     }
 
     if (statSync( path ).isDirectory())
         result = result.concat(... await Promise.all(
-            (await readdir( path )).map(file  =>  bundle(join(path, file), HTML))
+            (await readdir( path )).map(file  =>  bundle( join(path, file) ))
         ));
 
     return result;
@@ -38,28 +35,26 @@ export  async function bundle(path, HTML) {
 
 
 /**
- * Bundle components into a JS or HTML package
+ * Bundle components into a JS package
  *
- * @param {string}  path   - Source directory
- * @param {boolean} [HTML] - Whether bundle as HTML
+ * @param {string} path - Source directory
  *
  * @return {string[]} Component paths
  */
-export  async function pack(path, HTML) {
+export  async function pack(path) {
 
-    const file = await bundle(path, HTML);
+    const file = await bundle( path );
 
     await outputFile(
-        `dist/index.${HTML ? 'html' : 'js'}`,
+        'dist/index.js',
         file.map(item => {
 
             item = basename( item );
 
             console.info(`√ Component "${item}" is packed in`);
 
-            return  HTML ?
-                `<link rel="import" href="${item}">`  :
-                `export * from './${item}';`;
+            return  `export * from './${item}';`;
+
         }).join('\n')
     );
 

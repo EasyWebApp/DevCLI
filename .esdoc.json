@@ -8,7 +8,7 @@
                 "test": {
                     "source": "./test",
                     "interfaces": ["describe", "it"],
-                    "includes": ["\\.js$"]
+                    "includes": ["\\.test\\.js$"]
                 }
             }
         },
