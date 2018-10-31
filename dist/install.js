@@ -8,9 +8,9 @@
     if ((typeof define === 'function')  &&  define.amd)
         define('install', ["@tech_query/node-toolkit"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory(require('@tech_query/node-toolkit'));
+        return  module.exports = factory.call(global,require('@tech_query/node-toolkit'));
     else
-        return  this['install'] = factory(this['@tech_query/node-toolkit']);
+        return  this['install'] = factory.call(self,this['@tech_query/node-toolkit']);
 
 })(function (_tech_query_node_toolkit) {
 
@@ -24,13 +24,18 @@ function outPackage(name) {
   return /^[^./]/.test(name);
 }
 
-    if (typeof require !== 'function')
-        require = function (name) {
+    var require = (typeof module === 'object') ?
+        function () {
 
-            if (self[name] != null)  return self[name];
+            return  module.require.apply(module, arguments);
+        } : (
+            this.require  ||  function (name) {
 
-            throw ReferenceError('Can\'t find "' + name + '" module');
-        };
+                if (self[name] != null)  return self[name];
+
+                throw ReferenceError('Can\'t find "' + name + '" module');
+            }
+        );
 
     var _include_ = include.bind(null, './');
 

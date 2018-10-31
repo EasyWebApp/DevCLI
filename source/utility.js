@@ -10,7 +10,7 @@ import Stylus from 'stylus';
  *
  * @type {Object}
  */
-export const meta = packageOf('./test').meta;
+export const meta = (packageOf('./test') || '').meta;
 
 
 /**

@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
@@ -44,18 +45,19 @@
 
 import { packageOf, currentModulePath } from &apos;@tech_query/node-toolkit&apos;;
 
+import { meta } from &apos;./utility&apos;;
+
 import Commander from &apos;commander&apos;;
 
-import { pack } from &apos;./command&apos;;
+import { pack, boot } from &apos;./command&apos;;
 
 import PuppeteerBrowser from &apos;puppeteer-browser&apos;;
 
 
 
-const meta = packageOf( currentModulePath() ).meta,
-    manifest = packageOf(&apos;./test&apos;).meta;
+const currentPackage = packageOf( currentModulePath() ).meta;
 
-const folder = manifest.directories || &apos;&apos;;
+const folder = meta ? meta.directories : &apos;&apos;;
 
 async function safePack(exit) {
     try {
@@ -70,11 +72,10 @@ async function safePack(exit) {
 }
 
 Commander
-    .version( meta.version ).description( meta.description )
-    .command(
-        &apos;pack&apos;,
-        &apos;Bundle components to a package with JS modules in it&apos;
-    )
+    .version( currentPackage.version ).description( currentPackage.description )
+    .command(&apos;boot&apos;,  &apos;Boot current directory as a WebCell project&apos;)
+    .on(&apos;command:boot&apos;,  boot)
+    .command(&apos;pack&apos;,  &apos;Bundle components to a package with JS modules in it&apos;)
     .on(&apos;command:pack&apos;,  safePack.bind(null, true))
     .command(&apos;preview&apos;,  &apos;Real-time preview during development&apos;)
     .on(&apos;command:preview&apos;,  async () =&gt; {

@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
@@ -43,6 +44,8 @@
 <p><a href="https://david-dm.org/EasyWebApp/DevCLI"><img src="https://david-dm.org/EasyWebApp/DevCLI.svg" alt="NPM Dependency"></a></p>
 <p><a href="https://nodei.co/npm/web-cell-cli/"><img src="https://nodei.co/npm/web-cell-cli.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
 <h2 id="feature">Feature</h2><ol>
+<li><p>Boot current directory as a <strong>WebCell project</strong></p>
+</li>
 <li><p>Bundle components to a package with <strong>JS modules</strong> in it</p>
 </li>
 <li><p>Support to import <strong>HTML</strong> &amp; <strong>CSS</strong> (LESS, SASS/SCSS or Stylus) as a <code>String</code>, <strong>JSON</strong> as an <code>Object</code>, and other assets as <strong>Data URI</strong> in ES module</p>
@@ -51,13 +54,14 @@
 </li>
 </ol>
 <h2 id="usage">Usage</h2><ol>
-<li><p><code>npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D</code></p>
+<li><p><code>npm install web-cell-cli -g --production</code></p>
 </li>
-<li><p>refer <a href="https://web-cell-ht.ml" title="Offical component library of WebCell (based on Material Design lite v1.3)">Material Cell</a> to <a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24">configure the <strong>Source directory</strong></a></p>
+<li><p><code>cd your_project  &amp;&amp;  web-cell boot</code></p>
 </li>
-<li><p>refer <a href="https://web-cell-ht.ml" title="Offical component library of WebCell (based on Material Design lite v1.3)">Material Cell</a> to <a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29">configure the <strong>NPM script</strong></a></p>
-</li>
-<li><p>refer <a href="https://web-cell-ht.ml" title="Offical component library of WebCell (based on Material Design lite v1.3)">Material Cell</a> to <a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55">configure <strong>Babel</strong></a></p>
+<li><p>you may want to refer <a href="https://web-cell-ht.ml" title="Offical component library of WebCell (based on Material Design lite v1.3)">Material Cell</a> to configure the
+<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24"><strong>Source directory</strong></a>,
+<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29"><strong>NPM script</strong></a> or
+<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55"><strong>Babel</strong></a></p>
 </li>
 <li><p><code>npm run your_script</code></p>
 </li>
@@ -71,6 +75,7 @@ Options:
 
 Commands:
 
+    boot           Boot current directory as a WebCell project
     pack           Bundle components to a package with JS modules in it
     preview        Real-time preview during development
     help [cmd]     display help for [cmd]</code>

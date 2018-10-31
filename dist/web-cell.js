@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["@tech_query/node-toolkit","jsdom","stylus","fs-extra","path","amd-bundle","less","sass","commander","puppeteer-browser"], factory);
+        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","less","sass","@tech_query/node-toolkit","simple-git/promise","cross-spawn","stylus","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory(require('@tech_query/node-toolkit'),require('jsdom'),require('stylus'),require('fs-extra'),require('path'),require('amd-bundle'),require('less'),require('sass'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('less'),require('sass'),require('@tech_query/node-toolkit'),require('simple-git/promise'),require('cross-spawn'),require('stylus'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory(this['@tech_query/node-toolkit'],this['jsdom'],this['stylus'],this['fs-extra'],this['path'],this['amd-bundle'],this['less'],this['sass'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory.call(self,this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['less'],this['sass'],this['@tech_query/node-toolkit'],this['simple-git/promise'],this['cross-spawn'],this['stylus'],this['commander'],this['puppeteer-browser']);
 
-})(function (_tech_query_node_toolkit,jsdom,stylus,fs_extra,path,amd_bundle,less,sass,commander,puppeteer_browser) {
+})(function (fs_extra,path,jsdom,amd_bundle,less,sass,_tech_query_node_toolkit,simple_git_promise,cross_spawn,stylus,commander,puppeteer_browser) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -24,13 +24,18 @@ function outPackage(name) {
   return /^[^./]/.test(name);
 }
 
-    if (typeof require !== 'function')
-        require = function (name) {
+    var require = (typeof module === 'object') ?
+        function () {
 
-            if (self[name] != null)  return self[name];
+            return  module.require.apply(module, arguments);
+        } : (
+            this.require  ||  function (name) {
 
-            throw ReferenceError('Can\'t find "' + name + '" module');
-        };
+                if (self[name] != null)  return self[name];
+
+                throw ReferenceError('Can\'t find "' + name + '" module');
+            }
+        );
 
     var _include_ = include.bind(null, './');
 
@@ -67,6 +72,10 @@ function outPackage(name) {
 
 var _interopRequireDefault2 = require('@babel/runtime/helpers/interopRequireDefault');
 
+var _objectSpread2 = _interopRequireDefault2(
+    require('@babel/runtime/helpers/objectSpread')
+);
+
 var _toConsumableArray2 = _interopRequireDefault2(
     require('@babel/runtime/helpers/toConsumableArray')
 );
@@ -88,67 +97,6 @@ var _createClass2 = _interopRequireDefault2(
 );
 
 var _module_ = {
-    './utility': {
-        base: '.',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, '__esModule', {
-                value: true
-            });
-            exports.parseStylus = parseStylus;
-            exports.document = exports.meta = void 0;
-
-            var _nodeToolkit = require('@tech_query/node-toolkit');
-
-            var _jsdom = require('jsdom');
-
-            var _stylus = _interopRequireDefault(require('stylus'));
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule
-                    ? obj
-                    : {
-                          default: obj
-                      };
-            }
-            /**
-             * `package.json` data of `process.cwd()`
-             *
-             * @type {Object}
-             */
-
-            var meta = (0, _nodeToolkit.packageOf)('./test').meta;
-            /**
-             * @type {Document}
-             */
-
-            exports.meta = meta;
-            var document = new _jsdom.JSDOM().window.document;
-            /**
-             * @param {string} source
-             * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
-             *
-             * @return {Promise<string>} CSS source code
-             */
-
-            exports.document = document;
-
-            function parseStylus(source) {
-                var option =
-                    arguments.length > 1 && arguments[1] !== undefined
-                        ? arguments[1]
-                        : {};
-                return new Promise(function(resolve, reject) {
-                    return _stylus.default.render(source, option, function(
-                        error,
-                        CSS
-                    ) {
-                        return error ? reject(error) : resolve(CSS);
-                    });
-                });
-            }
-        }
-    },
     './Component': {
         base: '.',
         dependency: [],
@@ -216,10 +164,8 @@ var _module_ = {
                       };
             }
 
-            var single_entry = (0, _path.join)(
-                _utility.meta.directories.lib || '',
-                'index.js'
-            );
+            var directory = _utility.meta ? _utility.meta.directories : '';
+            var single_entry = (0, _path.join)(directory.lib || '', 'index.js');
             /**
              * Component packer
              */
@@ -1180,11 +1126,19 @@ var _module_ = {
                                     return Array.from(
                                         fragment.childNodes,
                                         function(node) {
-                                            return node[
-                                                node.nodeType === 1
-                                                    ? 'outerHTML'
-                                                    : 'nodeValue'
-                                            ];
+                                            switch (node.nodeType) {
+                                                case 1:
+                                                    return node.outerHTML;
+
+                                                case 3:
+                                                    return node.nodeValue;
+
+                                                case 8:
+                                                    return '<!--'.concat(
+                                                        node.nodeValue,
+                                                        '-->'
+                                                    );
+                                            }
                                         }
                                     ).join('');
                                 }
@@ -1204,12 +1158,21 @@ var _module_ = {
             Object.defineProperty(exports, '__esModule', {
                 value: true
             });
+            exports.boot = boot;
             exports.bundle = bundle;
             exports.pack = pack;
 
             var _path = require('path');
 
+            var _nodeToolkit = require('@tech_query/node-toolkit');
+
             var _fsExtra = require('fs-extra');
+
+            var _promise = _interopRequireDefault(
+                require('simple-git/promise')
+            );
+
+            var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
 
             var _Component = _interopRequireDefault(require('./Component'));
 
@@ -1220,6 +1183,357 @@ var _module_ = {
                           default: obj
                       };
             }
+
+            function setTemplate() {
+                return _setTemplate.apply(this, arguments);
+            }
+
+            function _setTemplate() {
+                _setTemplate = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee6() {
+                        var template,
+                            _iteratorNormalCompletion3,
+                            _didIteratorError3,
+                            _iteratorError3,
+                            _iterator3,
+                            _step3,
+                            file,
+                            _path2,
+                            type;
+
+                        return _regenerator.default.wrap(
+                            function _callee6$(_context6) {
+                                while (1) {
+                                    switch ((_context6.prev = _context6.next)) {
+                                        case 0:
+                                            template = (0, _path.join)(
+                                                (0,
+                                                _nodeToolkit.currentModulePath)(),
+                                                '../../template'
+                                            );
+                                            _iteratorNormalCompletion3 = true;
+                                            _didIteratorError3 = false;
+                                            _iteratorError3 = undefined;
+                                            _context6.prev = 4;
+                                            _iterator3 = (0,
+                                            _fsExtra.readdirSync)(template)[
+                                                Symbol.iterator
+                                            ]();
+
+                                        case 6:
+                                            if (
+                                                (_iteratorNormalCompletion3 = (_step3 = _iterator3.next())
+                                                    .done)
+                                            ) {
+                                                _context6.next = 39;
+                                                break;
+                                            }
+
+                                            file = _step3.value;
+                                            (_path2 = (0, _path.join)(
+                                                template,
+                                                file
+                                            )),
+                                                (type = 'Skip');
+
+                                            if (
+                                                (0, _fsExtra.existsSync)(file)
+                                            ) {
+                                                _context6.next = 15;
+                                                break;
+                                            }
+
+                                            _context6.next = 12;
+                                            return (0, _fsExtra.copy)(
+                                                _path2,
+                                                file
+                                            );
+
+                                        case 12:
+                                            type = 'Create';
+                                            _context6.next = 35;
+                                            break;
+
+                                        case 15:
+                                            if (
+                                                !(
+                                                    (0, _path.extname)(file) ===
+                                                    '.json'
+                                                )
+                                            ) {
+                                                _context6.next = 35;
+                                                break;
+                                            }
+
+                                            _context6.t0 = (0,
+                                            _fsExtra.outputFile);
+                                            _context6.t1 = file;
+                                            _context6.t2 = JSON;
+                                            _context6.t3 = (0,
+                                            _nodeToolkit.patch);
+                                            _context6.t4 = JSON;
+                                            _context6.next = 23;
+                                            return (0, _fsExtra.readFile)(file);
+
+                                        case 23:
+                                            _context6.t5 = _context6.sent;
+                                            _context6.t6 = _context6.t4.parse.call(
+                                                _context6.t4,
+                                                _context6.t5
+                                            );
+                                            _context6.t7 = JSON;
+                                            _context6.next = 28;
+                                            return (0, _fsExtra.readFile)(
+                                                _path2
+                                            );
+
+                                        case 28:
+                                            _context6.t8 = _context6.sent;
+                                            _context6.t9 = _context6.t7.parse.call(
+                                                _context6.t7,
+                                                _context6.t8
+                                            );
+                                            _context6.t10 = (0, _context6.t3)(
+                                                _context6.t6,
+                                                _context6.t9
+                                            );
+                                            _context6.t11 = _context6.t2.stringify.call(
+                                                _context6.t2,
+                                                _context6.t10,
+                                                null,
+                                                4
+                                            );
+                                            _context6.next = 34;
+                                            return (0, _context6.t0)(
+                                                _context6.t1,
+                                                _context6.t11
+                                            );
+
+                                        case 34:
+                                            type = 'Update';
+
+                                        case 35:
+                                            console.info(
+                                                ''
+                                                    .concat(
+                                                        type.padEnd(6),
+                                                        ' --> '
+                                                    )
+                                                    .concat(file)
+                                            );
+
+                                        case 36:
+                                            _iteratorNormalCompletion3 = true;
+                                            _context6.next = 6;
+                                            break;
+
+                                        case 39:
+                                            _context6.next = 45;
+                                            break;
+
+                                        case 41:
+                                            _context6.prev = 41;
+                                            _context6.t12 = _context6['catch'](
+                                                4
+                                            );
+                                            _didIteratorError3 = true;
+                                            _iteratorError3 = _context6.t12;
+
+                                        case 45:
+                                            _context6.prev = 45;
+                                            _context6.prev = 46;
+
+                                            if (
+                                                !_iteratorNormalCompletion3 &&
+                                                _iterator3.return != null
+                                            ) {
+                                                _iterator3.return();
+                                            }
+
+                                        case 48:
+                                            _context6.prev = 48;
+
+                                            if (!_didIteratorError3) {
+                                                _context6.next = 51;
+                                                break;
+                                            }
+
+                                            throw _iteratorError3;
+
+                                        case 51:
+                                            return _context6.finish(48);
+
+                                        case 52:
+                                            return _context6.finish(45);
+
+                                        case 53:
+                                        case 'end':
+                                            return _context6.stop();
+                                    }
+                                }
+                            },
+                            _callee6,
+                            this,
+                            [[4, 41, 45, 53], [46, , 48, 52]]
+                        );
+                    })
+                );
+                return _setTemplate.apply(this, arguments);
+            }
+
+            function setMeta() {
+                return _setMeta.apply(this, arguments);
+            }
+            /**
+             * Boot current directory as a WebCell project
+             */
+
+            function _setMeta() {
+                _setMeta = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee7() {
+                        var meta, git, config, url, ReadMe, text;
+                        return _regenerator.default.wrap(
+                            function _callee7$(_context7) {
+                                while (1) {
+                                    switch ((_context7.prev = _context7.next)) {
+                                        case 0:
+                                            _context7.t0 = JSON;
+                                            _context7.next = 3;
+                                            return (0, _fsExtra.readFile)(
+                                                'package.json'
+                                            );
+
+                                        case 3:
+                                            _context7.t1 = _context7.sent;
+                                            meta = _context7.t0.parse.call(
+                                                _context7.t0,
+                                                _context7.t1
+                                            );
+                                            git = (0, _promise.default)();
+                                            config = {};
+                                            _context7.next = 9;
+                                            return git.checkIsRepo();
+
+                                        case 9:
+                                            if (_context7.sent) {
+                                                _context7.next = 12;
+                                                break;
+                                            }
+
+                                            _context7.next = 12;
+                                            return git.init();
+
+                                        case 12:
+                                            _context7.prev = 12;
+                                            _context7.next = 15;
+                                            return git.listRemote([
+                                                '--get-url'
+                                            ]);
+
+                                        case 15:
+                                            url = _context7.sent.trim();
+                                            _context7.next = 21;
+                                            break;
+
+                                        case 18:
+                                            _context7.prev = 18;
+                                            _context7.t2 = _context7['catch'](
+                                                12
+                                            );
+                                            url = '';
+
+                                        case 21:
+                                            if (!meta.name)
+                                                config.name = (url
+                                                    ? /([^/]+)\.git$/.exec(
+                                                          url
+                                                      )[1]
+                                                    : (0, _path.basename)(
+                                                          process.cwd()
+                                                      ).replace(
+                                                          /[^a-zA-Z0-9-]/g,
+                                                          '-'
+                                                      )
+                                                ).toLowerCase();
+
+                                            if (meta.description) {
+                                                _context7.next = 31;
+                                                break;
+                                            }
+
+                                            ReadMe = (0, _nodeToolkit.findFile)(
+                                                /^ReadMe\.?/i
+                                            );
+
+                                            if (!ReadMe) {
+                                                _context7.next = 31;
+                                                break;
+                                            }
+
+                                            _context7.t3 = /^[^#].+/m;
+                                            _context7.next = 28;
+                                            return (0, _fsExtra.readFile)(
+                                                ReadMe
+                                            );
+
+                                        case 28:
+                                            _context7.t4 = _context7.sent;
+                                            text = _context7.t3.exec.call(
+                                                _context7.t3,
+                                                _context7.t4
+                                            );
+                                            if (text)
+                                                config.description = text[0].trim();
+
+                                        case 31:
+                                            if (
+                                                !meta.repository ||
+                                                !meta.bugs
+                                            ) {
+                                                config.repository = meta.repository || {
+                                                    type: 'git',
+                                                    url: url
+                                                };
+                                                config.bugs = meta.bugs || {
+                                                    url: url.replace(
+                                                        /\.git$/,
+                                                        '/issues/'
+                                                    )
+                                                };
+                                                config.homepage =
+                                                    meta.homepage ||
+                                                    url.replace(/\.git$/, '/');
+                                            }
+
+                                            return _context7.abrupt(
+                                                'return',
+                                                (0, _objectSpread2.default)(
+                                                    {},
+                                                    config,
+                                                    meta
+                                                )
+                                            );
+
+                                        case 33:
+                                        case 'end':
+                                            return _context7.stop();
+                                    }
+                                }
+                            },
+                            _callee7,
+                            this,
+                            [[12, 18]]
+                        );
+                    })
+                );
+                return _setMeta.apply(this, arguments);
+            }
+
+            function boot() {
+                return _boot.apply(this, arguments);
+            }
             /**
              * Bundle components to JS modules
              *
@@ -1227,6 +1541,69 @@ var _module_ = {
              *
              * @return {string[]} Component paths
              */
+
+            function _boot() {
+                _boot = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee8() {
+                        return _regenerator.default.wrap(
+                            function _callee8$(_context8) {
+                                while (1) {
+                                    switch ((_context8.prev = _context8.next)) {
+                                        case 0:
+                                            console.time('Write configuration');
+                                            _context8.next = 3;
+                                            return setTemplate();
+
+                                        case 3:
+                                            _context8.t0 = (0,
+                                            _fsExtra.outputFile);
+                                            _context8.t1 = JSON;
+                                            _context8.next = 7;
+                                            return setMeta();
+
+                                        case 7:
+                                            _context8.t2 = _context8.sent;
+                                            _context8.t3 = _context8.t1.stringify.call(
+                                                _context8.t1,
+                                                _context8.t2,
+                                                null,
+                                                4
+                                            );
+                                            _context8.next = 11;
+                                            return (0, _context8.t0)(
+                                                'package.json',
+                                                _context8.t3
+                                            );
+
+                                        case 11:
+                                            console.info(
+                                                '--------------------'
+                                            );
+                                            console.timeEnd(
+                                                'Write configuration'
+                                            );
+                                            (0, _crossSpawn.default)(
+                                                'npm',
+                                                ['install'],
+                                                {
+                                                    stdio: 'inherit'
+                                                }
+                                            );
+
+                                        case 14:
+                                        case 'end':
+                                            return _context8.stop();
+                                    }
+                                }
+                            },
+                            _callee8,
+                            this
+                        );
+                    })
+                );
+                return _boot.apply(this, arguments);
+            }
 
             function bundle(_x6) {
                 return _bundle.apply(this, arguments);
@@ -1242,14 +1619,12 @@ var _module_ = {
             function _bundle() {
                 _bundle = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee6(path) {
-                        var _result;
-
+                    _regenerator.default.mark(function _callee9(path) {
                         var result, component;
                         return _regenerator.default.wrap(
-                            function _callee6$(_context6) {
+                            function _callee9$(_context9) {
                                 while (1) {
-                                    switch ((_context6.prev = _context6.next)) {
+                                    switch ((_context9.prev = _context9.next)) {
                                         case 0:
                                             result = [];
 
@@ -1261,7 +1636,7 @@ var _module_ = {
                                                     )
                                                 )
                                             ) {
-                                                _context6.next = 11;
+                                                _context9.next = 11;
                                                 break;
                                             }
 
@@ -1272,78 +1647,55 @@ var _module_ = {
                                                 component.name,
                                                 '.js'
                                             );
-                                            _context6.t0 = (0,
+                                            _context9.t0 = (0,
                                             _fsExtra.outputFile);
-                                            _context6.t1 = result[0];
-                                            _context6.next = 8;
+                                            _context9.t1 = result[0];
+                                            _context9.next = 8;
                                             return component.toJS();
 
                                         case 8:
-                                            _context6.t2 = _context6.sent;
-                                            _context6.next = 11;
-                                            return (0, _context6.t0)(
-                                                _context6.t1,
-                                                _context6.t2
+                                            _context9.t2 = _context9.sent;
+                                            _context9.next = 11;
+                                            return (0, _context9.t0)(
+                                                _context9.t1,
+                                                _context9.t2
                                             );
 
                                         case 11:
                                             if (
-                                                !(0, _fsExtra.statSync)(
+                                                (0, _fsExtra.statSync)(
                                                     path
                                                 ).isDirectory()
-                                            ) {
-                                                _context6.next = 25;
-                                                break;
-                                            }
-
-                                            _context6.t3 = (_result = result).concat;
-                                            _context6.t4 = _result;
-                                            _context6.t5 =
-                                                _toConsumableArray2.default;
-                                            _context6.t6 = Promise;
-                                            _context6.next = 18;
-                                            return (0, _fsExtra.readdir)(path);
-
-                                        case 18:
-                                            _context6.t7 = function(file) {
-                                                return bundle(
-                                                    (0, _path.join)(path, file)
+                                            )
+                                                result.push.apply(
+                                                    result,
+                                                    (0,
+                                                    _toConsumableArray2.default)(
+                                                        (0,
+                                                        _fsExtra.readdirSync)(
+                                                            path
+                                                        ).map(function(file) {
+                                                            return bundle(
+                                                                (0, _path.join)(
+                                                                    path,
+                                                                    file
+                                                                )
+                                                            );
+                                                        })
+                                                    )
                                                 );
-                                            };
-
-                                            _context6.t8 = _context6.sent.map(
-                                                _context6.t7
-                                            );
-                                            _context6.next = 22;
-                                            return _context6.t6.all.call(
-                                                _context6.t6,
-                                                _context6.t8
-                                            );
-
-                                        case 22:
-                                            _context6.t9 = _context6.sent;
-                                            _context6.t10 = (0, _context6.t5)(
-                                                _context6.t9
-                                            );
-                                            result = _context6.t3.apply.call(
-                                                _context6.t3,
-                                                _context6.t4,
-                                                _context6.t10
-                                            );
-
-                                        case 25:
-                                            return _context6.abrupt(
+                                            return _context9.abrupt(
                                                 'return',
                                                 result
                                             );
 
-                                        case 26:
+                                        case 13:
                                         case 'end':
-                                            return _context6.stop();
+                                            return _context9.stop();
                                     }
                                 }
                             },
-                            _callee6,
+                            _callee9,
                             this
                         );
                     })
@@ -1358,19 +1710,21 @@ var _module_ = {
             function _pack() {
                 _pack = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee7(path) {
+                    _regenerator.default.mark(function _callee10(path) {
                         var file;
                         return _regenerator.default.wrap(
-                            function _callee7$(_context7) {
+                            function _callee10$(_context10) {
                                 while (1) {
-                                    switch ((_context7.prev = _context7.next)) {
+                                    switch (
+                                        (_context10.prev = _context10.next)
+                                    ) {
                                         case 0:
-                                            _context7.next = 2;
+                                            _context10.next = 2;
                                             return bundle(path);
 
                                         case 2:
-                                            file = _context7.sent;
-                                            _context7.next = 5;
+                                            file = _context10.sent;
+                                            _context10.next = 5;
                                             return (0, _fsExtra.outputFile)(
                                                 'dist/index.js',
                                                 file
@@ -1392,18 +1746,18 @@ var _module_ = {
                                             );
 
                                         case 5:
-                                            return _context7.abrupt(
+                                            return _context10.abrupt(
                                                 'return',
                                                 file
                                             );
 
                                         case 6:
                                         case 'end':
-                                            return _context7.stop();
+                                            return _context10.stop();
                                     }
                                 }
                             },
-                            _callee7,
+                            _callee10,
                             this
                         );
                     })
@@ -1412,11 +1766,74 @@ var _module_ = {
             }
         }
     },
+    './utility': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.parseStylus = parseStylus;
+            exports.document = exports.meta = void 0;
+
+            var _nodeToolkit = require('@tech_query/node-toolkit');
+
+            var _jsdom = require('jsdom');
+
+            var _stylus = _interopRequireDefault(require('stylus'));
+
+            function _interopRequireDefault(obj) {
+                return obj && obj.__esModule
+                    ? obj
+                    : {
+                          default: obj
+                      };
+            }
+            /**
+             * `package.json` data of `process.cwd()`
+             *
+             * @type {Object}
+             */
+
+            var meta = ((0, _nodeToolkit.packageOf)('./test') || '').meta;
+            /**
+             * @type {Document}
+             */
+
+            exports.meta = meta;
+            var document = new _jsdom.JSDOM().window.document;
+            /**
+             * @param {string} source
+             * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
+             *
+             * @return {Promise<string>} CSS source code
+             */
+
+            exports.document = document;
+
+            function parseStylus(source) {
+                var option =
+                    arguments.length > 1 && arguments[1] !== undefined
+                        ? arguments[1]
+                        : {};
+                return new Promise(function(resolve, reject) {
+                    return _stylus.default.render(source, option, function(
+                        error,
+                        CSS
+                    ) {
+                        return error ? reject(error) : resolve(CSS);
+                    });
+                });
+            }
+        }
+    },
     './index': {
         base: '.',
         dependency: [],
         factory: function factory(require, exports, module) {
             var _nodeToolkit = require('@tech_query/node-toolkit');
+
+            var _utility = require('./utility');
 
             var _commander = _interopRequireDefault(require('commander'));
 
@@ -1434,11 +1851,10 @@ var _module_ = {
                       };
             }
 
-            var meta = (0, _nodeToolkit.packageOf)(
-                    (0, _nodeToolkit.currentModulePath)()
-                ).meta,
-                manifest = (0, _nodeToolkit.packageOf)('./test').meta;
-            var folder = manifest.directories || '';
+            var currentPackage = (0, _nodeToolkit.packageOf)(
+                (0, _nodeToolkit.currentModulePath)()
+            ).meta;
+            var folder = _utility.meta ? _utility.meta.directories : '';
 
             function safePack(_x8) {
                 return _safePack.apply(this, arguments);
@@ -1447,37 +1863,39 @@ var _module_ = {
             function _safePack() {
                 _safePack = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee9(exit) {
+                    _regenerator.default.mark(function _callee12(exit) {
                         return _regenerator.default.wrap(
-                            function _callee9$(_context9) {
+                            function _callee12$(_context12) {
                                 while (1) {
-                                    switch ((_context9.prev = _context9.next)) {
+                                    switch (
+                                        (_context12.prev = _context12.next)
+                                    ) {
                                         case 0:
-                                            _context9.prev = 0;
-                                            _context9.next = 3;
+                                            _context12.prev = 0;
+                                            _context12.next = 3;
                                             return (0, _command.pack)(
                                                 folder.lib
                                             );
 
                                         case 3:
-                                            _context9.next = 9;
+                                            _context12.next = 9;
                                             break;
 
                                         case 5:
-                                            _context9.prev = 5;
-                                            _context9.t0 = _context9['catch'](
+                                            _context12.prev = 5;
+                                            _context12.t0 = _context12['catch'](
                                                 0
                                             );
-                                            console.error(_context9.t0);
+                                            console.error(_context12.t0);
                                             if (exit === true) process.exit(1);
 
                                         case 9:
                                         case 'end':
-                                            return _context9.stop();
+                                            return _context12.stop();
                                     }
                                 }
                             },
-                            _callee9,
+                            _callee12,
                             this,
                             [[0, 5]]
                         );
@@ -1487,8 +1905,10 @@ var _module_ = {
             }
 
             _commander.default
-                .version(meta.version)
-                .description(meta.description)
+                .version(currentPackage.version)
+                .description(currentPackage.description)
+                .command('boot', 'Boot current directory as a WebCell project')
+                .on('command:boot', _command.boot)
                 .command(
                     'pack',
                     'Bundle components to a package with JS modules in it'
@@ -1500,19 +1920,19 @@ var _module_ = {
                     /*#__PURE__*/
                     (0, _asyncToGenerator2.default)(
                         /*#__PURE__*/
-                        _regenerator.default.mark(function _callee8() {
+                        _regenerator.default.mark(function _callee11() {
                             return _regenerator.default.wrap(
-                                function _callee8$(_context8) {
+                                function _callee11$(_context11) {
                                     while (1) {
                                         switch (
-                                            (_context8.prev = _context8.next)
+                                            (_context11.prev = _context11.next)
                                         ) {
                                             case 0:
-                                                _context8.next = 2;
+                                                _context11.next = 2;
                                                 return safePack(true);
 
                                             case 2:
-                                                _context8.next = 4;
+                                                _context11.next = 4;
                                                 return _puppeteerBrowser.default.getPage(
                                                     '.',
                                                     folder.test || 'test/',
@@ -1521,11 +1941,11 @@ var _module_ = {
 
                                             case 4:
                                             case 'end':
-                                                return _context8.stop();
+                                                return _context11.stop();
                                         }
                                     }
                                 },
-                                _callee8,
+                                _callee11,
                                 this
                             );
                         })
@@ -1534,20 +1954,14 @@ var _module_ = {
                 .parse(process.argv);
         }
     },
-    '@tech_query/node-toolkit': {
-        exports: _tech_query_node_toolkit
-    },
-    jsdom: {
-        exports: jsdom
-    },
-    stylus: {
-        exports: stylus
-    },
     'fs-extra': {
         exports: fs_extra
     },
     path: {
         exports: path
+    },
+    jsdom: {
+        exports: jsdom
     },
     'amd-bundle': {
         exports: amd_bundle
@@ -1557,6 +1971,18 @@ var _module_ = {
     },
     sass: {
         exports: sass
+    },
+    '@tech_query/node-toolkit': {
+        exports: _tech_query_node_toolkit
+    },
+    'simple-git/promise': {
+        exports: simple_git_promise
+    },
+    'cross-spawn': {
+        exports: cross_spawn
+    },
+    stylus: {
+        exports: stylus
     },
     commander: {
         exports: commander

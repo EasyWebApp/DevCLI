@@ -2,18 +2,19 @@
 
 import { packageOf, currentModulePath } from '@tech_query/node-toolkit';
 
+import { meta } from './utility';
+
 import Commander from 'commander';
 
-import { pack } from './command';
+import { pack, boot } from './command';
 
 import PuppeteerBrowser from 'puppeteer-browser';
 
 
 
-const meta = packageOf( currentModulePath() ).meta,
-    manifest = packageOf('./test').meta;
+const currentPackage = packageOf( currentModulePath() ).meta;
 
-const folder = manifest.directories || '';
+const folder = meta ? meta.directories : '';
 
 async function safePack(exit) {
     try {
@@ -28,11 +29,10 @@ async function safePack(exit) {
 }
 
 Commander
-    .version( meta.version ).description( meta.description )
-    .command(
-        'pack',
-        'Bundle components to a package with JS modules in it'
-    )
+    .version( currentPackage.version ).description( currentPackage.description )
+    .command('boot',  'Boot current directory as a WebCell project')
+    .on('command:boot',  boot)
+    .command('pack',  'Bundle components to a package with JS modules in it')
     .on('command:pack',  safePack.bind(null, true))
     .command('preview',  'Real-time preview during development')
     .on('command:preview',  async () => {

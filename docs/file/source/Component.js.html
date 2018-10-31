@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
@@ -57,7 +58,9 @@ import { meta, document, parseStylus } from &apos;./utility&apos;;
 import { toDataURI } from &apos;@tech_query/node-toolkit&apos;;
 
 
-const single_entry = join(meta.directories.lib || &apos;&apos;,  &apos;index.js&apos;);
+const directory = meta ? meta.directories : &apos;&apos;;
+
+const single_entry = join(directory.lib || &apos;&apos;,  &apos;index.js&apos;);
 
 
 /**
@@ -187,10 +190,14 @@ export default  class Component {
      */
     static stringOf(fragment) {
 
-        return Array.from(
-            fragment.childNodes,
-            node  =&gt;  node[(node.nodeType === 1) ? &apos;outerHTML&apos; : &apos;nodeValue&apos;]
-        ).join(&apos;&apos;);
+        return  Array.from(fragment.childNodes,  node =&gt; {
+
+            switch ( node.nodeType ) {
+                case 1:  return node.outerHTML;
+                case 3:  return node.nodeValue;
+                case 8:  return `&lt;!--${node.nodeValue}--&gt;`;
+            }
+        }).join(&apos;&apos;);
     }
 
     /**

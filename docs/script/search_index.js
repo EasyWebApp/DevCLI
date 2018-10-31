@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "web-cell-cli/source/command.js~boot",
+    "function/index.html#static-function-boot",
+    "<span>boot</span> <span class=\"search-result-import-path\">web-cell-cli/source/command.js</span>",
+    "function"
+  ],
+  [
     "web-cell-cli/source/command.js~bundle",
     "function/index.html#static-function-bundle",
     "<span>bundle</span> <span class=\"search-result-import-path\">web-cell-cli/source/command.js</span>",

@@ -15,7 +15,9 @@ import { meta, document, parseStylus } from './utility';
 import { toDataURI } from '@tech_query/node-toolkit';
 
 
-const single_entry = join(meta.directories.lib || '',  'index.js');
+const directory = meta ? meta.directories : '';
+
+const single_entry = join(directory.lib || '',  'index.js');
 
 
 /**
@@ -145,10 +147,14 @@ export default  class Component {
      */
     static stringOf(fragment) {
 
-        return Array.from(
-            fragment.childNodes,
-            node  =>  node[(node.nodeType === 1) ? 'outerHTML' : 'nodeValue']
-        ).join('');
+        return  Array.from(fragment.childNodes,  node => {
+
+            switch ( node.nodeType ) {
+                case 1:  return node.outerHTML;
+                case 3:  return node.nodeValue;
+                case 8:  return `<!--${node.nodeValue}-->`;
+            }
+        }).join('');
     }
 
     /**

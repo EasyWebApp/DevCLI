@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
@@ -40,11 +41,112 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/command.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {join, basename} from &apos;path&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { join, basename, extname } from &apos;path&apos;;
 
-import {outputFile, existsSync, statSync, readdir} from &apos;fs-extra&apos;;
+import { currentModulePath, patch, findFile } from &apos;@tech_query/node-toolkit&apos;;
+
+import {
+    readdirSync, existsSync, copy, outputFile, readFile, statSync
+} from &apos;fs-extra&apos;;
+
+import Git from &apos;simple-git/promise&apos;;
+
+import spawn from &apos;cross-spawn&apos;;
 
 import Component from &apos;./Component&apos;;
+
+
+async function setTemplate() {
+
+    const template = join(currentModulePath(), &apos;../../template&apos;);
+
+    for (let file  of  readdirSync( template )) {
+
+        let path = join(template, file), type = &apos;Skip&apos;;
+
+        if (! existsSync( file )) {
+
+            await copy(path, file);  type = &apos;Create&apos;;
+
+        } else if (extname( file ) === &apos;.json&apos;)
+            await outputFile(
+                file,
+                JSON.stringify(
+                    patch(
+                        JSON.parse(await readFile( file )),
+                        JSON.parse(await readFile( path ))
+                    ),
+                    null,
+                    4
+                )
+            ),
+            type = &apos;Update&apos;;
+
+        console.info(`${type.padEnd(6)} --&gt; ${file}`);
+    }
+}
+
+async function setMeta() {
+
+    const meta = JSON.parse(await readFile(&apos;package.json&apos;)),
+        git = Git(),
+        config = { };
+
+    if (!(await git.checkIsRepo()))  await git.init();
+
+    try {
+        var url = (await git.listRemote([&apos;--get-url&apos;])).trim();
+
+    } catch (error) {  url = &apos;&apos;;  }
+
+    if (! meta.name)
+        config.name = (
+            url ?
+                /([^/]+)\.git$/.exec( url )[1]  :
+                basename( process.cwd() ).replace(/[^a-zA-Z0-9-]/g, &apos;-&apos;)
+        ).toLowerCase();
+
+    if (! meta.description) {
+
+        const ReadMe = findFile( /^ReadMe\.?/i );
+
+        if ( ReadMe ) {
+
+            const text = /^[^#].+/m.exec(await readFile( ReadMe ));
+
+            if ( text )  config.description = text[0].trim();
+        }
+    }
+
+    if (!meta.repository || !meta.bugs) {
+
+        config.repository = meta.repository  ||  {type: &apos;git&apos;,  url};
+
+        config.bugs = meta.bugs  ||  {url: url.replace(/\.git$/, &apos;/issues/&apos;)};
+
+        config.homepage = meta.homepage  ||  url.replace(/\.git$/, &apos;/&apos;);
+    }
+
+    return  {...config, ...meta};
+}
+
+/**
+ * Boot current directory as a WebCell project
+ */
+export async function boot() {
+
+    console.time(&apos;Write configuration&apos;);
+
+    await setTemplate();
+
+    await outputFile(&apos;package.json&apos;,  JSON.stringify(await setMeta(), null, 4));
+
+    console.info(&apos;--------------------&apos;);
+
+    console.timeEnd(&apos;Write configuration&apos;);
+
+    spawn(&apos;npm&apos;,  [&apos;install&apos;],  {stdio: &apos;inherit&apos;});
+}
 
 
 /**
@@ -68,8 +170,8 @@ export  async function bundle(path) {
     }
 
     if (statSync( path ).isDirectory())
-        result = result.concat(... await Promise.all(
-            (await readdir( path )).map(file  =&gt;  bundle( join(path, file) ))
+        result.push(... readdirSync( path ).map(
+            file  =&gt;  bundle( join(path, file) )
         ));
 
     return result;
