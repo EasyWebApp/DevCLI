@@ -1,5 +1,23 @@
 window.esdocSearchIndex = [
   [
+    "",
+    "test-file/test/template.test.js.html#lineNumber4",
+    "\"boot\" command",
+    "test"
+  ],
+  [
+    "upgradehtml source/utility.js~upgradehtml,upgradehtml",
+    "test-file/test/template.test.js.html#lineNumber24",
+    "\"boot\" command index.html",
+    "test"
+  ],
+  [
+    "setpackage source/utility.js~setpackage,setpackage",
+    "test-file/test/template.test.js.html#lineNumber8",
+    "\"boot\" command package.json",
+    "test"
+  ],
+  [
     "web-cell-cli~component",
     "class/source/Component.js~Component.html",
     "<span>Component</span> <span class=\"search-result-import-path\">web-cell-cli</span>",
@@ -18,10 +36,10 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell-cli/source/utility.js~document",
-    "variable/index.html#static-variable-document",
-    "<span>document</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
-    "variable"
+    "web-cell-cli/source/utility.js~copyfrom",
+    "function/index.html#static-function-copyFrom",
+    "<span>copyFrom</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "function"
   ],
   [
     "web-cell-cli/source/utility.js~meta",
@@ -40,6 +58,24 @@ window.esdocSearchIndex = [
     "function/index.html#static-function-parseStylus",
     "<span>parseStylus</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
     "function"
+  ],
+  [
+    "web-cell-cli/source/utility.js~setpackage",
+    "function/index.html#static-function-setPackage",
+    "<span>setPackage</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "function"
+  ],
+  [
+    "web-cell-cli/source/utility.js~upgradehtml",
+    "function/index.html#static-function-upgradeHTML",
+    "<span>upgradeHTML</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "function"
+  ],
+  [
+    "web-cell-cli/source/utility.js~window",
+    "variable/index.html#static-variable-window",
+    "<span>window</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "variable"
   ],
   [
     "component source/component.js~component,component",
@@ -543,6 +579,12 @@ window.esdocSearchIndex = [
     "test/index.test.js",
     "test-file/test/index.test.js.html",
     "test/index.test.js",
+    "testFile"
+  ],
+  [
+    "test/template.test.js",
+    "test-file/test/template.test.js.html",
+    "test/template.test.js",
     "testFile"
   ]
 ]

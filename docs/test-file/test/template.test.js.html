@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/command.js | web-cell-cli</title>
+  <title data-ice="title">test/template.test.js | web-cell-cli</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -43,105 +43,48 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/command.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { join, basename } from &apos;path&apos;;
-
-import { currentModulePath } from &apos;@tech_query/node-toolkit&apos;;
-
-import {
-    outputJSON, readJSON, outputFile, readFile, existsSync, statSync, readdir
-} from &apos;fs-extra&apos;;
-
-import { copyFrom, setPackage, upgradeHTML } from &apos;./utility&apos;;
-
-import Component from &apos;./Component&apos;;
-
-import spawn from &apos;cross-spawn&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/template.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { setPackage, upgradeHTML } from &apos;../source/utility&apos;;
 
 
-/**
- * Boot current directory as a WebCell project
- */
-export  async function boot() {
+describe(&apos;&quot;boot&quot; command&apos;,  () =&gt; {
+    /**
+     * @test {setPackage}
+     */
+    it(&apos;package.json&apos;,  () =&gt; setPackage({ }).should.be.fulfilledWith({
+        name:         &apos;devcli&apos;,
+        description:  &apos;Developer command-line tool for [WebCell](https://web-cell.tk/)&apos;,
+        homepage:     &apos;https://github.com/EasyWebApp/DevCLI/&apos;,
+        repository:   {
+            type:  &apos;git&apos;,
+            url:   &apos;https://github.com/EasyWebApp/DevCLI.git&apos;
+        },
+        bugs:         {
+            url:  &apos;https://github.com/EasyWebApp/DevCLI/issues/&apos;
+        }
+    }));
 
-    console.time(&apos;Boot project&apos;);
+    /**
+     * @test {upgradeHTML}
+     */
+    it(&apos;index.html&apos;,  () =&gt; {
 
-    await copyFrom(join(currentModulePath(), &apos;../../template&apos;));
+        const document = upgradeHTML(`
+&lt;!DocType HTML&gt;
+&lt;html&gt;&lt;head&gt;
 
-    await outputJSON(
-        &apos;package.json&apos;,
-        await setPackage(await readJSON(&apos;package.json&apos;)),
-        {spaces: 4}
-    );
+&lt;/head&gt;&lt;body&gt;
 
-    await outputFile(
-        &apos;index.html&apos;,
-        Component.stringOf( upgradeHTML(await readFile(&apos;index.html&apos;)) )
-    );
+&lt;/body&gt;&lt;/html&gt;`
+        );
 
-    console.info(&apos;--------------------&apos;);
+        document.querySelectorAll(&apos;script[src^=&quot;node_modules/&quot;]&apos;)
+            .should.have.length(5);
 
-    console.timeEnd(&apos;Boot project&apos;);
-
-    spawn(&apos;npm&apos;,  [&apos;install&apos;],  {stdio: &apos;inherit&apos;});
-}
-
-
-/**
- * Bundle components to JS modules
- *
- * @param {string} path - Source directory
- *
- * @return {string[]} Component paths
- */
-export  async function bundle(path) {
-
-    var result = [ ];
-
-    if (existsSync( join(path, &apos;index.js&apos;) )) {
-
-        const component = new Component( path );
-
-        result[0] = `dist/${component.name}.js`;
-
-        await outputFile(result[0],  await component.toJS());
-    }
-
-    if (statSync( path ).isDirectory())
-        result = result.concat(... await Promise.all(
-            readdir( path ).map(file  =&gt;  bundle( join(path, file) ))
-        ));
-
-    return result;
-}
-
-
-/**
- * Bundle components into a JS package
- *
- * @param {string} path - Source directory
- *
- * @return {string[]} Component paths
- */
-export  async function pack(path) {
-
-    const file = await bundle( path );
-
-    await outputFile(
-        &apos;dist/index.js&apos;,
-        file.map(item =&gt; {
-
-            item = basename( item );
-
-            console.info(`&#x221A; Component &quot;${item}&quot; is packed in`);
-
-            return  `export * from &apos;./${item}&apos;;`;
-
-        }).join(&apos;\n&apos;)
-    );
-
-    return file;
-}
+        document.querySelectorAll(&apos;script[src$=&quot;min.js&quot;]&apos;)
+            .should.have.length(4);
+    });
+});
 </code></pre>
 
 </div>

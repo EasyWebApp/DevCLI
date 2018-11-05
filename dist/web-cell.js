@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","less","sass","@tech_query/node-toolkit","simple-git/promise","cross-spawn","stylus","commander","puppeteer-browser"], factory);
+        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","less","sass","@tech_query/node-toolkit","cross-spawn","stylus","simple-git/promise","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('less'),require('sass'),require('@tech_query/node-toolkit'),require('simple-git/promise'),require('cross-spawn'),require('stylus'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('less'),require('sass'),require('@tech_query/node-toolkit'),require('cross-spawn'),require('stylus'),require('simple-git/promise'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory.call(self,this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['less'],this['sass'],this['@tech_query/node-toolkit'],this['simple-git/promise'],this['cross-spawn'],this['stylus'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory.call(self,this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['less'],this['sass'],this['@tech_query/node-toolkit'],this['cross-spawn'],this['stylus'],this['simple-git/promise'],this['commander'],this['puppeteer-browser']);
 
-})(function (fs_extra,path,jsdom,amd_bundle,less,sass,_tech_query_node_toolkit,simple_git_promise,cross_spawn,stylus,commander,puppeteer_browser) {
+})(function (fs_extra,path,jsdom,amd_bundle,less,sass,_tech_query_node_toolkit,cross_spawn,stylus,simple_git_promise,commander,puppeteer_browser) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -164,7 +164,8 @@ var _module_ = {
                       };
             }
 
-            var directory = _utility.meta ? _utility.meta.directories : '';
+            var directory = _utility.meta ? _utility.meta.directories : '',
+                serializer = new _utility.XMLSerializer();
             var single_entry = (0, _path.join)(directory.lib || '', 'index.js');
             /**
              * Component packer
@@ -1115,7 +1116,7 @@ var _module_ = {
                                     );
                                 }
                                 /**
-                                 * @param {DocumentFragment} fragment
+                                 * @param {Node} fragment
                                  *
                                  * @return {string}
                                  */
@@ -1123,24 +1124,12 @@ var _module_ = {
                             {
                                 key: 'stringOf',
                                 value: function stringOf(fragment) {
-                                    return Array.from(
-                                        fragment.childNodes,
-                                        function(node) {
-                                            switch (node.nodeType) {
-                                                case 1:
-                                                    return node.outerHTML;
-
-                                                case 3:
-                                                    return node.nodeValue;
-
-                                                case 8:
-                                                    return '<!--'.concat(
-                                                        node.nodeValue,
-                                                        '-->'
-                                                    );
-                                            }
-                                        }
-                                    ).join('');
+                                    return serializer
+                                        .serializeToString(fragment)
+                                        .replace(
+                                            ' xmlns="http://www.w3.org/1999/xhtml"',
+                                            ''
+                                        );
                                 }
                             }
                         ]
@@ -1168,13 +1157,11 @@ var _module_ = {
 
             var _fsExtra = require('fs-extra');
 
-            var _promise = _interopRequireDefault(
-                require('simple-git/promise')
-            );
-
-            var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
+            var _utility = require('./utility');
 
             var _Component = _interopRequireDefault(require('./Component'));
+
+            var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -1183,353 +1170,9 @@ var _module_ = {
                           default: obj
                       };
             }
-
-            function setTemplate() {
-                return _setTemplate.apply(this, arguments);
-            }
-
-            function _setTemplate() {
-                _setTemplate = (0, _asyncToGenerator2.default)(
-                    /*#__PURE__*/
-                    _regenerator.default.mark(function _callee6() {
-                        var template,
-                            _iteratorNormalCompletion3,
-                            _didIteratorError3,
-                            _iteratorError3,
-                            _iterator3,
-                            _step3,
-                            file,
-                            _path2,
-                            type;
-
-                        return _regenerator.default.wrap(
-                            function _callee6$(_context6) {
-                                while (1) {
-                                    switch ((_context6.prev = _context6.next)) {
-                                        case 0:
-                                            template = (0, _path.join)(
-                                                (0,
-                                                _nodeToolkit.currentModulePath)(),
-                                                '../../template'
-                                            );
-                                            _iteratorNormalCompletion3 = true;
-                                            _didIteratorError3 = false;
-                                            _iteratorError3 = undefined;
-                                            _context6.prev = 4;
-                                            _iterator3 = (0,
-                                            _fsExtra.readdirSync)(template)[
-                                                Symbol.iterator
-                                            ]();
-
-                                        case 6:
-                                            if (
-                                                (_iteratorNormalCompletion3 = (_step3 = _iterator3.next())
-                                                    .done)
-                                            ) {
-                                                _context6.next = 39;
-                                                break;
-                                            }
-
-                                            file = _step3.value;
-                                            (_path2 = (0, _path.join)(
-                                                template,
-                                                file
-                                            )),
-                                                (type = 'Skip');
-
-                                            if (
-                                                (0, _fsExtra.existsSync)(file)
-                                            ) {
-                                                _context6.next = 15;
-                                                break;
-                                            }
-
-                                            _context6.next = 12;
-                                            return (0, _fsExtra.copy)(
-                                                _path2,
-                                                file
-                                            );
-
-                                        case 12:
-                                            type = 'Create';
-                                            _context6.next = 35;
-                                            break;
-
-                                        case 15:
-                                            if (
-                                                !(
-                                                    (0, _path.extname)(file) ===
-                                                    '.json'
-                                                )
-                                            ) {
-                                                _context6.next = 35;
-                                                break;
-                                            }
-
-                                            _context6.t0 = (0,
-                                            _fsExtra.outputFile);
-                                            _context6.t1 = file;
-                                            _context6.t2 = JSON;
-                                            _context6.t3 = (0,
-                                            _nodeToolkit.patch);
-                                            _context6.t4 = JSON;
-                                            _context6.next = 23;
-                                            return (0, _fsExtra.readFile)(file);
-
-                                        case 23:
-                                            _context6.t5 = _context6.sent;
-                                            _context6.t6 = _context6.t4.parse.call(
-                                                _context6.t4,
-                                                _context6.t5
-                                            );
-                                            _context6.t7 = JSON;
-                                            _context6.next = 28;
-                                            return (0, _fsExtra.readFile)(
-                                                _path2
-                                            );
-
-                                        case 28:
-                                            _context6.t8 = _context6.sent;
-                                            _context6.t9 = _context6.t7.parse.call(
-                                                _context6.t7,
-                                                _context6.t8
-                                            );
-                                            _context6.t10 = (0, _context6.t3)(
-                                                _context6.t6,
-                                                _context6.t9
-                                            );
-                                            _context6.t11 = _context6.t2.stringify.call(
-                                                _context6.t2,
-                                                _context6.t10,
-                                                null,
-                                                4
-                                            );
-                                            _context6.next = 34;
-                                            return (0, _context6.t0)(
-                                                _context6.t1,
-                                                _context6.t11
-                                            );
-
-                                        case 34:
-                                            type = 'Update';
-
-                                        case 35:
-                                            console.info(
-                                                ''
-                                                    .concat(
-                                                        type.padEnd(6),
-                                                        ' --> '
-                                                    )
-                                                    .concat(file)
-                                            );
-
-                                        case 36:
-                                            _iteratorNormalCompletion3 = true;
-                                            _context6.next = 6;
-                                            break;
-
-                                        case 39:
-                                            _context6.next = 45;
-                                            break;
-
-                                        case 41:
-                                            _context6.prev = 41;
-                                            _context6.t12 = _context6['catch'](
-                                                4
-                                            );
-                                            _didIteratorError3 = true;
-                                            _iteratorError3 = _context6.t12;
-
-                                        case 45:
-                                            _context6.prev = 45;
-                                            _context6.prev = 46;
-
-                                            if (
-                                                !_iteratorNormalCompletion3 &&
-                                                _iterator3.return != null
-                                            ) {
-                                                _iterator3.return();
-                                            }
-
-                                        case 48:
-                                            _context6.prev = 48;
-
-                                            if (!_didIteratorError3) {
-                                                _context6.next = 51;
-                                                break;
-                                            }
-
-                                            throw _iteratorError3;
-
-                                        case 51:
-                                            return _context6.finish(48);
-
-                                        case 52:
-                                            return _context6.finish(45);
-
-                                        case 53:
-                                        case 'end':
-                                            return _context6.stop();
-                                    }
-                                }
-                            },
-                            _callee6,
-                            this,
-                            [[4, 41, 45, 53], [46, , 48, 52]]
-                        );
-                    })
-                );
-                return _setTemplate.apply(this, arguments);
-            }
-
-            function setMeta() {
-                return _setMeta.apply(this, arguments);
-            }
             /**
              * Boot current directory as a WebCell project
              */
-
-            function _setMeta() {
-                _setMeta = (0, _asyncToGenerator2.default)(
-                    /*#__PURE__*/
-                    _regenerator.default.mark(function _callee7() {
-                        var meta, git, config, url, ReadMe, text;
-                        return _regenerator.default.wrap(
-                            function _callee7$(_context7) {
-                                while (1) {
-                                    switch ((_context7.prev = _context7.next)) {
-                                        case 0:
-                                            _context7.t0 = JSON;
-                                            _context7.next = 3;
-                                            return (0, _fsExtra.readFile)(
-                                                'package.json'
-                                            );
-
-                                        case 3:
-                                            _context7.t1 = _context7.sent;
-                                            meta = _context7.t0.parse.call(
-                                                _context7.t0,
-                                                _context7.t1
-                                            );
-                                            git = (0, _promise.default)();
-                                            config = {};
-                                            _context7.next = 9;
-                                            return git.checkIsRepo();
-
-                                        case 9:
-                                            if (_context7.sent) {
-                                                _context7.next = 12;
-                                                break;
-                                            }
-
-                                            _context7.next = 12;
-                                            return git.init();
-
-                                        case 12:
-                                            _context7.prev = 12;
-                                            _context7.next = 15;
-                                            return git.listRemote([
-                                                '--get-url'
-                                            ]);
-
-                                        case 15:
-                                            url = _context7.sent.trim();
-                                            _context7.next = 21;
-                                            break;
-
-                                        case 18:
-                                            _context7.prev = 18;
-                                            _context7.t2 = _context7['catch'](
-                                                12
-                                            );
-                                            url = '';
-
-                                        case 21:
-                                            if (!meta.name)
-                                                config.name = (url
-                                                    ? /([^/]+)\.git$/.exec(
-                                                          url
-                                                      )[1]
-                                                    : (0, _path.basename)(
-                                                          process.cwd()
-                                                      ).replace(
-                                                          /[^a-zA-Z0-9-]/g,
-                                                          '-'
-                                                      )
-                                                ).toLowerCase();
-
-                                            if (meta.description) {
-                                                _context7.next = 31;
-                                                break;
-                                            }
-
-                                            ReadMe = (0, _nodeToolkit.findFile)(
-                                                /^ReadMe\.?/i
-                                            );
-
-                                            if (!ReadMe) {
-                                                _context7.next = 31;
-                                                break;
-                                            }
-
-                                            _context7.t3 = /^[^#].+/m;
-                                            _context7.next = 28;
-                                            return (0, _fsExtra.readFile)(
-                                                ReadMe
-                                            );
-
-                                        case 28:
-                                            _context7.t4 = _context7.sent;
-                                            text = _context7.t3.exec.call(
-                                                _context7.t3,
-                                                _context7.t4
-                                            );
-                                            if (text)
-                                                config.description = text[0].trim();
-
-                                        case 31:
-                                            if (
-                                                !meta.repository ||
-                                                !meta.bugs
-                                            ) {
-                                                config.repository = meta.repository || {
-                                                    type: 'git',
-                                                    url: url
-                                                };
-                                                config.bugs = meta.bugs || {
-                                                    url: url.replace(
-                                                        /\.git$/,
-                                                        '/issues/'
-                                                    )
-                                                };
-                                                config.homepage =
-                                                    meta.homepage ||
-                                                    url.replace(/\.git$/, '/');
-                                            }
-
-                                            return _context7.abrupt(
-                                                'return',
-                                                (0, _objectSpread2.default)(
-                                                    {},
-                                                    config,
-                                                    meta
-                                                )
-                                            );
-
-                                        case 33:
-                                        case 'end':
-                                            return _context7.stop();
-                                    }
-                                }
-                            },
-                            _callee7,
-                            this,
-                            [[12, 18]]
-                        );
-                    })
-                );
-                return _setMeta.apply(this, arguments);
-            }
 
             function boot() {
                 return _boot.apply(this, arguments);
@@ -1545,44 +1188,82 @@ var _module_ = {
             function _boot() {
                 _boot = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee8() {
+                    _regenerator.default.mark(function _callee6() {
                         return _regenerator.default.wrap(
-                            function _callee8$(_context8) {
+                            function _callee6$(_context6) {
                                 while (1) {
-                                    switch ((_context8.prev = _context8.next)) {
+                                    switch ((_context6.prev = _context6.next)) {
                                         case 0:
-                                            console.time('Write configuration');
-                                            _context8.next = 3;
-                                            return setTemplate();
+                                            console.time('Boot project');
+                                            _context6.next = 3;
+                                            return (0, _utility.copyFrom)(
+                                                (0, _path.join)(
+                                                    (0,
+                                                    _nodeToolkit.currentModulePath)(),
+                                                    '../../template'
+                                                )
+                                            );
 
                                         case 3:
-                                            _context8.t0 = (0,
-                                            _fsExtra.outputFile);
-                                            _context8.t1 = JSON;
-                                            _context8.next = 7;
-                                            return setMeta();
+                                            _context6.t0 = (0,
+                                            _fsExtra.outputJSON);
+                                            _context6.t1 = (0,
+                                            _utility.setPackage);
+                                            _context6.next = 7;
+                                            return (0, _fsExtra.readJSON)(
+                                                'package.json'
+                                            );
 
                                         case 7:
-                                            _context8.t2 = _context8.sent;
-                                            _context8.t3 = _context8.t1.stringify.call(
-                                                _context8.t1,
-                                                _context8.t2,
-                                                null,
-                                                4
-                                            );
-                                            _context8.next = 11;
-                                            return (0, _context8.t0)(
-                                                'package.json',
-                                                _context8.t3
+                                            _context6.t2 = _context6.sent;
+                                            _context6.next = 10;
+                                            return (0, _context6.t1)(
+                                                _context6.t2
                                             );
 
-                                        case 11:
+                                        case 10:
+                                            _context6.t3 = _context6.sent;
+                                            _context6.t4 = {
+                                                spaces: 4
+                                            };
+                                            _context6.next = 14;
+                                            return (0, _context6.t0)(
+                                                'package.json',
+                                                _context6.t3,
+                                                _context6.t4
+                                            );
+
+                                        case 14:
+                                            _context6.t5 = (0,
+                                            _fsExtra.outputFile);
+                                            _context6.t6 = _Component.default;
+                                            _context6.t7 = (0,
+                                            _utility.upgradeHTML);
+                                            _context6.next = 19;
+                                            return (0, _fsExtra.readFile)(
+                                                'index.html'
+                                            );
+
+                                        case 19:
+                                            _context6.t8 = _context6.sent;
+                                            _context6.t9 = (0, _context6.t7)(
+                                                _context6.t8
+                                            );
+                                            _context6.t10 = _context6.t6.stringOf.call(
+                                                _context6.t6,
+                                                _context6.t9
+                                            );
+                                            _context6.next = 24;
+                                            return (0, _context6.t5)(
+                                                'index.html',
+                                                _context6.t10
+                                            );
+
+                                        case 24:
                                             console.info(
                                                 '--------------------'
                                             );
-                                            console.timeEnd(
-                                                'Write configuration'
-                                            );
+                                            console.timeEnd('Boot project');
                                             (0, _crossSpawn.default)(
                                                 'npm',
                                                 ['install'],
@@ -1591,13 +1272,13 @@ var _module_ = {
                                                 }
                                             );
 
-                                        case 14:
+                                        case 27:
                                         case 'end':
-                                            return _context8.stop();
+                                            return _context6.stop();
                                     }
                                 }
                             },
-                            _callee8,
+                            _callee6,
                             this
                         );
                     })
@@ -1619,12 +1300,14 @@ var _module_ = {
             function _bundle() {
                 _bundle = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee9(path) {
+                    _regenerator.default.mark(function _callee7(path) {
+                        var _result;
+
                         var result, component;
                         return _regenerator.default.wrap(
-                            function _callee9$(_context9) {
+                            function _callee7$(_context7) {
                                 while (1) {
-                                    switch ((_context9.prev = _context9.next)) {
+                                    switch ((_context7.prev = _context7.next)) {
                                         case 0:
                                             result = [];
 
@@ -1636,7 +1319,7 @@ var _module_ = {
                                                     )
                                                 )
                                             ) {
-                                                _context9.next = 11;
+                                                _context7.next = 11;
                                                 break;
                                             }
 
@@ -1647,55 +1330,72 @@ var _module_ = {
                                                 component.name,
                                                 '.js'
                                             );
-                                            _context9.t0 = (0,
+                                            _context7.t0 = (0,
                                             _fsExtra.outputFile);
-                                            _context9.t1 = result[0];
-                                            _context9.next = 8;
+                                            _context7.t1 = result[0];
+                                            _context7.next = 8;
                                             return component.toJS();
 
                                         case 8:
-                                            _context9.t2 = _context9.sent;
-                                            _context9.next = 11;
-                                            return (0, _context9.t0)(
-                                                _context9.t1,
-                                                _context9.t2
+                                            _context7.t2 = _context7.sent;
+                                            _context7.next = 11;
+                                            return (0, _context7.t0)(
+                                                _context7.t1,
+                                                _context7.t2
                                             );
 
                                         case 11:
                                             if (
-                                                (0, _fsExtra.statSync)(
+                                                !(0, _fsExtra.statSync)(
                                                     path
                                                 ).isDirectory()
-                                            )
-                                                result.push.apply(
-                                                    result,
-                                                    (0,
-                                                    _toConsumableArray2.default)(
-                                                        (0,
-                                                        _fsExtra.readdirSync)(
-                                                            path
-                                                        ).map(function(file) {
-                                                            return bundle(
-                                                                (0, _path.join)(
-                                                                    path,
-                                                                    file
-                                                                )
-                                                            );
-                                                        })
-                                                    )
-                                                );
-                                            return _context9.abrupt(
+                                            ) {
+                                                _context7.next = 20;
+                                                break;
+                                            }
+
+                                            _context7.t3 = (_result = result).concat;
+                                            _context7.t4 = _result;
+                                            _context7.t5 =
+                                                _toConsumableArray2.default;
+                                            _context7.next = 17;
+                                            return Promise.all(
+                                                (0, _fsExtra.readdir)(path).map(
+                                                    function(file) {
+                                                        return bundle(
+                                                            (0, _path.join)(
+                                                                path,
+                                                                file
+                                                            )
+                                                        );
+                                                    }
+                                                )
+                                            );
+
+                                        case 17:
+                                            _context7.t6 = _context7.sent;
+                                            _context7.t7 = (0, _context7.t5)(
+                                                _context7.t6
+                                            );
+                                            result = _context7.t3.apply.call(
+                                                _context7.t3,
+                                                _context7.t4,
+                                                _context7.t7
+                                            );
+
+                                        case 20:
+                                            return _context7.abrupt(
                                                 'return',
                                                 result
                                             );
 
-                                        case 13:
+                                        case 21:
                                         case 'end':
-                                            return _context9.stop();
+                                            return _context7.stop();
                                     }
                                 }
                             },
-                            _callee9,
+                            _callee7,
                             this
                         );
                     })
@@ -1710,21 +1410,19 @@ var _module_ = {
             function _pack() {
                 _pack = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee10(path) {
+                    _regenerator.default.mark(function _callee8(path) {
                         var file;
                         return _regenerator.default.wrap(
-                            function _callee10$(_context10) {
+                            function _callee8$(_context8) {
                                 while (1) {
-                                    switch (
-                                        (_context10.prev = _context10.next)
-                                    ) {
+                                    switch ((_context8.prev = _context8.next)) {
                                         case 0:
-                                            _context10.next = 2;
+                                            _context8.next = 2;
                                             return bundle(path);
 
                                         case 2:
-                                            file = _context10.sent;
-                                            _context10.next = 5;
+                                            file = _context8.sent;
+                                            _context8.next = 5;
                                             return (0, _fsExtra.outputFile)(
                                                 'dist/index.js',
                                                 file
@@ -1746,18 +1444,18 @@ var _module_ = {
                                             );
 
                                         case 5:
-                                            return _context10.abrupt(
+                                            return _context8.abrupt(
                                                 'return',
                                                 file
                                             );
 
                                         case 6:
                                         case 'end':
-                                            return _context10.stop();
+                                            return _context8.stop();
                                     }
                                 }
                             },
-                            _callee10,
+                            _callee8,
                             this
                         );
                     })
@@ -1774,13 +1472,24 @@ var _module_ = {
                 value: true
             });
             exports.parseStylus = parseStylus;
-            exports.document = exports.meta = void 0;
+            exports.copyFrom = copyFrom;
+            exports.setPackage = setPackage;
+            exports.upgradeHTML = upgradeHTML;
+            exports.XMLSerializer = exports.document = exports.meta = void 0;
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
             var _jsdom = require('jsdom');
 
             var _stylus = _interopRequireDefault(require('stylus'));
+
+            var _fsExtra = require('fs-extra');
+
+            var _path = require('path');
+
+            var _promise = _interopRequireDefault(
+                require('simple-git/promise')
+            );
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -1796,12 +1505,12 @@ var _module_ = {
              */
 
             var meta = ((0, _nodeToolkit.packageOf)('./test') || '').meta;
-            /**
-             * @type {Document}
-             */
-
             exports.meta = meta;
-            var document = new _jsdom.JSDOM().window.document;
+
+            var _ref2 = new _jsdom.JSDOM(),
+                _ref2$window = _ref2.window,
+                document = _ref2$window.document,
+                XMLSerializer = _ref2$window.XMLSerializer;
             /**
              * @param {string} source
              * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
@@ -1809,6 +1518,7 @@ var _module_ = {
              * @return {Promise<string>} CSS source code
              */
 
+            exports.XMLSerializer = XMLSerializer;
             exports.document = document;
 
             function parseStylus(source) {
@@ -1824,6 +1534,440 @@ var _module_ = {
                         return error ? reject(error) : resolve(CSS);
                     });
                 });
+            }
+            /**
+             * @private
+             *
+             * @param {String} folder
+             */
+
+            function copyFrom(_x8) {
+                return _copyFrom.apply(this, arguments);
+            }
+            /**
+             * @private
+             *
+             * @param {Object} meta
+             *
+             * @return {Object}
+             */
+
+            function _copyFrom() {
+                _copyFrom = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee9(folder) {
+                        var _iteratorNormalCompletion3,
+                            _didIteratorError3,
+                            _iteratorError3,
+                            _iterator3,
+                            _step3,
+                            file,
+                            _path2,
+                            type;
+
+                        return _regenerator.default.wrap(
+                            function _callee9$(_context9) {
+                                while (1) {
+                                    switch ((_context9.prev = _context9.next)) {
+                                        case 0:
+                                            _iteratorNormalCompletion3 = true;
+                                            _didIteratorError3 = false;
+                                            _iteratorError3 = undefined;
+                                            _context9.prev = 3;
+                                            _context9.next = 6;
+                                            return (0, _fsExtra.readdir)(
+                                                folder
+                                            );
+
+                                        case 6:
+                                            _context9.t0 = Symbol.iterator;
+                                            _iterator3 = _context9.sent[
+                                                _context9.t0
+                                            ]();
+
+                                        case 8:
+                                            if (
+                                                (_iteratorNormalCompletion3 = (_step3 = _iterator3.next())
+                                                    .done)
+                                            ) {
+                                                _context9.next = 36;
+                                                break;
+                                            }
+
+                                            file = _step3.value;
+                                            (_path2 = (0, _path.join)(
+                                                folder,
+                                                file
+                                            )),
+                                                (type = 'Skip');
+
+                                            if (
+                                                (0, _fsExtra.existsSync)(file)
+                                            ) {
+                                                _context9.next = 17;
+                                                break;
+                                            }
+
+                                            _context9.next = 14;
+                                            return (0, _fsExtra.copy)(
+                                                _path2,
+                                                file
+                                            );
+
+                                        case 14:
+                                            type = 'Create';
+                                            _context9.next = 32;
+                                            break;
+
+                                        case 17:
+                                            if (
+                                                !(
+                                                    (0, _path.extname)(file) ===
+                                                    '.json'
+                                                )
+                                            ) {
+                                                _context9.next = 32;
+                                                break;
+                                            }
+
+                                            _context9.t1 = (0,
+                                            _fsExtra.outputJSON);
+                                            _context9.t2 = file;
+                                            _context9.t3 = (0,
+                                            _nodeToolkit.patch);
+                                            _context9.next = 23;
+                                            return (0, _fsExtra.readJSON)(file);
+
+                                        case 23:
+                                            _context9.t4 = _context9.sent;
+                                            _context9.next = 26;
+                                            return (0, _fsExtra.readJSON)(
+                                                _path2
+                                            );
+
+                                        case 26:
+                                            _context9.t5 = _context9.sent;
+                                            _context9.t6 = (0, _context9.t3)(
+                                                _context9.t4,
+                                                _context9.t5
+                                            );
+                                            _context9.t7 = {
+                                                spaces: 4
+                                            };
+                                            _context9.next = 31;
+                                            return (0, _context9.t1)(
+                                                _context9.t2,
+                                                _context9.t6,
+                                                _context9.t7
+                                            );
+
+                                        case 31:
+                                            type = 'Update';
+
+                                        case 32:
+                                            console.info(
+                                                ''
+                                                    .concat(
+                                                        type.padEnd(6),
+                                                        ' --> '
+                                                    )
+                                                    .concat(file)
+                                            );
+
+                                        case 33:
+                                            _iteratorNormalCompletion3 = true;
+                                            _context9.next = 8;
+                                            break;
+
+                                        case 36:
+                                            _context9.next = 42;
+                                            break;
+
+                                        case 38:
+                                            _context9.prev = 38;
+                                            _context9.t8 = _context9['catch'](
+                                                3
+                                            );
+                                            _didIteratorError3 = true;
+                                            _iteratorError3 = _context9.t8;
+
+                                        case 42:
+                                            _context9.prev = 42;
+                                            _context9.prev = 43;
+
+                                            if (
+                                                !_iteratorNormalCompletion3 &&
+                                                _iterator3.return != null
+                                            ) {
+                                                _iterator3.return();
+                                            }
+
+                                        case 45:
+                                            _context9.prev = 45;
+
+                                            if (!_didIteratorError3) {
+                                                _context9.next = 48;
+                                                break;
+                                            }
+
+                                            throw _iteratorError3;
+
+                                        case 48:
+                                            return _context9.finish(45);
+
+                                        case 49:
+                                            return _context9.finish(42);
+
+                                        case 50:
+                                        case 'end':
+                                            return _context9.stop();
+                                    }
+                                }
+                            },
+                            _callee9,
+                            this,
+                            [[3, 38, 42, 50], [43, , 45, 49]]
+                        );
+                    })
+                );
+                return _copyFrom.apply(this, arguments);
+            }
+
+            function setPackage(_x9) {
+                return _setPackage.apply(this, arguments);
+            }
+
+            function _setPackage() {
+                _setPackage = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee10(meta) {
+                        var git, config, url, ReadMe, text;
+                        return _regenerator.default.wrap(
+                            function _callee10$(_context10) {
+                                while (1) {
+                                    switch (
+                                        (_context10.prev = _context10.next)
+                                    ) {
+                                        case 0:
+                                            (git = (0, _promise.default)()),
+                                                (config = {});
+                                            _context10.next = 3;
+                                            return git.checkIsRepo();
+
+                                        case 3:
+                                            if (_context10.sent) {
+                                                _context10.next = 6;
+                                                break;
+                                            }
+
+                                            _context10.next = 6;
+                                            return git.init();
+
+                                        case 6:
+                                            _context10.prev = 6;
+                                            _context10.next = 9;
+                                            return git.listRemote([
+                                                '--get-url'
+                                            ]);
+
+                                        case 9:
+                                            url = _context10.sent.trim();
+                                            _context10.next = 15;
+                                            break;
+
+                                        case 12:
+                                            _context10.prev = 12;
+                                            _context10.t0 = _context10['catch'](
+                                                6
+                                            );
+                                            url = '';
+
+                                        case 15:
+                                            if (!meta.name)
+                                                config.name = (url
+                                                    ? /([^/]+)\.git$/.exec(
+                                                          url
+                                                      )[1]
+                                                    : (0, _path.basename)(
+                                                          process.cwd()
+                                                      ).replace(
+                                                          /[^a-zA-Z0-9-]/g,
+                                                          '-'
+                                                      )
+                                                ).toLowerCase();
+
+                                            if (meta.description) {
+                                                _context10.next = 25;
+                                                break;
+                                            }
+
+                                            ReadMe = (0, _nodeToolkit.findFile)(
+                                                /^ReadMe\.?/i
+                                            );
+
+                                            if (!ReadMe) {
+                                                _context10.next = 25;
+                                                break;
+                                            }
+
+                                            _context10.t1 = /^[^#].+/m;
+                                            _context10.next = 22;
+                                            return (0, _fsExtra.readFile)(
+                                                ReadMe
+                                            );
+
+                                        case 22:
+                                            _context10.t2 = _context10.sent;
+                                            text = _context10.t1.exec.call(
+                                                _context10.t1,
+                                                _context10.t2
+                                            );
+                                            if (text)
+                                                config.description = text[0].trim();
+
+                                        case 25:
+                                            if (
+                                                !meta.repository ||
+                                                !meta.bugs
+                                            ) {
+                                                config.repository = meta.repository || {
+                                                    type: 'git',
+                                                    url: url
+                                                };
+                                                config.bugs = meta.bugs || {
+                                                    url: url.replace(
+                                                        /\.git$/,
+                                                        '/issues/'
+                                                    )
+                                                };
+                                                config.homepage =
+                                                    meta.homepage ||
+                                                    url.replace(/\.git$/, '/');
+                                            }
+
+                                            return _context10.abrupt(
+                                                'return',
+                                                (0, _objectSpread2.default)(
+                                                    {},
+                                                    config,
+                                                    meta
+                                                )
+                                            );
+
+                                        case 27:
+                                        case 'end':
+                                            return _context10.stop();
+                                    }
+                                }
+                            },
+                            _callee10,
+                            this,
+                            [[6, 12]]
+                        );
+                    })
+                );
+                return _setPackage.apply(this, arguments);
+            }
+
+            var tagAttribute = {
+                    script: {
+                        key: 'src',
+                        kind: 'js'
+                    },
+                    link: {
+                        key: 'href',
+                        kind: 'css'
+                    }
+                },
+                library = [
+                    {
+                        name: '@babel/polyfill',
+                        file: 'polyfill',
+                        path: 'dist/',
+                        type: 'script'
+                    },
+                    {
+                        name: 'whatwg-fetch',
+                        file: 'fetch.umd',
+                        path: 'dist/',
+                        type: 'script'
+                    },
+                    {
+                        name: '@webcomponents/webcomponentsjs',
+                        file: 'webcomponents-bundle',
+                        type: 'script'
+                    },
+                    {
+                        name: '@webcomponents/webcomponentsjs',
+                        file: 'custom-elements-es5-adapter',
+                        type: 'script'
+                    },
+                    {
+                        name: 'web-cell',
+                        path: 'dist/',
+                        type: 'script'
+                    }
+                ];
+
+            function equalLibrary(element, type, key, name, file) {
+                var URI = element[key];
+                return (
+                    element.tagName.toLowerCase() === type &&
+                    URI.includes(name) &&
+                    URI.includes(file)
+                );
+            }
+            /**
+             * @private
+             *
+             * @param {String} code - HTML source
+             *
+             * @return {Document}
+             */
+
+            function upgradeHTML(code) {
+                var _ref3 = new _jsdom.JSDOM(code),
+                    document = _ref3.window.document;
+
+                var list = (0, _toConsumableArray2.default)(
+                    document.querySelectorAll(Object.keys(tagAttribute))
+                );
+
+                var _loop = function _loop() {
+                    var _library$_i = library[_i],
+                        type = _library$_i.type,
+                        name = _library$_i.name,
+                        file = _library$_i.file,
+                        path = _library$_i.path;
+                    var _tagAttribute$type = tagAttribute[type];
+                    key = _tagAttribute$type.key;
+                    kind = _tagAttribute$type.kind;
+
+                    if (
+                        !(element = list.find(function(item) {
+                            return equalLibrary(item, type, key, name, file);
+                        }))
+                    ) {
+                        element = document.createElement(type);
+                        element[key] = 'node_modules/'
+                            .concat(name, '/')
+                            .concat(path || '')
+                            .concat(file || name)
+                            .concat(/\.[^/]+$/.test(file) ? '' : '.min', '.')
+                            .concat(kind);
+                        if (type === 'link') element.rel = 'stylesheet';
+                    }
+
+                    document.head.append('    ', element, '\n');
+                };
+
+                for (var _i = 0; _i < library.length; _i++) {
+                    var element, key, kind;
+
+                    _loop();
+                }
+
+                return document;
             }
         }
     },
@@ -1856,7 +2000,7 @@ var _module_ = {
             ).meta;
             var folder = _utility.meta ? _utility.meta.directories : '';
 
-            function safePack(_x8) {
+            function safePack(_x10) {
                 return _safePack.apply(this, arguments);
             }
 
@@ -1975,14 +2119,14 @@ var _module_ = {
     '@tech_query/node-toolkit': {
         exports: _tech_query_node_toolkit
     },
-    'simple-git/promise': {
-        exports: simple_git_promise
-    },
     'cross-spawn': {
         exports: cross_spawn
     },
     stylus: {
         exports: stylus
+    },
+    'simple-git/promise': {
+        exports: simple_git_promise
     },
     commander: {
         exports: commander

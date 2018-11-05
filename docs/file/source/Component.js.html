@@ -33,9 +33,12 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-document">document</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-window">window</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -53,12 +56,12 @@ import LESS from &apos;less&apos;;
 
 import * as SASS from &apos;sass&apos;;
 
-import { meta, document, parseStylus } from &apos;./utility&apos;;
+import {meta, XMLSerializer, document, parseStylus} from &apos;./utility&apos;;
 
 import { toDataURI } from &apos;@tech_query/node-toolkit&apos;;
 
 
-const directory = meta ? meta.directories : &apos;&apos;;
+const directory = meta ? meta.directories : &apos;&apos;, serializer = new XMLSerializer();
 
 const single_entry = join(directory.lib || &apos;&apos;,  &apos;index.js&apos;);
 
@@ -184,20 +187,15 @@ export default  class Component {
     }
 
     /**
-     * @param {DocumentFragment} fragment
+     * @param {Node} fragment
      *
      * @return {string}
      */
     static stringOf(fragment) {
 
-        return  Array.from(fragment.childNodes,  node =&gt; {
-
-            switch ( node.nodeType ) {
-                case 1:  return node.outerHTML;
-                case 3:  return node.nodeValue;
-                case 8:  return `&lt;!--${node.nodeValue}--&gt;`;
-            }
-        }).join(&apos;&apos;);
+        return  serializer.serializeToString( fragment ).replace(
+            &apos; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&apos;,  &apos;&apos;
+        );
     }
 
     /**

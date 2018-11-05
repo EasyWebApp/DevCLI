@@ -33,19 +33,30 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-document">document</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-window">window</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/utility.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { packageOf } from &apos;@tech_query/node-toolkit&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { packageOf, patch, findFile } from &apos;@tech_query/node-toolkit&apos;;
 
 import { JSDOM } from &apos;jsdom&apos;;
 
 import Stylus from &apos;stylus&apos;;
+
+import {
+    readdir, existsSync, copy, outputJSON, readJSON, readFile
+} from &apos;fs-extra&apos;;
+
+import { join, extname, basename } from &apos;path&apos;;
+
+import Git from &apos;simple-git/promise&apos;;
 
 
 /**
@@ -56,10 +67,7 @@ import Stylus from &apos;stylus&apos;;
 export const meta = (packageOf(&apos;./test&apos;) || &apos;&apos;).meta;
 
 
-/**
- * @type {Document}
- */
-export const document = (new JSDOM()).window.document;
+export const {window: {document, XMLSerializer}} = (new JSDOM());
 
 
 /**
@@ -75,6 +83,168 @@ export function parseStylus(source,  option = { }) {
         option,
         (error, CSS)  =&gt;  error ? reject( error ) : resolve( CSS )
     ));
+}
+
+
+/**
+ * @private
+ *
+ * @param {String} folder
+ */
+export  async function copyFrom(folder) {
+
+    for (let file  of  await readdir( folder )) {
+
+        let path = join(folder, file), type = &apos;Skip&apos;;
+
+        if (! existsSync( file )) {
+
+            await copy(path, file);  type = &apos;Create&apos;;
+
+        } else if (extname( file ) === &apos;.json&apos;)
+            await outputJSON(
+                file,
+                patch(await readJSON( file ),  await readJSON( path )),
+                {spaces: 4}
+            ),
+            type = &apos;Update&apos;;
+
+        console.info(`${type.padEnd(6)} --&gt; ${file}`);
+    }
+}
+
+
+/**
+ * @private
+ *
+ * @param {Object} meta
+ *
+ * @return {Object}
+ */
+export  async function setPackage(meta) {
+
+    const git = Git(), config = { };
+
+    if (!(await git.checkIsRepo()))  await git.init();
+
+    try {
+        var url = (await git.listRemote([&apos;--get-url&apos;])).trim();
+
+    } catch (error) {  url = &apos;&apos;;  }
+
+    if (! meta.name)
+        config.name = (
+            url ?
+                /([^/]+)\.git$/.exec( url )[1]  :
+                basename( process.cwd() ).replace(/[^a-zA-Z0-9-]/g, &apos;-&apos;)
+        ).toLowerCase();
+
+    if (! meta.description) {
+
+        const ReadMe = findFile( /^ReadMe\.?/i );
+
+        if ( ReadMe ) {
+
+            const text = /^[^#].+/m.exec(await readFile( ReadMe ));
+
+            if ( text )  config.description = text[0].trim();
+        }
+    }
+
+    if (!meta.repository || !meta.bugs) {
+
+        config.repository = meta.repository  ||  {type: &apos;git&apos;,  url};
+
+        config.bugs = meta.bugs  ||  {url: url.replace(/\.git$/, &apos;/issues/&apos;)};
+
+        config.homepage = meta.homepage  ||  url.replace(/\.git$/, &apos;/&apos;);
+    }
+
+    return  {...config, ...meta};
+}
+
+
+const tagAttribute = {
+        script:  {
+            key:   &apos;src&apos;,
+            kind:  &apos;js&apos;
+        },
+        link:    {
+            key:   &apos;href&apos;,
+            kind:  &apos;css&apos;
+        }
+    },
+    library = [
+        {
+            name:  &apos;@babel/polyfill&apos;,
+            file:  &apos;polyfill&apos;,
+            path:  &apos;dist/&apos;,
+            type:  &apos;script&apos;
+        },
+        {
+            name:  &apos;whatwg-fetch&apos;,
+            file:  &apos;fetch.umd&apos;,
+            path:  &apos;dist/&apos;,
+            type:  &apos;script&apos;
+        },
+        {
+            name:  &apos;@webcomponents/webcomponentsjs&apos;,
+            file:  &apos;webcomponents-bundle&apos;,
+            type:  &apos;script&apos;
+        },
+        {
+            name:  &apos;@webcomponents/webcomponentsjs&apos;,
+            file:  &apos;custom-elements-es5-adapter&apos;,
+            type:  &apos;script&apos;
+        },
+        {
+            name:  &apos;web-cell&apos;,
+            path:  &apos;dist/&apos;,
+            type:  &apos;script&apos;
+        }
+    ];
+
+function equalLibrary(element, type, key, name, file) {
+
+    const URI = element[ key ];
+
+    return  (element.tagName.toLowerCase() === type)  &amp;&amp;
+        URI.includes( name )  &amp;&amp;  URI.includes( file );
+}
+
+/**
+ * @private
+ *
+ * @param {String} code - HTML source
+ *
+ * @return {Document}
+ */
+export function upgradeHTML(code) {
+
+    const { window: { document } } = new JSDOM( code );
+
+    const list = [... document.querySelectorAll( Object.keys( tagAttribute ) )];
+
+    for (let {type, name, file, path}  of  library) {
+
+        var { key, kind } = tagAttribute[ type ], element;
+
+        if (! (element = list.find(
+            item  =&gt;  equalLibrary(item, type, key, name, file)
+        ))) {
+            element = document.createElement( type );
+
+            element[key] = `node_modules/${name}/${path || &apos;&apos;}${file || name}${
+                /\.[^/]+$/.test( file )  ?  &apos;&apos;  :  &apos;.min&apos;
+            }.${kind}`;
+
+            if (type === &apos;link&apos;)  element.rel = &apos;stylesheet&apos;;
+        }
+
+        document.head.append(&apos;    &apos;,  element,  &apos;\n&apos;);
+    }
+
+    return document;
 }
 </code></pre>
 

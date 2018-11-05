@@ -10,12 +10,12 @@ import LESS from 'less';
 
 import * as SASS from 'sass';
 
-import { meta, document, parseStylus } from './utility';
+import {meta, XMLSerializer, document, parseStylus} from './utility';
 
 import { toDataURI } from '@tech_query/node-toolkit';
 
 
-const directory = meta ? meta.directories : '';
+const directory = meta ? meta.directories : '', serializer = new XMLSerializer();
 
 const single_entry = join(directory.lib || '',  'index.js');
 
@@ -141,20 +141,15 @@ export default  class Component {
     }
 
     /**
-     * @param {DocumentFragment} fragment
+     * @param {Node} fragment
      *
      * @return {string}
      */
     static stringOf(fragment) {
 
-        return  Array.from(fragment.childNodes,  node => {
-
-            switch ( node.nodeType ) {
-                case 1:  return node.outerHTML;
-                case 3:  return node.nodeValue;
-                case 8:  return `<!--${node.nodeValue}-->`;
-            }
-        }).join('');
+        return  serializer.serializeToString( fragment ).replace(
+            ' xmlns="http://www.w3.org/1999/xhtml"',  ''
+        );
     }
 
     /**
