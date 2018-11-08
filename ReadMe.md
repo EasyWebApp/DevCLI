@@ -3,6 +3,7 @@
 Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FDevCLI.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FDevCLI?ref=badge_shield)
 
 [![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)
 
@@ -62,3 +63,7 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 
 [1]: https://web-cell-ht.ml "Offical component library of WebCell (based on Material Design lite v1.3)"
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FDevCLI.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FDevCLI?ref=badge_large)
