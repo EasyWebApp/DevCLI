@@ -1,14 +1,18 @@
+import 'regenerator-runtime/runtime';
+
+import Git from 'simple-git/promise';
+
 import { join, basename } from 'path';
 
 import { currentModulePath } from '@tech_query/node-toolkit';
 
-import {
-    outputJSON, readJSON, outputFile, readFile, existsSync, statSync, readdir
-} from 'fs-extra';
+import {outputFile, readFile, existsSync, statSync, readdir} from 'fs-extra';
 
-import { copyFrom, setPackage, upgradeHTML } from './utility';
+import { copyFrom, upgradeHTML } from './utility';
 
 import Component from './Component';
+
+import 'web-cell/dist/polyfill';
 
 import { stringifyDOM } from 'web-cell';
 
@@ -22,13 +26,13 @@ export  async function boot() {
 
     console.time('Boot project');
 
-    await copyFrom(join(currentModulePath(), '../../template'));
+    const git = Git();
 
-    await outputJSON(
-        'package.json',
-        await setPackage(await readJSON('package.json')),
-        {spaces: 4}
-    );
+    if (!(await git.checkIsRepo()))  await git.init();
+
+    spawn('npm',  ['init', '-y'],  {stdio: 'inherit'});
+
+    await copyFrom(join(currentModulePath(), '../../template'));
 
     await outputFile(
         'index.html',  stringifyDOM( upgradeHTML(await readFile('index.html')) )

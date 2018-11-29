@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime';
+
 import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';
 
 import {join, basename, dirname, extname} from 'path';
@@ -9,6 +11,8 @@ import LESS from 'less';
 import * as SASS from 'sass';
 
 import {meta, parseStylus} from './utility';
+
+import 'web-cell/dist/polyfill';
 
 import { $, stringifyDOM } from 'web-cell';
 

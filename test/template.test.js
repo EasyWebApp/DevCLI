@@ -1,25 +1,9 @@
-import { setPackage, upgradeHTML } from '../source/utility';
+import { upgradeHTML } from '../source/utility';
 
 import { $ } from 'web-cell';
 
 
 describe('"boot" command',  () => {
-    /**
-     * @test {setPackage}
-     */
-    it('package.json',  () => setPackage({ }).should.be.fulfilledWith({
-        name:         'devcli',
-        description:  'Developer command-line tool for [WebCell](https://web-cell.tk/)',
-        homepage:     'https://github.com/EasyWebApp/DevCLI/',
-        repository:   {
-            type:  'git',
-            url:   'https://github.com/EasyWebApp/DevCLI.git'
-        },
-        bugs:         {
-            url:  'https://github.com/EasyWebApp/DevCLI/issues/'
-        }
-    }));
-
     /**
      * @test {upgradeHTML}
      */

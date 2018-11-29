@@ -35,7 +35,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
 </ul>
@@ -43,7 +42,11 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/utility.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { packageOf, patch, findFile } from &apos;@tech_query/node-toolkit&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;regenerator-runtime/runtime&apos;;
+
+import &apos;@babel/polyfill&apos;;
+
+import { packageOf, patch } from &apos;@tech_query/node-toolkit&apos;;
 
 import &apos;web-cell/dist/polyfill&apos;;
 
@@ -51,13 +54,9 @@ import { $ } from &apos;web-cell&apos;;
 
 import Stylus from &apos;stylus&apos;;
 
-import {
-    readdir, existsSync, copy, outputJSON, readJSON, readFile
-} from &apos;fs-extra&apos;;
+import {readdir, existsSync, copy, outputJSON, readJSON} from &apos;fs-extra&apos;;
 
-import { join, extname, basename } from &apos;path&apos;;
-
-import Git from &apos;simple-git/promise&apos;;
+import { join, extname } from &apos;path&apos;;
 
 
 /**
@@ -109,56 +108,6 @@ export  async function copyFrom(folder) {
 
         console.info(`${type.padEnd(6)} --&gt; ${file}`);
     }
-}
-
-
-/**
- * @private
- *
- * @param {Object} meta
- *
- * @return {Object}
- */
-export  async function setPackage(meta) {
-
-    const git = Git(), config = { };
-
-    if (!(await git.checkIsRepo()))  await git.init();
-
-    try {
-        var url = (await git.listRemote([&apos;--get-url&apos;])).trim();
-
-    } catch (error) {  url = &apos;&apos;;  }
-
-    if (! meta.name)
-        config.name = (
-            url ?
-                /([^/]+)\.git$/.exec( url )[1]  :
-                basename( process.cwd() ).replace(/[^a-zA-Z0-9-]/g, &apos;-&apos;)
-        ).toLowerCase();
-
-    if (! meta.description) {
-
-        const ReadMe = findFile( /^ReadMe\.?/i );
-
-        if ( ReadMe ) {
-
-            const text = /^[^#].+/m.exec(await readFile( ReadMe ));
-
-            if ( text )  config.description = text[0].trim();
-        }
-    }
-
-    if (!meta.repository || !meta.bugs) {
-
-        config.repository = meta.repository  ||  {type: &apos;git&apos;,  url};
-
-        config.bugs = meta.bugs  ||  {url: url.replace(/\.git$/, &apos;/issues/&apos;)};
-
-        config.homepage = meta.homepage  ||  url.replace(/\.git$/, &apos;/&apos;);
-    }
-
-    return  {...config, ...meta};
 }
 
 

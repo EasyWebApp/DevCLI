@@ -1,5 +1,4 @@
 {
-    "version": "0.1.0",
     "keywords": [
         "WebCell",
         "component",
@@ -38,7 +37,7 @@
         "husky": "^1.2.0",
         "koapache": "^1.0.4",
         "prettier": "^1.15.2",
-        "web-cell-cli": "^0.7.2"
+        "web-cell-cli": "^0.7.5"
     },
     "babel": {
         "plugins": [

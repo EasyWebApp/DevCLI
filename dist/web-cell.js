@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["fs-extra","path","amd-bundle","less","sass","web-cell","@tech_query/node-toolkit","cross-spawn","web-cell/dist/polyfill","stylus","simple-git/promise","commander","puppeteer-browser"], factory);
+        define('web-cell', ["regenerator-runtime/runtime","fs-extra","path","amd-bundle","less","sass","web-cell/dist/polyfill","web-cell","@tech_query/node-toolkit","simple-git/promise","cross-spawn","@babel/polyfill","stylus","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('amd-bundle'),require('less'),require('sass'),require('web-cell'),require('@tech_query/node-toolkit'),require('cross-spawn'),require('web-cell/dist/polyfill'),require('stylus'),require('simple-git/promise'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory.call(global,require('regenerator-runtime/runtime'),require('fs-extra'),require('path'),require('amd-bundle'),require('less'),require('sass'),require('web-cell/dist/polyfill'),require('web-cell'),require('@tech_query/node-toolkit'),require('simple-git/promise'),require('cross-spawn'),require('@babel/polyfill'),require('stylus'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory.call(self,this['fs-extra'],this['path'],this['amd-bundle'],this['less'],this['sass'],this['web-cell'],this['@tech_query/node-toolkit'],this['cross-spawn'],this['web-cell/dist/polyfill'],this['stylus'],this['simple-git/promise'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory.call(self,this['regenerator-runtime/runtime'],this['fs-extra'],this['path'],this['amd-bundle'],this['less'],this['sass'],this['web-cell/dist/polyfill'],this['web-cell'],this['@tech_query/node-toolkit'],this['simple-git/promise'],this['cross-spawn'],this['@babel/polyfill'],this['stylus'],this['commander'],this['puppeteer-browser']);
 
-})(function (fs_extra,path,amd_bundle,less,sass,web_cell,_tech_query_node_toolkit,cross_spawn,web_cell_dist_polyfill,stylus,simple_git_promise,commander,puppeteer_browser) {
+})(function (regenerator_runtime_runtime,fs_extra,path,amd_bundle,less,sass,web_cell_dist_polyfill,web_cell,_tech_query_node_toolkit,simple_git_promise,cross_spawn,_babel_polyfill,stylus,commander,puppeteer_browser) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -72,10 +72,6 @@ function outPackage(name) {
 
 var _interopRequireDefault2 = require('@babel/runtime/helpers/interopRequireDefault');
 
-var _objectSpread2 = _interopRequireDefault2(
-    require('@babel/runtime/helpers/objectSpread')
-);
-
 var _toConsumableArray2 = _interopRequireDefault2(
     require('@babel/runtime/helpers/toConsumableArray')
 );
@@ -106,6 +102,8 @@ var _module_ = {
             });
             exports.default = void 0;
 
+            require('regenerator-runtime/runtime');
+
             var _fsExtra = require('fs-extra');
 
             var _path = require('path');
@@ -117,6 +115,8 @@ var _module_ = {
             var SASS = _interopRequireWildcard(require('sass'));
 
             var _utility = require('./utility');
+
+            require('web-cell/dist/polyfill');
 
             var _webCell = require('web-cell');
 
@@ -1130,6 +1130,12 @@ var _module_ = {
             exports.bundle = bundle;
             exports.pack = pack;
 
+            require('regenerator-runtime/runtime');
+
+            var _promise = _interopRequireDefault(
+                require('simple-git/promise')
+            );
+
             var _path = require('path');
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
@@ -1139,6 +1145,8 @@ var _module_ = {
             var _utility = require('./utility');
 
             var _Component = _interopRequireDefault(require('./Component'));
+
+            require('web-cell/dist/polyfill');
 
             var _webCell = require('web-cell');
 
@@ -1170,13 +1178,35 @@ var _module_ = {
                 _boot = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
                     _regenerator.default.mark(function _callee6() {
+                        var git;
                         return _regenerator.default.wrap(
                             function _callee6$(_context6) {
                                 while (1) {
                                     switch ((_context6.prev = _context6.next)) {
                                         case 0:
                                             console.time('Boot project');
-                                            _context6.next = 3;
+                                            git = (0, _promise.default)();
+                                            _context6.next = 4;
+                                            return git.checkIsRepo();
+
+                                        case 4:
+                                            if (_context6.sent) {
+                                                _context6.next = 7;
+                                                break;
+                                            }
+
+                                            _context6.next = 7;
+                                            return git.init();
+
+                                        case 7:
+                                            (0, _crossSpawn.default)(
+                                                'npm',
+                                                ['init', '-y'],
+                                                {
+                                                    stdio: 'inherit'
+                                                }
+                                            );
+                                            _context6.next = 10;
                                             return (0, _utility.copyFrom)(
                                                 (0, _path.join)(
                                                     (0,
@@ -1185,62 +1215,33 @@ var _module_ = {
                                                 )
                                             );
 
-                                        case 3:
-                                            _context6.t0 = (0,
-                                            _fsExtra.outputJSON);
-                                            _context6.t1 = (0,
-                                            _utility.setPackage);
-                                            _context6.next = 7;
-                                            return (0, _fsExtra.readJSON)(
-                                                'package.json'
-                                            );
-
-                                        case 7:
-                                            _context6.t2 = _context6.sent;
-                                            _context6.next = 10;
-                                            return (0, _context6.t1)(
-                                                _context6.t2
-                                            );
-
                                         case 10:
-                                            _context6.t3 = _context6.sent;
-                                            _context6.t4 = {
-                                                spaces: 4
-                                            };
-                                            _context6.next = 14;
-                                            return (0, _context6.t0)(
-                                                'package.json',
-                                                _context6.t3,
-                                                _context6.t4
-                                            );
-
-                                        case 14:
-                                            _context6.t5 = (0,
+                                            _context6.t0 = (0,
                                             _fsExtra.outputFile);
-                                            _context6.t6 = (0,
+                                            _context6.t1 = (0,
                                             _webCell.stringifyDOM);
-                                            _context6.t7 = (0,
+                                            _context6.t2 = (0,
                                             _utility.upgradeHTML);
-                                            _context6.next = 19;
+                                            _context6.next = 15;
                                             return (0, _fsExtra.readFile)(
                                                 'index.html'
                                             );
 
-                                        case 19:
-                                            _context6.t8 = _context6.sent;
-                                            _context6.t9 = (0, _context6.t7)(
-                                                _context6.t8
+                                        case 15:
+                                            _context6.t3 = _context6.sent;
+                                            _context6.t4 = (0, _context6.t2)(
+                                                _context6.t3
                                             );
-                                            _context6.t10 = (0, _context6.t6)(
-                                                _context6.t9
+                                            _context6.t5 = (0, _context6.t1)(
+                                                _context6.t4
                                             );
-                                            _context6.next = 24;
-                                            return (0, _context6.t5)(
+                                            _context6.next = 20;
+                                            return (0, _context6.t0)(
                                                 'index.html',
-                                                _context6.t10
+                                                _context6.t5
                                             );
 
-                                        case 24:
+                                        case 20:
                                             console.info(
                                                 '--------------------'
                                             );
@@ -1253,7 +1254,7 @@ var _module_ = {
                                                 }
                                             );
 
-                                        case 27:
+                                        case 23:
                                         case 'end':
                                             return _context6.stop();
                                     }
@@ -1460,9 +1461,12 @@ var _module_ = {
             });
             exports.parseStylus = parseStylus;
             exports.copyFrom = copyFrom;
-            exports.setPackage = setPackage;
             exports.upgradeHTML = upgradeHTML;
             exports.meta = void 0;
+
+            require('regenerator-runtime/runtime');
+
+            require('@babel/polyfill');
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
@@ -1475,10 +1479,6 @@ var _module_ = {
             var _fsExtra = require('fs-extra');
 
             var _path = require('path');
-
-            var _promise = _interopRequireDefault(
-                require('simple-git/promise')
-            );
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -1526,13 +1526,6 @@ var _module_ = {
             function copyFrom(_x8) {
                 return _copyFrom.apply(this, arguments);
             }
-            /**
-             * @private
-             *
-             * @param {Object} meta
-             *
-             * @return {Object}
-             */
 
             function _copyFrom() {
                 _copyFrom = (0, _asyncToGenerator2.default)(
@@ -1715,142 +1708,6 @@ var _module_ = {
                 return _copyFrom.apply(this, arguments);
             }
 
-            function setPackage(_x9) {
-                return _setPackage.apply(this, arguments);
-            }
-
-            function _setPackage() {
-                _setPackage = (0, _asyncToGenerator2.default)(
-                    /*#__PURE__*/
-                    _regenerator.default.mark(function _callee10(meta) {
-                        var git, config, url, ReadMe, text;
-                        return _regenerator.default.wrap(
-                            function _callee10$(_context10) {
-                                while (1) {
-                                    switch (
-                                        (_context10.prev = _context10.next)
-                                    ) {
-                                        case 0:
-                                            (git = (0, _promise.default)()),
-                                                (config = {});
-                                            _context10.next = 3;
-                                            return git.checkIsRepo();
-
-                                        case 3:
-                                            if (_context10.sent) {
-                                                _context10.next = 6;
-                                                break;
-                                            }
-
-                                            _context10.next = 6;
-                                            return git.init();
-
-                                        case 6:
-                                            _context10.prev = 6;
-                                            _context10.next = 9;
-                                            return git.listRemote([
-                                                '--get-url'
-                                            ]);
-
-                                        case 9:
-                                            url = _context10.sent.trim();
-                                            _context10.next = 15;
-                                            break;
-
-                                        case 12:
-                                            _context10.prev = 12;
-                                            _context10.t0 = _context10['catch'](
-                                                6
-                                            );
-                                            url = '';
-
-                                        case 15:
-                                            if (!meta.name)
-                                                config.name = (url
-                                                    ? /([^/]+)\.git$/.exec(
-                                                          url
-                                                      )[1]
-                                                    : (0, _path.basename)(
-                                                          process.cwd()
-                                                      ).replace(
-                                                          /[^a-zA-Z0-9-]/g,
-                                                          '-'
-                                                      )
-                                                ).toLowerCase();
-
-                                            if (meta.description) {
-                                                _context10.next = 25;
-                                                break;
-                                            }
-
-                                            ReadMe = (0, _nodeToolkit.findFile)(
-                                                /^ReadMe\.?/i
-                                            );
-
-                                            if (!ReadMe) {
-                                                _context10.next = 25;
-                                                break;
-                                            }
-
-                                            _context10.t1 = /^[^#].+/m;
-                                            _context10.next = 22;
-                                            return (0, _fsExtra.readFile)(
-                                                ReadMe
-                                            );
-
-                                        case 22:
-                                            _context10.t2 = _context10.sent;
-                                            text = _context10.t1.exec.call(
-                                                _context10.t1,
-                                                _context10.t2
-                                            );
-                                            if (text)
-                                                config.description = text[0].trim();
-
-                                        case 25:
-                                            if (
-                                                !meta.repository ||
-                                                !meta.bugs
-                                            ) {
-                                                config.repository = meta.repository || {
-                                                    type: 'git',
-                                                    url: url
-                                                };
-                                                config.bugs = meta.bugs || {
-                                                    url: url.replace(
-                                                        /\.git$/,
-                                                        '/issues/'
-                                                    )
-                                                };
-                                                config.homepage =
-                                                    meta.homepage ||
-                                                    url.replace(/\.git$/, '/');
-                                            }
-
-                                            return _context10.abrupt(
-                                                'return',
-                                                (0, _objectSpread2.default)(
-                                                    {},
-                                                    config,
-                                                    meta
-                                                )
-                                            );
-
-                                        case 27:
-                                        case 'end':
-                                            return _context10.stop();
-                                    }
-                                }
-                            },
-                            _callee10,
-                            this,
-                            [[6, 12]]
-                        );
-                    })
-                );
-                return _setPackage.apply(this, arguments);
-            }
-
             var tagAttribute = {
                     script: {
                         key: 'src',
@@ -1978,46 +1835,46 @@ var _module_ = {
             ).meta;
             var folder = _utility.meta ? _utility.meta.directories : '';
 
-            function safePack(_x10) {
+            function safePack(_x9) {
                 return _safePack.apply(this, arguments);
             }
 
             function _safePack() {
                 _safePack = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee12(exit) {
+                    _regenerator.default.mark(function _callee11(exit) {
                         return _regenerator.default.wrap(
-                            function _callee12$(_context12) {
+                            function _callee11$(_context11) {
                                 while (1) {
                                     switch (
-                                        (_context12.prev = _context12.next)
+                                        (_context11.prev = _context11.next)
                                     ) {
                                         case 0:
-                                            _context12.prev = 0;
-                                            _context12.next = 3;
+                                            _context11.prev = 0;
+                                            _context11.next = 3;
                                             return (0, _command.pack)(
                                                 folder.lib
                                             );
 
                                         case 3:
-                                            _context12.next = 9;
+                                            _context11.next = 9;
                                             break;
 
                                         case 5:
-                                            _context12.prev = 5;
-                                            _context12.t0 = _context12['catch'](
+                                            _context11.prev = 5;
+                                            _context11.t0 = _context11['catch'](
                                                 0
                                             );
-                                            console.error(_context12.t0);
+                                            console.error(_context11.t0);
                                             if (exit === true) process.exit(1);
 
                                         case 9:
                                         case 'end':
-                                            return _context12.stop();
+                                            return _context11.stop();
                                     }
                                 }
                             },
-                            _callee12,
+                            _callee11,
                             this,
                             [[0, 5]]
                         );
@@ -2042,19 +1899,19 @@ var _module_ = {
                     /*#__PURE__*/
                     (0, _asyncToGenerator2.default)(
                         /*#__PURE__*/
-                        _regenerator.default.mark(function _callee11() {
+                        _regenerator.default.mark(function _callee10() {
                             return _regenerator.default.wrap(
-                                function _callee11$(_context11) {
+                                function _callee10$(_context10) {
                                     while (1) {
                                         switch (
-                                            (_context11.prev = _context11.next)
+                                            (_context10.prev = _context10.next)
                                         ) {
                                             case 0:
-                                                _context11.next = 2;
+                                                _context10.next = 2;
                                                 return safePack(true);
 
                                             case 2:
-                                                _context11.next = 4;
+                                                _context10.next = 4;
                                                 return _puppeteerBrowser.default.getPage(
                                                     '.',
                                                     folder.test || 'test/',
@@ -2063,11 +1920,11 @@ var _module_ = {
 
                                             case 4:
                                             case 'end':
-                                                return _context11.stop();
+                                                return _context10.stop();
                                         }
                                     }
                                 },
-                                _callee11,
+                                _callee10,
                                 this
                             );
                         })
@@ -2075,6 +1932,9 @@ var _module_ = {
                 )
                 .parse(process.argv);
         }
+    },
+    'regenerator-runtime/runtime': {
+        exports: regenerator_runtime_runtime
     },
     'fs-extra': {
         exports: fs_extra
@@ -2091,23 +1951,26 @@ var _module_ = {
     sass: {
         exports: sass
     },
+    'web-cell/dist/polyfill': {
+        exports: web_cell_dist_polyfill
+    },
     'web-cell': {
         exports: web_cell
     },
     '@tech_query/node-toolkit': {
         exports: _tech_query_node_toolkit
     },
+    'simple-git/promise': {
+        exports: simple_git_promise
+    },
     'cross-spawn': {
         exports: cross_spawn
     },
-    'web-cell/dist/polyfill': {
-        exports: web_cell_dist_polyfill
+    '@babel/polyfill': {
+        exports: _babel_polyfill
     },
     stylus: {
         exports: stylus
-    },
-    'simple-git/promise': {
-        exports: simple_git_promise
     },
     commander: {
         exports: commander

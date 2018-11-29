@@ -1,4 +1,8 @@
-import { packageOf, patch, findFile } from '@tech_query/node-toolkit';
+import 'regenerator-runtime/runtime';
+
+import '@babel/polyfill';
+
+import { packageOf, patch } from '@tech_query/node-toolkit';
 
 import 'web-cell/dist/polyfill';
 
@@ -6,13 +10,9 @@ import { $ } from 'web-cell';
 
 import Stylus from 'stylus';
 
-import {
-    readdir, existsSync, copy, outputJSON, readJSON, readFile
-} from 'fs-extra';
+import {readdir, existsSync, copy, outputJSON, readJSON} from 'fs-extra';
 
-import { join, extname, basename } from 'path';
-
-import Git from 'simple-git/promise';
+import { join, extname } from 'path';
 
 
 /**
@@ -64,56 +64,6 @@ export  async function copyFrom(folder) {
 
         console.info(`${type.padEnd(6)} --> ${file}`);
     }
-}
-
-
-/**
- * @private
- *
- * @param {Object} meta
- *
- * @return {Object}
- */
-export  async function setPackage(meta) {
-
-    const git = Git(), config = { };
-
-    if (!(await git.checkIsRepo()))  await git.init();
-
-    try {
-        var url = (await git.listRemote(['--get-url'])).trim();
-
-    } catch (error) {  url = '';  }
-
-    if (! meta.name)
-        config.name = (
-            url ?
-                /([^/]+)\.git$/.exec( url )[1]  :
-                basename( process.cwd() ).replace(/[^a-zA-Z0-9-]/g, '-')
-        ).toLowerCase();
-
-    if (! meta.description) {
-
-        const ReadMe = findFile( /^ReadMe\.?/i );
-
-        if ( ReadMe ) {
-
-            const text = /^[^#].+/m.exec(await readFile( ReadMe ));
-
-            if ( text )  config.description = text[0].trim();
-        }
-    }
-
-    if (!meta.repository || !meta.bugs) {
-
-        config.repository = meta.repository  ||  {type: 'git',  url};
-
-        config.bugs = meta.bugs  ||  {url: url.replace(/\.git$/, '/issues/')};
-
-        config.homepage = meta.homepage  ||  url.replace(/\.git$/, '/');
-    }
-
-    return  {...config, ...meta};
 }
 
 

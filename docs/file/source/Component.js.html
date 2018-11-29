@@ -35,7 +35,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
 </ul>
@@ -43,7 +42,9 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/Component.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {readFile, readdir, statSync, outputFile, remove} from &apos;fs-extra&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;regenerator-runtime/runtime&apos;;
+
+import {readFile, readdir, statSync, outputFile, remove} from &apos;fs-extra&apos;;
 
 import {join, basename, dirname, extname} from &apos;path&apos;;
 
@@ -54,6 +55,8 @@ import LESS from &apos;less&apos;;
 import * as SASS from &apos;sass&apos;;
 
 import {meta, parseStylus} from &apos;./utility&apos;;
+
+import &apos;web-cell/dist/polyfill&apos;;
 
 import { $, stringifyDOM } from &apos;web-cell&apos;;
 

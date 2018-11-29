@@ -35,7 +35,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
 </ul>
@@ -43,17 +42,21 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/command.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { join, basename } from &apos;path&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;regenerator-runtime/runtime&apos;;
+
+import Git from &apos;simple-git/promise&apos;;
+
+import { join, basename } from &apos;path&apos;;
 
 import { currentModulePath } from &apos;@tech_query/node-toolkit&apos;;
 
-import {
-    outputJSON, readJSON, outputFile, readFile, existsSync, statSync, readdir
-} from &apos;fs-extra&apos;;
+import {outputFile, readFile, existsSync, statSync, readdir} from &apos;fs-extra&apos;;
 
-import { copyFrom, setPackage, upgradeHTML } from &apos;./utility&apos;;
+import { copyFrom, upgradeHTML } from &apos;./utility&apos;;
 
 import Component from &apos;./Component&apos;;
+
+import &apos;web-cell/dist/polyfill&apos;;
 
 import { stringifyDOM } from &apos;web-cell&apos;;
 
@@ -67,13 +70,13 @@ export  async function boot() {
 
     console.time(&apos;Boot project&apos;);
 
-    await copyFrom(join(currentModulePath(), &apos;../../template&apos;));
+    const git = Git();
 
-    await outputJSON(
-        &apos;package.json&apos;,
-        await setPackage(await readJSON(&apos;package.json&apos;)),
-        {spaces: 4}
-    );
+    if (!(await git.checkIsRepo()))  await git.init();
+
+    spawn(&apos;npm&apos;,  [&apos;init&apos;, &apos;-y&apos;],  {stdio: &apos;inherit&apos;});
+
+    await copyFrom(join(currentModulePath(), &apos;../../template&apos;));
 
     await outputFile(
         &apos;index.html&apos;,  stringifyDOM( upgradeHTML(await readFile(&apos;index.html&apos;)) )

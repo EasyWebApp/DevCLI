@@ -7,14 +7,8 @@ window.esdocSearchIndex = [
   ],
   [
     "upgradehtml source/utility.js~upgradehtml,upgradehtml",
-    "test-file/test/template.test.js.html#lineNumber26",
-    "\"boot\" command index.html",
-    "test"
-  ],
-  [
-    "setpackage source/utility.js~setpackage,setpackage",
     "test-file/test/template.test.js.html#lineNumber10",
-    "\"boot\" command package.json",
+    "\"boot\" command index.html",
     "test"
   ],
   [
@@ -57,12 +51,6 @@ window.esdocSearchIndex = [
     "web-cell-cli/source/utility.js~parsestylus",
     "function/index.html#static-function-parseStylus",
     "<span>parseStylus</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
-    "function"
-  ],
-  [
-    "web-cell-cli/source/utility.js~setpackage",
-    "function/index.html#static-function-setPackage",
-    "<span>setPackage</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
     "function"
   ],
   [
