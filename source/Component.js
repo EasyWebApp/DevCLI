@@ -2,20 +2,20 @@ import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';
 
 import {join, basename, dirname, extname} from 'path';
 
-import { JSDOM } from 'jsdom';
-
 import Package from 'amd-bundle';
 
 import LESS from 'less';
 
 import * as SASS from 'sass';
 
-import {meta, XMLSerializer, document, parseStylus} from './utility';
+import {meta, parseStylus} from './utility';
+
+import { $, stringifyDOM } from 'web-cell';
 
 import { toDataURI } from '@tech_query/node-toolkit';
 
 
-const directory = meta ? meta.directories : '', serializer = new XMLSerializer();
+const directory = meta ? meta.directories : '';
 
 const single_entry = join(directory.lib || '',  'index.js');
 
@@ -43,7 +43,14 @@ export default  class Component {
      */
     static async parseHTML(path) {
 
-        return  JSDOM.fragment((await readFile( path )) + '');
+        const box = document.createElement('div'),
+            fragment = document.createDocumentFragment();
+
+        box.innerHTML = (await readFile( path ))  +  '';
+
+        fragment.append(... box.childNodes);
+
+        return fragment;
     }
 
     /**
@@ -92,13 +99,13 @@ export default  class Component {
      */
     static findStyle(fragment) {
 
-        return [
-            ... fragment.querySelectorAll('link[rel="stylesheet"]'),
-            ... [ ].concat(... Array.from(
-                fragment.querySelectorAll('template'),
-                template  =>  [... template.content.querySelectorAll('style')]
-            ))
-        ];
+        return  $('link[rel="stylesheet"]', fragment).concat(
+            [ ].concat(
+                ... $('template', fragment).map(
+                    template  =>  $('style', template.content)
+                )
+            )
+        );
     }
 
     /**
@@ -138,18 +145,6 @@ export default  class Component {
         return  Object.assign(document.createElement('script'), {
             text:  `\n${this.packJS( path )}\n`
         });
-    }
-
-    /**
-     * @param {Node} fragment
-     *
-     * @return {string}
-     */
-    static stringOf(fragment) {
-
-        return  serializer.serializeToString( fragment ).replace(
-            ' xmlns="http://www.w3.org/1999/xhtml"',  ''
-        );
     }
 
     /**
@@ -198,7 +193,7 @@ export default  class Component {
 
         switch ( extname( file ).slice(1) ) {
             case 'html':
-                file = Component.stringOf(await this.toHTML());  break;
+                file = stringifyDOM(await this.toHTML());  break;
             case 'css':
             case 'less':
             case 'sass':

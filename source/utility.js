@@ -1,6 +1,8 @@
 import { packageOf, patch, findFile } from '@tech_query/node-toolkit';
 
-import { JSDOM } from 'jsdom';
+import 'web-cell/dist/polyfill';
+
+import { $ } from 'web-cell';
 
 import Stylus from 'stylus';
 
@@ -19,9 +21,6 @@ import Git from 'simple-git/promise';
  * @type {Object}
  */
 export const meta = (packageOf('./test') || '').meta;
-
-
-export const {window: {document, XMLSerializer}} = (new JSDOM());
 
 
 /**
@@ -175,9 +174,9 @@ function equalLibrary(element, type, key, name, file) {
  */
 export function upgradeHTML(code) {
 
-    const { window: { document } } = new JSDOM( code );
+    const page = (new DOMParser()).parseFromString(code, 'text/html');
 
-    const list = [... document.querySelectorAll( Object.keys( tagAttribute ) )];
+    const list = $(Object.keys( tagAttribute ), page);
 
     for (let {type, name, file, path}  of  library) {
 
@@ -186,7 +185,7 @@ export function upgradeHTML(code) {
         if (! (element = list.find(
             item  =>  equalLibrary(item, type, key, name, file)
         ))) {
-            element = document.createElement( type );
+            element = page.createElement( type );
 
             element[key] = `node_modules/${name}/${path || ''}${file || name}${
                 /\.[^/]+$/.test( file )  ?  ''  :  '.min'
@@ -195,8 +194,8 @@ export function upgradeHTML(code) {
             if (type === 'link')  element.rel = 'stylesheet';
         }
 
-        document.head.append('    ',  element,  '\n');
+        page.head.append('    ',  element,  '\n');
     }
 
-    return document;
+    return page;
 }

@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["fs-extra","path","jsdom","amd-bundle","less","sass","@tech_query/node-toolkit","cross-spawn","stylus","simple-git/promise","commander","puppeteer-browser"], factory);
+        define('web-cell', ["fs-extra","path","amd-bundle","less","sass","web-cell","@tech_query/node-toolkit","cross-spawn","web-cell/dist/polyfill","stylus","simple-git/promise","commander","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('jsdom'),require('amd-bundle'),require('less'),require('sass'),require('@tech_query/node-toolkit'),require('cross-spawn'),require('stylus'),require('simple-git/promise'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('amd-bundle'),require('less'),require('sass'),require('web-cell'),require('@tech_query/node-toolkit'),require('cross-spawn'),require('web-cell/dist/polyfill'),require('stylus'),require('simple-git/promise'),require('commander'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory.call(self,this['fs-extra'],this['path'],this['jsdom'],this['amd-bundle'],this['less'],this['sass'],this['@tech_query/node-toolkit'],this['cross-spawn'],this['stylus'],this['simple-git/promise'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory.call(self,this['fs-extra'],this['path'],this['amd-bundle'],this['less'],this['sass'],this['web-cell'],this['@tech_query/node-toolkit'],this['cross-spawn'],this['web-cell/dist/polyfill'],this['stylus'],this['simple-git/promise'],this['commander'],this['puppeteer-browser']);
 
-})(function (fs_extra,path,jsdom,amd_bundle,less,sass,_tech_query_node_toolkit,cross_spawn,stylus,simple_git_promise,commander,puppeteer_browser) {
+})(function (fs_extra,path,amd_bundle,less,sass,web_cell,_tech_query_node_toolkit,cross_spawn,web_cell_dist_polyfill,stylus,simple_git_promise,commander,puppeteer_browser) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -110,8 +110,6 @@ var _module_ = {
 
             var _path = require('path');
 
-            var _jsdom = require('jsdom');
-
             var _amdBundle = _interopRequireDefault(require('amd-bundle'));
 
             var _less = _interopRequireDefault(require('less'));
@@ -119,6 +117,8 @@ var _module_ = {
             var SASS = _interopRequireWildcard(require('sass'));
 
             var _utility = require('./utility');
+
+            var _webCell = require('web-cell');
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
@@ -164,8 +164,7 @@ var _module_ = {
                       };
             }
 
-            var directory = _utility.meta ? _utility.meta.directories : '',
-                serializer = new _utility.XMLSerializer();
+            var directory = _utility.meta ? _utility.meta.directories : '';
             var single_entry = (0, _path.join)(directory.lib || '', 'index.js');
             /**
              * Component packer
@@ -465,15 +464,16 @@ var _module_ = {
                                                                     break;
 
                                                                 case 3:
-                                                                    _context2.t1 = Component;
+                                                                    _context2.t1 = (0,
+                                                                    _webCell.stringifyDOM);
                                                                     _context2.next = 6;
                                                                     return this.toHTML();
 
                                                                 case 6:
                                                                     _context2.t2 =
                                                                         _context2.sent;
-                                                                    file = _context2.t1.stringOf.call(
-                                                                        _context2.t1,
+                                                                    file = (0,
+                                                                    _context2.t1)(
                                                                         _context2.t2
                                                                     );
                                                                     return _context2.abrupt(
@@ -783,6 +783,7 @@ var _module_ = {
                                         /*#__PURE__*/
                                         _regenerator.default.mark(
                                             function _callee4(path) {
+                                                var box, fragment;
                                                 return _regenerator.default.wrap(
                                                     function _callee4$(
                                                         _context4
@@ -793,8 +794,10 @@ var _module_ = {
                                                                     _context4.next)
                                                             ) {
                                                                 case 0:
-                                                                    _context4.t0 =
-                                                                        _jsdom.JSDOM;
+                                                                    (box = document.createElement(
+                                                                        'div'
+                                                                    )),
+                                                                        (fragment = document.createDocumentFragment());
                                                                     _context4.next = 3;
                                                                     return (0,
                                                                     _fsExtra.readFile)(
@@ -802,20 +805,24 @@ var _module_ = {
                                                                     );
 
                                                                 case 3:
-                                                                    _context4.t1 =
+                                                                    _context4.t0 =
                                                                         _context4.sent;
-                                                                    _context4.t2 =
-                                                                        _context4.t1 +
+                                                                    box.innerHTML =
+                                                                        _context4.t0 +
                                                                         '';
-                                                                    return _context4.abrupt(
-                                                                        'return',
-                                                                        _context4.t0.fragment.call(
-                                                                            _context4.t0,
-                                                                            _context4.t2
+                                                                    fragment.append.apply(
+                                                                        fragment,
+                                                                        (0,
+                                                                        _toConsumableArray2.default)(
+                                                                            box.childNodes
                                                                         )
                                                                     );
+                                                                    return _context4.abrupt(
+                                                                        'return',
+                                                                        fragment
+                                                                    );
 
-                                                                case 6:
+                                                                case 7:
                                                                 case 'end':
                                                                     return _context4.stop();
                                                             }
@@ -983,7 +990,7 @@ var _module_ = {
                                                                         'return',
                                                                         style &&
                                                                             Object.assign(
-                                                                                _utility.document.createElement(
+                                                                                document.createElement(
                                                                                     'style'
                                                                                 ),
                                                                                 {
@@ -1020,30 +1027,20 @@ var _module_ = {
                                 value: function findStyle(fragment) {
                                     var _ref;
 
-                                    return (0, _toConsumableArray2.default)(
-                                        fragment.querySelectorAll(
-                                            'link[rel="stylesheet"]'
-                                        )
+                                    return (0, _webCell.$)(
+                                        'link[rel="stylesheet"]',
+                                        fragment
                                     ).concat(
-                                        (0, _toConsumableArray2.default)(
-                                            (_ref = []).concat.apply(
-                                                _ref,
-                                                (0,
-                                                _toConsumableArray2.default)(
-                                                    Array.from(
-                                                        fragment.querySelectorAll(
-                                                            'template'
-                                                        ),
-                                                        function(template) {
-                                                            return (0,
-                                                            _toConsumableArray2.default)(
-                                                                template.content.querySelectorAll(
-                                                                    'style'
-                                                                )
-                                                            );
-                                                        }
-                                                    )
-                                                )
+                                        (_ref = []).concat.apply(
+                                            _ref,
+                                            (0, _toConsumableArray2.default)(
+                                                (0, _webCell.$)(
+                                                    'template',
+                                                    fragment
+                                                ).map(function(template) {
+                                                    return (0,
+                                                    _webCell.$)('style', template.content);
+                                                })
                                             )
                                         )
                                     );
@@ -1104,9 +1101,7 @@ var _module_ = {
                                 key: 'parseJS',
                                 value: function parseJS(path) {
                                     return Object.assign(
-                                        _utility.document.createElement(
-                                            'script'
-                                        ),
+                                        document.createElement('script'),
                                         {
                                             text: '\n'.concat(
                                                 this.packJS(path),
@@ -1114,22 +1109,6 @@ var _module_ = {
                                             )
                                         }
                                     );
-                                }
-                                /**
-                                 * @param {Node} fragment
-                                 *
-                                 * @return {string}
-                                 */
-                            },
-                            {
-                                key: 'stringOf',
-                                value: function stringOf(fragment) {
-                                    return serializer
-                                        .serializeToString(fragment)
-                                        .replace(
-                                            ' xmlns="http://www.w3.org/1999/xhtml"',
-                                            ''
-                                        );
                                 }
                             }
                         ]
@@ -1160,6 +1139,8 @@ var _module_ = {
             var _utility = require('./utility');
 
             var _Component = _interopRequireDefault(require('./Component'));
+
+            var _webCell = require('web-cell');
 
             var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
 
@@ -1236,7 +1217,8 @@ var _module_ = {
                                         case 14:
                                             _context6.t5 = (0,
                                             _fsExtra.outputFile);
-                                            _context6.t6 = _Component.default;
+                                            _context6.t6 = (0,
+                                            _webCell.stringifyDOM);
                                             _context6.t7 = (0,
                                             _utility.upgradeHTML);
                                             _context6.next = 19;
@@ -1249,8 +1231,7 @@ var _module_ = {
                                             _context6.t9 = (0, _context6.t7)(
                                                 _context6.t8
                                             );
-                                            _context6.t10 = _context6.t6.stringOf.call(
-                                                _context6.t6,
+                                            _context6.t10 = (0, _context6.t6)(
                                                 _context6.t9
                                             );
                                             _context6.next = 24;
@@ -1350,7 +1331,7 @@ var _module_ = {
                                                     path
                                                 ).isDirectory()
                                             ) {
-                                                _context7.next = 20;
+                                                _context7.next = 25;
                                                 break;
                                             }
 
@@ -1358,38 +1339,44 @@ var _module_ = {
                                             _context7.t4 = _result;
                                             _context7.t5 =
                                                 _toConsumableArray2.default;
-                                            _context7.next = 17;
-                                            return Promise.all(
-                                                (0, _fsExtra.readdir)(path).map(
-                                                    function(file) {
-                                                        return bundle(
-                                                            (0, _path.join)(
-                                                                path,
-                                                                file
-                                                            )
-                                                        );
-                                                    }
-                                                )
+                                            _context7.t6 = Promise;
+                                            _context7.next = 18;
+                                            return (0, _fsExtra.readdir)(path);
+
+                                        case 18:
+                                            _context7.t7 = function(file) {
+                                                return bundle(
+                                                    (0, _path.join)(path, file)
+                                                );
+                                            };
+
+                                            _context7.t8 = _context7.sent.map(
+                                                _context7.t7
+                                            );
+                                            _context7.next = 22;
+                                            return _context7.t6.all.call(
+                                                _context7.t6,
+                                                _context7.t8
                                             );
 
-                                        case 17:
-                                            _context7.t6 = _context7.sent;
-                                            _context7.t7 = (0, _context7.t5)(
-                                                _context7.t6
+                                        case 22:
+                                            _context7.t9 = _context7.sent;
+                                            _context7.t10 = (0, _context7.t5)(
+                                                _context7.t9
                                             );
                                             result = _context7.t3.apply.call(
                                                 _context7.t3,
                                                 _context7.t4,
-                                                _context7.t7
+                                                _context7.t10
                                             );
 
-                                        case 20:
+                                        case 25:
                                             return _context7.abrupt(
                                                 'return',
                                                 result
                                             );
 
-                                        case 21:
+                                        case 26:
                                         case 'end':
                                             return _context7.stop();
                                     }
@@ -1475,11 +1462,13 @@ var _module_ = {
             exports.copyFrom = copyFrom;
             exports.setPackage = setPackage;
             exports.upgradeHTML = upgradeHTML;
-            exports.XMLSerializer = exports.document = exports.meta = void 0;
+            exports.meta = void 0;
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
-            var _jsdom = require('jsdom');
+            require('web-cell/dist/polyfill');
+
+            var _webCell = require('web-cell');
 
             var _stylus = _interopRequireDefault(require('stylus'));
 
@@ -1505,12 +1494,6 @@ var _module_ = {
              */
 
             var meta = ((0, _nodeToolkit.packageOf)('./test') || '').meta;
-            exports.meta = meta;
-
-            var _ref2 = new _jsdom.JSDOM(),
-                _ref2$window = _ref2.window,
-                document = _ref2$window.document,
-                XMLSerializer = _ref2$window.XMLSerializer;
             /**
              * @param {string} source
              * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
@@ -1518,8 +1501,7 @@ var _module_ = {
              * @return {Promise<string>} CSS source code
              */
 
-            exports.XMLSerializer = XMLSerializer;
-            exports.document = document;
+            exports.meta = meta;
 
             function parseStylus(source) {
                 var option =
@@ -1926,12 +1908,8 @@ var _module_ = {
              */
 
             function upgradeHTML(code) {
-                var _ref3 = new _jsdom.JSDOM(code),
-                    document = _ref3.window.document;
-
-                var list = (0, _toConsumableArray2.default)(
-                    document.querySelectorAll(Object.keys(tagAttribute))
-                );
+                var page = new DOMParser().parseFromString(code, 'text/html');
+                var list = (0, _webCell.$)(Object.keys(tagAttribute), page);
 
                 var _loop = function _loop() {
                     var _library$_i = library[_i],
@@ -1948,7 +1926,7 @@ var _module_ = {
                             return equalLibrary(item, type, key, name, file);
                         }))
                     ) {
-                        element = document.createElement(type);
+                        element = page.createElement(type);
                         element[key] = 'node_modules/'
                             .concat(name, '/')
                             .concat(path || '')
@@ -1958,7 +1936,7 @@ var _module_ = {
                         if (type === 'link') element.rel = 'stylesheet';
                     }
 
-                    document.head.append('    ', element, '\n');
+                    page.head.append('    ', element, '\n');
                 };
 
                 for (var _i = 0; _i < library.length; _i++) {
@@ -1967,7 +1945,7 @@ var _module_ = {
                     _loop();
                 }
 
-                return document;
+                return page;
             }
         }
     },
@@ -2104,9 +2082,6 @@ var _module_ = {
     path: {
         exports: path
     },
-    jsdom: {
-        exports: jsdom
-    },
     'amd-bundle': {
         exports: amd_bundle
     },
@@ -2116,11 +2091,17 @@ var _module_ = {
     sass: {
         exports: sass
     },
+    'web-cell': {
+        exports: web_cell
+    },
     '@tech_query/node-toolkit': {
         exports: _tech_query_node_toolkit
     },
     'cross-spawn': {
         exports: cross_spawn
+    },
+    'web-cell/dist/polyfill': {
+        exports: web_cell_dist_polyfill
     },
     stylus: {
         exports: stylus

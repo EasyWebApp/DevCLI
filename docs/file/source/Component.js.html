@@ -38,7 +38,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-window">window</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -48,20 +47,20 @@
 
 import {join, basename, dirname, extname} from &apos;path&apos;;
 
-import { JSDOM } from &apos;jsdom&apos;;
-
 import Package from &apos;amd-bundle&apos;;
 
 import LESS from &apos;less&apos;;
 
 import * as SASS from &apos;sass&apos;;
 
-import {meta, XMLSerializer, document, parseStylus} from &apos;./utility&apos;;
+import {meta, parseStylus} from &apos;./utility&apos;;
+
+import { $, stringifyDOM } from &apos;web-cell&apos;;
 
 import { toDataURI } from &apos;@tech_query/node-toolkit&apos;;
 
 
-const directory = meta ? meta.directories : &apos;&apos;, serializer = new XMLSerializer();
+const directory = meta ? meta.directories : &apos;&apos;;
 
 const single_entry = join(directory.lib || &apos;&apos;,  &apos;index.js&apos;);
 
@@ -89,7 +88,14 @@ export default  class Component {
      */
     static async parseHTML(path) {
 
-        return  JSDOM.fragment((await readFile( path )) + &apos;&apos;);
+        const box = document.createElement(&apos;div&apos;),
+            fragment = document.createDocumentFragment();
+
+        box.innerHTML = (await readFile( path ))  +  &apos;&apos;;
+
+        fragment.append(... box.childNodes);
+
+        return fragment;
     }
 
     /**
@@ -138,13 +144,13 @@ export default  class Component {
      */
     static findStyle(fragment) {
 
-        return [
-            ... fragment.querySelectorAll(&apos;link[rel=&quot;stylesheet&quot;]&apos;),
-            ... [ ].concat(... Array.from(
-                fragment.querySelectorAll(&apos;template&apos;),
-                template  =&gt;  [... template.content.querySelectorAll(&apos;style&apos;)]
-            ))
-        ];
+        return  $(&apos;link[rel=&quot;stylesheet&quot;]&apos;, fragment).concat(
+            [ ].concat(
+                ... $(&apos;template&apos;, fragment).map(
+                    template  =&gt;  $(&apos;style&apos;, template.content)
+                )
+            )
+        );
     }
 
     /**
@@ -184,18 +190,6 @@ export default  class Component {
         return  Object.assign(document.createElement(&apos;script&apos;), {
             text:  `\n${this.packJS( path )}\n`
         });
-    }
-
-    /**
-     * @param {Node} fragment
-     *
-     * @return {string}
-     */
-    static stringOf(fragment) {
-
-        return  serializer.serializeToString( fragment ).replace(
-            &apos; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&apos;,  &apos;&apos;
-        );
     }
 
     /**
@@ -244,7 +238,7 @@ export default  class Component {
 
         switch ( extname( file ).slice(1) ) {
             case &apos;html&apos;:
-                file = Component.stringOf(await this.toHTML());  break;
+                file = stringifyDOM(await this.toHTML());  break;
             case &apos;css&apos;:
             case &apos;less&apos;:
             case &apos;sass&apos;:

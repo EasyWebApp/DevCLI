@@ -10,6 +10,8 @@ import { copyFrom, setPackage, upgradeHTML } from './utility';
 
 import Component from './Component';
 
+import { stringifyDOM } from 'web-cell';
+
 import spawn from 'cross-spawn';
 
 
@@ -29,8 +31,7 @@ export  async function boot() {
     );
 
     await outputFile(
-        'index.html',
-        Component.stringOf( upgradeHTML(await readFile('index.html')) )
+        'index.html',  stringifyDOM( upgradeHTML(await readFile('index.html')) )
     );
 
     console.info('--------------------');
@@ -63,7 +64,7 @@ export  async function bundle(path) {
 
     if (statSync( path ).isDirectory())
         result = result.concat(... await Promise.all(
-            readdir( path ).map(file  =>  bundle( join(path, file) ))
+            (await readdir( path )).map(file  =>  bundle( join(path, file) ))
         ));
 
     return result;

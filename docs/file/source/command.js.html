@@ -38,7 +38,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-window">window</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -55,6 +54,8 @@ import {
 import { copyFrom, setPackage, upgradeHTML } from &apos;./utility&apos;;
 
 import Component from &apos;./Component&apos;;
+
+import { stringifyDOM } from &apos;web-cell&apos;;
 
 import spawn from &apos;cross-spawn&apos;;
 
@@ -75,8 +76,7 @@ export  async function boot() {
     );
 
     await outputFile(
-        &apos;index.html&apos;,
-        Component.stringOf( upgradeHTML(await readFile(&apos;index.html&apos;)) )
+        &apos;index.html&apos;,  stringifyDOM( upgradeHTML(await readFile(&apos;index.html&apos;)) )
     );
 
     console.info(&apos;--------------------&apos;);
@@ -109,7 +109,7 @@ export  async function bundle(path) {
 
     if (statSync( path ).isDirectory())
         result = result.concat(... await Promise.all(
-            readdir( path ).map(file  =&gt;  bundle( join(path, file) ))
+            (await readdir( path )).map(file  =&gt;  bundle( join(path, file) ))
         ));
 
     return result;

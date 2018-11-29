@@ -1,5 +1,7 @@
 import { setPackage, upgradeHTML } from '../source/utility';
 
+import { $ } from 'web-cell';
+
 
 describe('"boot" command',  () => {
     /**
@@ -32,10 +34,8 @@ describe('"boot" command',  () => {
 </body></html>`
         );
 
-        document.querySelectorAll('script[src^="node_modules/"]')
-            .should.have.length(5);
+        $('script[src^="node_modules/"]', document).should.have.length(5);
 
-        document.querySelectorAll('script[src$="min.js"]')
-            .should.have.length(4);
+        $('script[src$="min.js"]', document).should.have.length(4);
     });
 });

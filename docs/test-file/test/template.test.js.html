@@ -38,13 +38,14 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-window">window</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/template.test.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { setPackage, upgradeHTML } from &apos;../source/utility&apos;;
+
+import { $ } from &apos;web-cell&apos;;
 
 
 describe(&apos;&quot;boot&quot; command&apos;,  () =&gt; {
@@ -78,11 +79,9 @@ describe(&apos;&quot;boot&quot; command&apos;,  () =&gt; {
 &lt;/body&gt;&lt;/html&gt;`
         );
 
-        document.querySelectorAll(&apos;script[src^=&quot;node_modules/&quot;]&apos;)
-            .should.have.length(5);
+        $(&apos;script[src^=&quot;node_modules/&quot;]&apos;, document).should.have.length(5);
 
-        document.querySelectorAll(&apos;script[src$=&quot;min.js&quot;]&apos;)
-            .should.have.length(4);
+        $(&apos;script[src$=&quot;min.js&quot;]&apos;, document).should.have.length(4);
     });
 });
 </code></pre>

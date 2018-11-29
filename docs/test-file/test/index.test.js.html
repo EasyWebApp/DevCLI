@@ -38,13 +38,14 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setPackage">setPackage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-window">window</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/index.test.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;../source/Component&apos;;
+
+import { stringifyDOM } from &apos;web-cell&apos;;
 
 import { readFile } from &apos;fs-extra&apos;;
 
@@ -84,7 +85,6 @@ describe(&apos;Core class&apos;,  () =&gt; {
 
     /**
      * @test {Component.parseHTML}
-     * @test {Component.stringOf}
      */
     it(&apos;Parse pure HTML&apos;,  async () =&gt; {
 
@@ -94,7 +94,7 @@ describe(&apos;Core class&apos;,  () =&gt; {
 
         template.nodeType.should.be.equal( 11 );
 
-        Component.stringOf( template ).should.be.equal(
+        stringifyDOM( template ).should.be.equal(
             (await readFile( file )) + &apos;&apos;
         );
     });
@@ -175,7 +175,7 @@ textarea {
         ).should.be.true();
 
         component.includes(
-            JSON.stringify( Component.stringOf( template ) )
+            JSON.stringify( stringifyDOM( template ) )
                 .slice(1, -1).replace(/\\&quot;/g, &apos;&quot;&apos;)
         ).should.be.true();
 

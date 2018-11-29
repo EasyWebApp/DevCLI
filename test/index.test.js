@@ -1,5 +1,7 @@
 import Component from '../source/Component';
 
+import { stringifyDOM } from 'web-cell';
+
 import { readFile } from 'fs-extra';
 
 import { join } from 'path';
@@ -38,7 +40,6 @@ describe('Core class',  () => {
 
     /**
      * @test {Component.parseHTML}
-     * @test {Component.stringOf}
      */
     it('Parse pure HTML',  async () => {
 
@@ -48,7 +49,7 @@ describe('Core class',  () => {
 
         template.nodeType.should.be.equal( 11 );
 
-        Component.stringOf( template ).should.be.equal(
+        stringifyDOM( template ).should.be.equal(
             (await readFile( file )) + ''
         );
     });
@@ -129,7 +130,7 @@ textarea {
         ).should.be.true();
 
         component.includes(
-            JSON.stringify( Component.stringOf( template ) )
+            JSON.stringify( stringifyDOM( template ) )
                 .slice(1, -1).replace(/\\"/g, '"')
         ).should.be.true();
 

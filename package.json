@@ -1,6 +1,6 @@
 {
   "name": "web-cell-cli",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Developer command-line tool for WebCell",
   "keywords": [
     "developer",
@@ -49,37 +49,39 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
+    "@babel/runtime": "^7.1.5",
     "@tech_query/node-toolkit": "^0.8.1",
     "amd-bundle": "^1.7.4",
     "commander": "^2.19.0",
     "cross-spawn": "^6.0.5",
-    "fs-extra": "^7.0.0",
+    "fs-extra": "^7.0.1",
     "jsdom": "^13.0.0",
     "less": "^3.8.1",
+    "node-fetch": "^2.3.0",
     "puppeteer-browser": "^0.3.7",
-    "sass": "^1.14.3",
-    "simple-git": "^1.106.0",
-    "stylus": "^0.54.5"
+    "sass": "^1.15.1",
+    "simple-git": "^1.107.0",
+    "stylus": "^0.54.5",
+    "web-cell": "^0.10.10"
   },
   "peerDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "web-cell": "^0.10.7"
+    "@babel/plugin-proposal-decorators": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "web-cell": "^0.10.10"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "@babel/plugin-proposal-decorators": "^7.1.6",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.1.6",
     "@babel/register": "^7.0.0",
     "babel-eslint": "^10.0.1",
     "esdoc": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^5.8.0",
-    "husky": "^1.1.2",
+    "eslint": "^5.9.0",
+    "husky": "^1.2.0",
     "koapache": "^1.0.4",
     "mocha": "^5.2.0",
     "should": "^13.2.3"
