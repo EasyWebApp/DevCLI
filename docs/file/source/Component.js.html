@@ -36,7 +36,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -54,18 +55,13 @@ import LESS from &apos;less&apos;;
 
 import * as SASS from &apos;sass&apos;;
 
-import {meta, parseStylus} from &apos;./utility&apos;;
+import { parseStylus, folderOf, metaOf } from &apos;./utility&apos;;
 
 import &apos;web-cell/dist/polyfill&apos;;
 
 import { $, stringifyDOM } from &apos;web-cell&apos;;
 
 import { toDataURI } from &apos;@tech_query/node-toolkit&apos;;
-
-
-const directory = meta ? meta.directories : &apos;&apos;;
-
-const single_entry = join(directory.lib || &apos;&apos;,  &apos;index.js&apos;);
 
 
 /**
@@ -174,7 +170,9 @@ export default  class Component {
      */
     static packJS(path) {
 
-        const name = (path === single_entry)  &amp;&amp;  meta.name;
+        const single_entry = join(folderOf().lib || &apos;&apos;,  &apos;index.js&apos;);
+
+        const name = (path === single_entry)  &amp;&amp;  metaOf().name;
 
         path = path.split(&apos;.&apos;).slice(0, -1).join(&apos;.&apos;);
 

@@ -36,7 +36,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -46,7 +47,7 @@
 
 import &apos;@babel/polyfill&apos;;
 
-import { packageOf, patch } from &apos;@tech_query/node-toolkit&apos;;
+import { cache, packageOf, patch } from &apos;@tech_query/node-toolkit&apos;;
 
 import &apos;web-cell/dist/polyfill&apos;;
 
@@ -60,11 +61,21 @@ import { join, extname } from &apos;path&apos;;
 
 
 /**
- * `package.json` data of `process.cwd()`
+ * Get `package.json` data of `path` or `process.cwd()`
  *
- * @type {Object}
+ * @type {function(path: ?String): Object}
  */
-export const meta = (packageOf(&apos;./test&apos;) || &apos;&apos;).meta;
+export const metaOf = cache(
+    path  =&gt;  (packageOf(path || &apos;./test&apos;) || &apos;&apos;).meta || { }
+);
+
+
+/**
+ * Get `directories` field of `package.json` in `path` or `process.cwd()`
+ *
+ * @type {function(path: ?String): Object}
+ */
+export const folderOf = cache(path  =&gt;  (metaOf(path) || &apos;&apos;).directories || { });
 
 
 /**
@@ -174,6 +185,8 @@ export function upgradeHTML(code) {
 
     for (let {type, name, file, path}  of  library) {
 
+        file = file || name;
+
         var { key, kind } = tagAttribute[ type ], element;
 
         if (! (element = list.find(
@@ -181,7 +194,7 @@ export function upgradeHTML(code) {
         ))) {
             element = page.createElement( type );
 
-            element[key] = `node_modules/${name}/${path || &apos;&apos;}${file || name}${
+            element[key] = `node_modules/${name}/${path || &apos;&apos;}${file}${
                 /\.[^/]+$/.test( file )  ?  &apos;&apos;  :  &apos;.min&apos;
             }.${kind}`;
 

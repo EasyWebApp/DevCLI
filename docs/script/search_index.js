@@ -36,9 +36,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell-cli/source/utility.js~meta",
-    "variable/index.html#static-variable-meta",
-    "<span>meta</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "web-cell-cli/source/utility.js~folderof",
+    "variable/index.html#static-variable-folderOf",
+    "<span>folderOf</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
+    "variable"
+  ],
+  [
+    "web-cell-cli/source/utility.js~metaof",
+    "variable/index.html#static-variable-metaOf",
+    "<span>metaOf</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
     "variable"
   ],
   [

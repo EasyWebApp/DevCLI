@@ -665,7 +665,7 @@
     "name": "source/command.js",
     "content": "import 'regenerator-runtime/runtime';\n\nimport Git from 'simple-git/promise';\n\nimport { join, basename } from 'path';\n\nimport { currentModulePath } from '@tech_query/node-toolkit';\n\nimport {outputFile, readFile, existsSync, statSync, readdir} from 'fs-extra';\n\nimport { copyFrom, upgradeHTML } from './utility';\n\nimport Component from './Component';\n\nimport 'web-cell/dist/polyfill';\n\nimport { stringifyDOM } from 'web-cell';\n\nimport spawn from 'cross-spawn';\n\n\n/**\n * Boot current directory as a WebCell project\n */\nexport  async function boot() {\n\n    console.time('Boot project');\n\n    const git = Git();\n\n    if (!(await git.checkIsRepo()))  await git.init();\n\n    spawn('npm',  ['init', '-y'],  {stdio: 'inherit'});\n\n    await copyFrom(join(currentModulePath(), '../../template'));\n\n    await outputFile(\n        'index.html',  stringifyDOM( upgradeHTML(await readFile('index.html')) )\n    );\n\n    console.info('--------------------');\n\n    console.timeEnd('Boot project');\n\n    spawn('npm',  ['install'],  {stdio: 'inherit'});\n}\n\n\n/**\n * Bundle components to JS modules\n *\n * @param {string} path - Source directory\n *\n * @return {string[]} Component paths\n */\nexport  async function bundle(path) {\n\n    var result = [ ];\n\n    if (existsSync( join(path, 'index.js') )) {\n\n        const component = new Component( path );\n\n        result[0] = `dist/${component.name}.js`;\n\n        await outputFile(result[0],  await component.toJS());\n    }\n\n    if (statSync( path ).isDirectory())\n        result = result.concat(... await Promise.all(\n            (await readdir( path )).map(file  =>  bundle( join(path, file) ))\n        ));\n\n    return result;\n}\n\n\n/**\n * Bundle components into a JS package\n *\n * @param {string} path - Source directory\n *\n * @return {string[]} Component paths\n */\nexport  async function pack(path) {\n\n    const file = await bundle( path );\n\n    await outputFile(\n        'dist/index.js',\n        file.map(item => {\n\n            item = basename( item );\n\n            console.info(`√ Component \"${item}\" is packed in`);\n\n            return  `export * from './${item}';`;\n\n        }).join('\\n')\n    );\n\n    return file;\n}\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/source/command.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/source/command.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -764,57 +764,15 @@
     "__docId__": 61,
     "kind": "file",
     "name": "source/Component.js",
-    "content": "import 'regenerator-runtime/runtime';\n\nimport {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';\n\nimport {join, basename, dirname, extname} from 'path';\n\nimport Package from 'amd-bundle';\n\nimport LESS from 'less';\n\nimport * as SASS from 'sass';\n\nimport {meta, parseStylus} from './utility';\n\nimport 'web-cell/dist/polyfill';\n\nimport { $, stringifyDOM } from 'web-cell';\n\nimport { toDataURI } from '@tech_query/node-toolkit';\n\n\nconst directory = meta ? meta.directories : '';\n\nconst single_entry = join(directory.lib || '',  'index.js');\n\n\n/**\n * Component packer\n */\nexport default  class Component {\n    /**\n     * @param {string} path - Component directory\n     */\n    constructor(path) {\n\n        this.path = path;\n\n        this.name = basename( path );\n\n        this.entry = join(path, 'index');\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {DocumentFragment}\n     */\n    static async parseHTML(path) {\n\n        const box = document.createElement('div'),\n            fragment = document.createDocumentFragment();\n\n        box.innerHTML = (await readFile( path ))  +  '';\n\n        fragment.append(... box.childNodes);\n\n        return fragment;\n    }\n\n    /**\n     * @param {string}  source - File path or Style source code\n     * @param {?string} type   - MIME type\n     * @param {string}  [base] - Path of the file which `@import` located in\n     *\n     * @return {?Element} Style element\n     */\n    static async parseCSS(source, type, base) {\n\n        var style;\n\n        type = type  ?  type.split('/')[1]  :  extname( source ).slice(1);\n\n        if (! source.includes('\\n'))\n            source = await readFile(base = source) + '';\n\n        const paths = [dirname( base )];\n\n        switch ( type ) {\n            case 'css':       style = source;  break;\n            case 'sass':\n            case 'scss':\n                style = SASS.renderSync({\n                    data:          source,\n                    includePaths:  paths\n                }).css;\n                break;\n            case 'less':\n                style = (await LESS.render(source,  { paths })).css;\n                break;\n            case 'stylus':\n                style = await parseStylus(source,  { paths });\n        }\n\n        return  style && Object.assign(\n            document.createElement('style'),  {textContent: style}\n        );\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {Element[]}\n     */\n    static findStyle(fragment) {\n\n        return  $('link[rel=\"stylesheet\"]', fragment).concat(\n            [ ].concat(\n                ... $('template', fragment).map(\n                    template  =>  $('style', template.content)\n                )\n            )\n        );\n    }\n\n    /**\n     * @param {string} tagName\n     *\n     * @return {string}\n     */\n    static identifierOf(tagName) {\n\n        return  tagName[0].toUpperCase() +\n            tagName.replace(/-(\\w)/g,  (_, char) => char.toUpperCase()).slice(1);\n    }\n\n    /**\n     * @param {String} path - Full name of a JS file\n     *\n     * @return {String} Packed JS source code\n     */\n    static packJS(path) {\n\n        const name = (path === single_entry)  &&  meta.name;\n\n        path = path.split('.').slice(0, -1).join('.');\n\n        return  (new Package( path )).bundle(\n            name  ||  this.identifierOf( basename( dirname( path ) ) )\n        );\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {Element}\n     */\n    static parseJS(path) {\n\n        return  Object.assign(document.createElement('script'), {\n            text:  `\\n${this.packJS( path )}\\n`\n        });\n    }\n\n    /**\n     * @return {DocumentFragment} HTML version bundle of this component\n     */\n    async toHTML() {\n\n        const fragment = await Component.parseHTML(this.entry + '.html'),\n            CSS = [ ];\n\n        for (let sheet  of  Component.findStyle( fragment )) {\n\n            let style = await Component.parseCSS(\n                sheet.textContent  ||  join(this.path, sheet.getAttribute('href')),\n                sheet.type,\n                this.entry + '.css'\n            );\n\n            if (! style)  continue;\n\n            sheet.replaceWith( style );\n\n            if (style.parentNode === fragment)  CSS.push( style );\n        }\n\n        fragment.querySelector('template').content.prepend(... CSS);\n\n        const script = fragment.querySelector('script');\n\n        if ( script )\n            script.replaceWith(\n                Component.parseJS( join(this.path, script.getAttribute('src')) )\n            );\n\n        return fragment;\n    }\n\n    /**\n     * @protected\n     *\n     * @param {String} file - File path\n     *\n     * @return {String} Legal ECMAScript source code\n     */\n    async assetOf(file) {\n\n        switch ( extname( file ).slice(1) ) {\n            case 'html':\n                file = stringifyDOM(await this.toHTML());  break;\n            case 'css':\n            case 'less':\n            case 'sass':\n            case 'scss':\n            case 'stylus':\n                file = (await Component.parseCSS( file )).textContent;  break;\n            case 'js':\n                return;\n            case 'json':\n                return  (await readFile( file )) + '';\n            default:\n                file = toDataURI( file );\n        }\n\n        return  JSON.stringify( file );\n    }\n\n    /**\n     * @return {string} JS version bundle of this component\n     */\n    async toJS() {\n\n        const temp_file = [ ];\n\n        for (let file  of  await readdir( this.path )) {\n\n            file = join(this.path, file);\n\n            if (! statSync( file ).isFile())  continue;\n\n            let temp = `${file}.js`;\n\n            file = await this.assetOf( file );\n\n            if (!(file != null))  continue;\n\n            temp_file.push( temp );\n\n            await outputFile(temp,  `export default ${file}`);\n        }\n\n        const source = Component.packJS(this.entry + '.js');\n\n        await Promise.all( temp_file.map(file => remove( file )) );\n\n        return source;\n    }\n}\n",
+    "content": "import 'regenerator-runtime/runtime';\n\nimport {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';\n\nimport {join, basename, dirname, extname} from 'path';\n\nimport Package from 'amd-bundle';\n\nimport LESS from 'less';\n\nimport * as SASS from 'sass';\n\nimport { parseStylus, folderOf, metaOf } from './utility';\n\nimport 'web-cell/dist/polyfill';\n\nimport { $, stringifyDOM } from 'web-cell';\n\nimport { toDataURI } from '@tech_query/node-toolkit';\n\n\n/**\n * Component packer\n */\nexport default  class Component {\n    /**\n     * @param {string} path - Component directory\n     */\n    constructor(path) {\n\n        this.path = path;\n\n        this.name = basename( path );\n\n        this.entry = join(path, 'index');\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {DocumentFragment}\n     */\n    static async parseHTML(path) {\n\n        const box = document.createElement('div'),\n            fragment = document.createDocumentFragment();\n\n        box.innerHTML = (await readFile( path ))  +  '';\n\n        fragment.append(... box.childNodes);\n\n        return fragment;\n    }\n\n    /**\n     * @param {string}  source - File path or Style source code\n     * @param {?string} type   - MIME type\n     * @param {string}  [base] - Path of the file which `@import` located in\n     *\n     * @return {?Element} Style element\n     */\n    static async parseCSS(source, type, base) {\n\n        var style;\n\n        type = type  ?  type.split('/')[1]  :  extname( source ).slice(1);\n\n        if (! source.includes('\\n'))\n            source = await readFile(base = source) + '';\n\n        const paths = [dirname( base )];\n\n        switch ( type ) {\n            case 'css':       style = source;  break;\n            case 'sass':\n            case 'scss':\n                style = SASS.renderSync({\n                    data:          source,\n                    includePaths:  paths\n                }).css;\n                break;\n            case 'less':\n                style = (await LESS.render(source,  { paths })).css;\n                break;\n            case 'stylus':\n                style = await parseStylus(source,  { paths });\n        }\n\n        return  style && Object.assign(\n            document.createElement('style'),  {textContent: style}\n        );\n    }\n\n    /**\n     * @param {DocumentFragment} fragment\n     *\n     * @return {Element[]}\n     */\n    static findStyle(fragment) {\n\n        return  $('link[rel=\"stylesheet\"]', fragment).concat(\n            [ ].concat(\n                ... $('template', fragment).map(\n                    template  =>  $('style', template.content)\n                )\n            )\n        );\n    }\n\n    /**\n     * @param {string} tagName\n     *\n     * @return {string}\n     */\n    static identifierOf(tagName) {\n\n        return  tagName[0].toUpperCase() +\n            tagName.replace(/-(\\w)/g,  (_, char) => char.toUpperCase()).slice(1);\n    }\n\n    /**\n     * @param {String} path - Full name of a JS file\n     *\n     * @return {String} Packed JS source code\n     */\n    static packJS(path) {\n\n        const single_entry = join(folderOf().lib || '',  'index.js');\n\n        const name = (path === single_entry)  &&  metaOf().name;\n\n        path = path.split('.').slice(0, -1).join('.');\n\n        return  (new Package( path )).bundle(\n            name  ||  this.identifierOf( basename( dirname( path ) ) )\n        );\n    }\n\n    /**\n     * @param {string} path\n     *\n     * @return {Element}\n     */\n    static parseJS(path) {\n\n        return  Object.assign(document.createElement('script'), {\n            text:  `\\n${this.packJS( path )}\\n`\n        });\n    }\n\n    /**\n     * @return {DocumentFragment} HTML version bundle of this component\n     */\n    async toHTML() {\n\n        const fragment = await Component.parseHTML(this.entry + '.html'),\n            CSS = [ ];\n\n        for (let sheet  of  Component.findStyle( fragment )) {\n\n            let style = await Component.parseCSS(\n                sheet.textContent  ||  join(this.path, sheet.getAttribute('href')),\n                sheet.type,\n                this.entry + '.css'\n            );\n\n            if (! style)  continue;\n\n            sheet.replaceWith( style );\n\n            if (style.parentNode === fragment)  CSS.push( style );\n        }\n\n        fragment.querySelector('template').content.prepend(... CSS);\n\n        const script = fragment.querySelector('script');\n\n        if ( script )\n            script.replaceWith(\n                Component.parseJS( join(this.path, script.getAttribute('src')) )\n            );\n\n        return fragment;\n    }\n\n    /**\n     * @protected\n     *\n     * @param {String} file - File path\n     *\n     * @return {String} Legal ECMAScript source code\n     */\n    async assetOf(file) {\n\n        switch ( extname( file ).slice(1) ) {\n            case 'html':\n                file = stringifyDOM(await this.toHTML());  break;\n            case 'css':\n            case 'less':\n            case 'sass':\n            case 'scss':\n            case 'stylus':\n                file = (await Component.parseCSS( file )).textContent;  break;\n            case 'js':\n                return;\n            case 'json':\n                return  (await readFile( file )) + '';\n            default:\n                file = toDataURI( file );\n        }\n\n        return  JSON.stringify( file );\n    }\n\n    /**\n     * @return {string} JS version bundle of this component\n     */\n    async toJS() {\n\n        const temp_file = [ ];\n\n        for (let file  of  await readdir( this.path )) {\n\n            file = join(this.path, file);\n\n            if (! statSync( file ).isFile())  continue;\n\n            let temp = `${file}.js`;\n\n            file = await this.assetOf( file );\n\n            if (!(file != null))  continue;\n\n            temp_file.push( temp );\n\n            await outputFile(temp,  `export default ${file}`);\n        }\n\n        const source = Component.packJS(this.entry + '.js');\n\n        await Promise.all( temp_file.map(file => remove( file )) );\n\n        return source;\n    }\n}\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/source/Component.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/source/Component.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
     "__docId__": 62,
-    "kind": "variable",
-    "name": "directory",
-    "memberof": "source/Component.js",
-    "static": true,
-    "longname": "source/Component.js~directory",
-    "access": "public",
-    "export": false,
-    "importPath": "web-cell-cli",
-    "importStyle": null,
-    "description": null,
-    "lineNumber": 22,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    },
-    "ignore": true
-  },
-  {
-    "__docId__": 63,
-    "kind": "variable",
-    "name": "single_entry",
-    "memberof": "source/Component.js",
-    "static": true,
-    "longname": "source/Component.js~single_entry",
-    "access": "public",
-    "export": false,
-    "importPath": "web-cell-cli",
-    "importStyle": null,
-    "description": null,
-    "lineNumber": 24,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    },
-    "ignore": true
-  },
-  {
-    "__docId__": 64,
     "kind": "class",
     "name": "Component",
     "memberof": "source/Component.js",
@@ -825,11 +783,11 @@
     "importPath": "web-cell-cli",
     "importStyle": "Component",
     "description": "Component packer",
-    "lineNumber": 30,
+    "lineNumber": 25,
     "interface": false
   },
   {
-    "__docId__": 65,
+    "__docId__": 63,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "source/Component.js~Component",
@@ -839,7 +797,7 @@
     "longname": "source/Component.js~Component#constructor",
     "access": "public",
     "description": "",
-    "lineNumber": 34,
+    "lineNumber": 29,
     "params": [
       {
         "nullable": null,
@@ -854,7 +812,7 @@
     ]
   },
   {
-    "__docId__": 66,
+    "__docId__": 64,
     "kind": "member",
     "name": "path",
     "memberof": "source/Component.js~Component",
@@ -862,7 +820,41 @@
     "longname": "source/Component.js~Component#path",
     "access": "public",
     "description": null,
-    "lineNumber": 36,
+    "lineNumber": 31,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "member",
+    "name": "name",
+    "memberof": "source/Component.js~Component",
+    "static": false,
+    "longname": "source/Component.js~Component#name",
+    "access": "public",
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "member",
+    "name": "entry",
+    "memberof": "source/Component.js~Component",
+    "static": false,
+    "longname": "source/Component.js~Component#entry",
+    "access": "public",
+    "description": null,
+    "lineNumber": 35,
     "undocument": true,
     "type": {
       "types": [
@@ -872,40 +864,6 @@
   },
   {
     "__docId__": 67,
-    "kind": "member",
-    "name": "name",
-    "memberof": "source/Component.js~Component",
-    "static": false,
-    "longname": "source/Component.js~Component#name",
-    "access": "public",
-    "description": null,
-    "lineNumber": 38,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 68,
-    "kind": "member",
-    "name": "entry",
-    "memberof": "source/Component.js~Component",
-    "static": false,
-    "longname": "source/Component.js~Component#entry",
-    "access": "public",
-    "description": null,
-    "lineNumber": 40,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 69,
     "kind": "method",
     "name": "parseHTML",
     "memberof": "source/Component.js~Component",
@@ -915,7 +873,7 @@
     "longname": "source/Component.js~Component.parseHTML",
     "access": "public",
     "description": "",
-    "lineNumber": 48,
+    "lineNumber": 43,
     "params": [
       {
         "nullable": null,
@@ -938,7 +896,7 @@
     }
   },
   {
-    "__docId__": 70,
+    "__docId__": 68,
     "kind": "method",
     "name": "parseCSS",
     "memberof": "source/Component.js~Component",
@@ -948,7 +906,7 @@
     "longname": "source/Component.js~Component.parseCSS",
     "access": "public",
     "description": "",
-    "lineNumber": 67,
+    "lineNumber": 62,
     "params": [
       {
         "nullable": null,
@@ -991,7 +949,7 @@
     }
   },
   {
-    "__docId__": 71,
+    "__docId__": 69,
     "kind": "method",
     "name": "findStyle",
     "memberof": "source/Component.js~Component",
@@ -1001,7 +959,7 @@
     "longname": "source/Component.js~Component.findStyle",
     "access": "public",
     "description": "",
-    "lineNumber": 104,
+    "lineNumber": 99,
     "params": [
       {
         "nullable": null,
@@ -1024,7 +982,7 @@
     }
   },
   {
-    "__docId__": 72,
+    "__docId__": 70,
     "kind": "method",
     "name": "identifierOf",
     "memberof": "source/Component.js~Component",
@@ -1034,7 +992,7 @@
     "longname": "source/Component.js~Component.identifierOf",
     "access": "public",
     "description": "",
-    "lineNumber": 120,
+    "lineNumber": 115,
     "params": [
       {
         "nullable": null,
@@ -1057,7 +1015,7 @@
     }
   },
   {
-    "__docId__": 73,
+    "__docId__": 71,
     "kind": "method",
     "name": "packJS",
     "memberof": "source/Component.js~Component",
@@ -1067,7 +1025,7 @@
     "longname": "source/Component.js~Component.packJS",
     "access": "public",
     "description": "",
-    "lineNumber": 131,
+    "lineNumber": 126,
     "params": [
       {
         "nullable": null,
@@ -1090,7 +1048,7 @@
     }
   },
   {
-    "__docId__": 74,
+    "__docId__": 72,
     "kind": "method",
     "name": "parseJS",
     "memberof": "source/Component.js~Component",
@@ -1100,7 +1058,7 @@
     "longname": "source/Component.js~Component.parseJS",
     "access": "public",
     "description": "",
-    "lineNumber": 147,
+    "lineNumber": 144,
     "params": [
       {
         "nullable": null,
@@ -1123,7 +1081,7 @@
     }
   },
   {
-    "__docId__": 75,
+    "__docId__": 73,
     "kind": "method",
     "name": "toHTML",
     "memberof": "source/Component.js~Component",
@@ -1133,7 +1091,7 @@
     "longname": "source/Component.js~Component#toHTML",
     "access": "public",
     "description": "",
-    "lineNumber": 157,
+    "lineNumber": 154,
     "return": {
       "nullable": null,
       "types": [
@@ -1145,7 +1103,7 @@
     "params": []
   },
   {
-    "__docId__": 76,
+    "__docId__": 74,
     "kind": "method",
     "name": "assetOf",
     "memberof": "source/Component.js~Component",
@@ -1155,7 +1113,7 @@
     "longname": "source/Component.js~Component#assetOf",
     "access": "protected",
     "description": "",
-    "lineNumber": 196,
+    "lineNumber": 193,
     "params": [
       {
         "nullable": null,
@@ -1178,7 +1136,7 @@
     }
   },
   {
-    "__docId__": 77,
+    "__docId__": 75,
     "kind": "method",
     "name": "toJS",
     "memberof": "source/Component.js~Component",
@@ -1188,7 +1146,7 @@
     "longname": "source/Component.js~Component#toJS",
     "access": "public",
     "description": "",
-    "lineNumber": 221,
+    "lineNumber": 218,
     "return": {
       "nullable": null,
       "types": [
@@ -1200,18 +1158,18 @@
     "params": []
   },
   {
-    "__docId__": 78,
+    "__docId__": 76,
     "kind": "file",
     "name": "source/index.js",
-    "content": "#! /usr/bin/env node\n\nimport { packageOf, currentModulePath } from '@tech_query/node-toolkit';\n\nimport { meta } from './utility';\n\nimport Commander from 'commander';\n\nimport { pack, boot } from './command';\n\nimport PuppeteerBrowser from 'puppeteer-browser';\n\n\n\nconst currentPackage = packageOf( currentModulePath() ).meta;\n\nconst folder = meta ? meta.directories : '';\n\nasync function safePack(exit) {\n    try {\n        await pack( folder.lib );\n\n    } catch (error) {\n\n        console.error( error );\n\n        if (exit === true)  process.exit( 1 );\n    }\n}\n\nCommander\n    .version( currentPackage.version ).description( currentPackage.description )\n    .command('boot',  'Boot current directory as a WebCell project')\n    .on('command:boot',  boot)\n    .command('pack',  'Bundle components to a package with JS modules in it')\n    .on('command:pack',  safePack.bind(null, true))\n    .command('preview',  'Real-time preview during development')\n    .on('command:preview',  async () => {\n\n        await safePack( true );\n\n        await PuppeteerBrowser.getPage(\n            '.',  folder.test || 'test/',  safePack\n        );\n    })\n    .parse( process.argv );\n",
+    "content": "#! /usr/bin/env node\n\nimport { currentModulePath } from '@tech_query/node-toolkit';\n\nimport { metaOf, folderOf } from './utility';\n\nimport Commander from 'commander';\n\nimport { pack, boot } from './command';\n\nimport PuppeteerBrowser from 'puppeteer-browser';\n\n\nconst currentPackage = metaOf( currentModulePath() ), folder = folderOf();\n\nasync function safePack(exit) {\n    try {\n        await pack( folder.lib );\n\n    } catch (error) {\n\n        console.error( error );\n\n        if (exit === true)  process.exit( 1 );\n    }\n}\n\nCommander\n    .version( currentPackage.version ).description( currentPackage.description )\n    .command('boot',  'Boot current directory as a WebCell project')\n    .on('command:boot',  boot)\n    .command('pack',  'Bundle components to a package with JS modules in it')\n    .on('command:pack',  safePack.bind(null, true))\n    .command('preview',  'Real-time preview during development')\n    .on('command:preview',  async () => {\n\n        await safePack( true );\n\n        await PuppeteerBrowser.getPage(\n            '.',  folder.test || 'test/',  safePack\n        );\n    })\n    .parse( process.argv );\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/source/index.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/source/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 79,
+    "__docId__": 77,
     "kind": "variable",
     "name": "currentPackage",
     "memberof": "source/index.js",
@@ -1222,7 +1180,7 @@
     "importPath": "web-cell-cli/source/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 15,
+    "lineNumber": 14,
     "undocument": true,
     "type": {
       "types": [
@@ -1232,28 +1190,7 @@
     "ignore": true
   },
   {
-    "__docId__": 80,
-    "kind": "variable",
-    "name": "folder",
-    "memberof": "source/index.js",
-    "static": true,
-    "longname": "source/index.js~folder",
-    "access": "public",
-    "export": false,
-    "importPath": "web-cell-cli/source/index.js",
-    "importStyle": null,
-    "description": null,
-    "lineNumber": 17,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    },
-    "ignore": true
-  },
-  {
-    "__docId__": 81,
+    "__docId__": 78,
     "kind": "function",
     "name": "safePack",
     "memberof": "source/index.js",
@@ -1266,7 +1203,7 @@
     "importPath": "web-cell-cli/source/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 19,
+    "lineNumber": 16,
     "undocument": true,
     "params": [
       {
@@ -1280,51 +1217,73 @@
     "ignore": true
   },
   {
-    "__docId__": 82,
+    "__docId__": 79,
     "kind": "file",
     "name": "source/install.js",
     "content": "#! /usr/bin/env node\n\nimport { getNPMConfig, setNPMConfig } from '@tech_query/node-toolkit';\n\nvar browser;\n\n\nfor (let name  of  ['chrome', 'firefox'])  if (getNPMConfig( name )) {\n\n    browser = name;    break;\n}\n\n\nif (browser = browser  ||  ((process.platform === 'win32') && 'IE'))\n    setNPMConfig('PUPPETEER_BROWSER', browser);\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/source/install.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/source/install.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 83,
+    "__docId__": 80,
     "kind": "file",
     "name": "source/utility.js",
-    "content": "import 'regenerator-runtime/runtime';\n\nimport '@babel/polyfill';\n\nimport { packageOf, patch } from '@tech_query/node-toolkit';\n\nimport 'web-cell/dist/polyfill';\n\nimport { $ } from 'web-cell';\n\nimport Stylus from 'stylus';\n\nimport {readdir, existsSync, copy, outputJSON, readJSON} from 'fs-extra';\n\nimport { join, extname } from 'path';\n\n\n/**\n * `package.json` data of `process.cwd()`\n *\n * @type {Object}\n */\nexport const meta = (packageOf('./test') || '').meta;\n\n\n/**\n * @param {string} source\n * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md\n *\n * @return {Promise<string>} CSS source code\n */\nexport function parseStylus(source,  option = { }) {\n\n    return  new Promise((resolve, reject) => Stylus.render(\n        source,\n        option,\n        (error, CSS)  =>  error ? reject( error ) : resolve( CSS )\n    ));\n}\n\n\n/**\n * @private\n *\n * @param {String} folder\n */\nexport  async function copyFrom(folder) {\n\n    for (let file  of  await readdir( folder )) {\n\n        let path = join(folder, file), type = 'Skip';\n\n        if (! existsSync( file )) {\n\n            await copy(path, file);  type = 'Create';\n\n        } else if (extname( file ) === '.json')\n            await outputJSON(\n                file,\n                patch(await readJSON( file ),  await readJSON( path )),\n                {spaces: 4}\n            ),\n            type = 'Update';\n\n        console.info(`${type.padEnd(6)} --> ${file}`);\n    }\n}\n\n\nconst tagAttribute = {\n        script:  {\n            key:   'src',\n            kind:  'js'\n        },\n        link:    {\n            key:   'href',\n            kind:  'css'\n        }\n    },\n    library = [\n        {\n            name:  '@babel/polyfill',\n            file:  'polyfill',\n            path:  'dist/',\n            type:  'script'\n        },\n        {\n            name:  'whatwg-fetch',\n            file:  'fetch.umd',\n            path:  'dist/',\n            type:  'script'\n        },\n        {\n            name:  '@webcomponents/webcomponentsjs',\n            file:  'webcomponents-bundle',\n            type:  'script'\n        },\n        {\n            name:  '@webcomponents/webcomponentsjs',\n            file:  'custom-elements-es5-adapter',\n            type:  'script'\n        },\n        {\n            name:  'web-cell',\n            path:  'dist/',\n            type:  'script'\n        }\n    ];\n\nfunction equalLibrary(element, type, key, name, file) {\n\n    const URI = element[ key ];\n\n    return  (element.tagName.toLowerCase() === type)  &&\n        URI.includes( name )  &&  URI.includes( file );\n}\n\n/**\n * @private\n *\n * @param {String} code - HTML source\n *\n * @return {Document}\n */\nexport function upgradeHTML(code) {\n\n    const page = (new DOMParser()).parseFromString(code, 'text/html');\n\n    const list = $(Object.keys( tagAttribute ), page);\n\n    for (let {type, name, file, path}  of  library) {\n\n        var { key, kind } = tagAttribute[ type ], element;\n\n        if (! (element = list.find(\n            item  =>  equalLibrary(item, type, key, name, file)\n        ))) {\n            element = page.createElement( type );\n\n            element[key] = `node_modules/${name}/${path || ''}${file || name}${\n                /\\.[^/]+$/.test( file )  ?  ''  :  '.min'\n            }.${kind}`;\n\n            if (type === 'link')  element.rel = 'stylesheet';\n        }\n\n        page.head.append('    ',  element,  '\\n');\n    }\n\n    return page;\n}\n",
+    "content": "import 'regenerator-runtime/runtime';\n\nimport '@babel/polyfill';\n\nimport { cache, packageOf, patch } from '@tech_query/node-toolkit';\n\nimport 'web-cell/dist/polyfill';\n\nimport { $ } from 'web-cell';\n\nimport Stylus from 'stylus';\n\nimport {readdir, existsSync, copy, outputJSON, readJSON} from 'fs-extra';\n\nimport { join, extname } from 'path';\n\n\n/**\n * Get `package.json` data of `path` or `process.cwd()`\n *\n * @type {function(path: ?String): Object}\n */\nexport const metaOf = cache(\n    path  =>  (packageOf(path || './test') || '').meta || { }\n);\n\n\n/**\n * Get `directories` field of `package.json` in `path` or `process.cwd()`\n *\n * @type {function(path: ?String): Object}\n */\nexport const folderOf = cache(path  =>  (metaOf(path) || '').directories || { });\n\n\n/**\n * @param {string} source\n * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md\n *\n * @return {Promise<string>} CSS source code\n */\nexport function parseStylus(source,  option = { }) {\n\n    return  new Promise((resolve, reject) => Stylus.render(\n        source,\n        option,\n        (error, CSS)  =>  error ? reject( error ) : resolve( CSS )\n    ));\n}\n\n\n/**\n * @private\n *\n * @param {String} folder\n */\nexport  async function copyFrom(folder) {\n\n    for (let file  of  await readdir( folder )) {\n\n        let path = join(folder, file), type = 'Skip';\n\n        if (! existsSync( file )) {\n\n            await copy(path, file);  type = 'Create';\n\n        } else if (extname( file ) === '.json')\n            await outputJSON(\n                file,\n                patch(await readJSON( file ),  await readJSON( path )),\n                {spaces: 4}\n            ),\n            type = 'Update';\n\n        console.info(`${type.padEnd(6)} --> ${file}`);\n    }\n}\n\n\nconst tagAttribute = {\n        script:  {\n            key:   'src',\n            kind:  'js'\n        },\n        link:    {\n            key:   'href',\n            kind:  'css'\n        }\n    },\n    library = [\n        {\n            name:  '@babel/polyfill',\n            file:  'polyfill',\n            path:  'dist/',\n            type:  'script'\n        },\n        {\n            name:  'whatwg-fetch',\n            file:  'fetch.umd',\n            path:  'dist/',\n            type:  'script'\n        },\n        {\n            name:  '@webcomponents/webcomponentsjs',\n            file:  'webcomponents-bundle',\n            type:  'script'\n        },\n        {\n            name:  '@webcomponents/webcomponentsjs',\n            file:  'custom-elements-es5-adapter',\n            type:  'script'\n        },\n        {\n            name:  'web-cell',\n            path:  'dist/',\n            type:  'script'\n        }\n    ];\n\nfunction equalLibrary(element, type, key, name, file) {\n\n    const URI = element[ key ];\n\n    return  (element.tagName.toLowerCase() === type)  &&\n        URI.includes( name )  &&  URI.includes( file );\n}\n\n/**\n * @private\n *\n * @param {String} code - HTML source\n *\n * @return {Document}\n */\nexport function upgradeHTML(code) {\n\n    const page = (new DOMParser()).parseFromString(code, 'text/html');\n\n    const list = $(Object.keys( tagAttribute ), page);\n\n    for (let {type, name, file, path}  of  library) {\n\n        file = file || name;\n\n        var { key, kind } = tagAttribute[ type ], element;\n\n        if (! (element = list.find(\n            item  =>  equalLibrary(item, type, key, name, file)\n        ))) {\n            element = page.createElement( type );\n\n            element[key] = `node_modules/${name}/${path || ''}${file}${\n                /\\.[^/]+$/.test( file )  ?  ''  :  '.min'\n            }.${kind}`;\n\n            if (type === 'link')  element.rel = 'stylesheet';\n        }\n\n        page.head.append('    ',  element,  '\\n');\n    }\n\n    return page;\n}\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/source/utility.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/source/utility.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 84,
+    "__docId__": 81,
     "kind": "variable",
-    "name": "meta",
+    "name": "metaOf",
     "memberof": "source/utility.js",
     "static": true,
-    "longname": "source/utility.js~meta",
+    "longname": "source/utility.js~metaOf",
     "access": "public",
     "export": true,
     "importPath": "web-cell-cli/source/utility.js",
-    "importStyle": "{meta}",
-    "description": "`package.json` data of `process.cwd()`",
+    "importStyle": "{metaOf}",
+    "description": "Get `package.json` data of `path` or `process.cwd()`",
     "lineNumber": 23,
     "type": {
       "nullable": null,
       "types": [
-        "Object"
+        "function(path: ?String): Object"
       ],
       "spread": false,
       "description": null
     }
   },
   {
-    "__docId__": 85,
+    "__docId__": 82,
+    "kind": "variable",
+    "name": "folderOf",
+    "memberof": "source/utility.js",
+    "static": true,
+    "longname": "source/utility.js~folderOf",
+    "access": "public",
+    "export": true,
+    "importPath": "web-cell-cli/source/utility.js",
+    "importStyle": "{folderOf}",
+    "description": "Get `directories` field of `package.json` in `path` or `process.cwd()`",
+    "lineNumber": 33,
+    "type": {
+      "nullable": null,
+      "types": [
+        "function(path: ?String): Object"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 83,
     "kind": "function",
     "name": "parseStylus",
     "memberof": "source/utility.js",
@@ -1337,7 +1296,7 @@
     "importPath": "web-cell-cli/source/utility.js",
     "importStyle": "{parseStylus}",
     "description": "",
-    "lineNumber": 32,
+    "lineNumber": 42,
     "params": [
       {
         "nullable": null,
@@ -1370,7 +1329,7 @@
     }
   },
   {
-    "__docId__": 86,
+    "__docId__": 84,
     "kind": "function",
     "name": "copyFrom",
     "memberof": "source/utility.js",
@@ -1383,7 +1342,7 @@
     "importPath": "web-cell-cli/source/utility.js",
     "importStyle": "{copyFrom}",
     "description": "",
-    "lineNumber": 47,
+    "lineNumber": 57,
     "params": [
       {
         "nullable": null,
@@ -1399,7 +1358,7 @@
     "return": null
   },
   {
-    "__docId__": 87,
+    "__docId__": 85,
     "kind": "variable",
     "name": "tagAttribute",
     "memberof": "source/utility.js",
@@ -1410,7 +1369,7 @@
     "importPath": "web-cell-cli/source/utility.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 70,
+    "lineNumber": 80,
     "undocument": true,
     "type": {
       "types": [
@@ -1420,7 +1379,7 @@
     "ignore": true
   },
   {
-    "__docId__": 88,
+    "__docId__": 86,
     "kind": "function",
     "name": "equalLibrary",
     "memberof": "source/utility.js",
@@ -1433,7 +1392,7 @@
     "importPath": "web-cell-cli/source/utility.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 110,
+    "lineNumber": 120,
     "undocument": true,
     "params": [
       {
@@ -1475,7 +1434,7 @@
     "ignore": true
   },
   {
-    "__docId__": 89,
+    "__docId__": 87,
     "kind": "function",
     "name": "upgradeHTML",
     "memberof": "source/utility.js",
@@ -1488,7 +1447,7 @@
     "importPath": "web-cell-cli/source/utility.js",
     "importStyle": "{upgradeHTML}",
     "description": "",
-    "lineNumber": 125,
+    "lineNumber": 135,
     "params": [
       {
         "nullable": null,
@@ -1512,33 +1471,33 @@
   },
   {
     "kind": "index",
-    "content": "# WebCell DevCLI\n\nDeveloper command-line tool for [WebCell](https://web-cell.tk/)\n\n[![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)\n\n[![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)\n\n\n\n## Feature\n\n 1. Boot current directory as a **WebCell project**\n\n 2. Bundle components to a package with **JS modules** in it\n\n 3. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** as an `Object`, and other assets as **Data URI** in ES module\n\n 4. **Real-time preview** during development in Chrome, Firefox or IE\n\n\n\n## Usage\n\n 1. `npm install web-cell-cli -g --production`\n\n 2. `cd your_project  &&  web-cell boot`\n\n 3. you may want to refer [Material Cell][1] to configure the\n    [**Source directory**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24),\n    [**NPM script**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29) or\n    [**Babel**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55)\n\n 4. `npm run your_script`\n\n\n\n### Command\n\n    Usage: web-cell [options] [command]\n\n    Options:\n\n        -V, --version  output the version number\n        -h, --help     output usage information\n\n    Commands:\n\n        boot           Boot current directory as a WebCell project\n        pack           Bundle components to a package with JS modules in it\n        preview        Real-time preview during development\n        help [cmd]     display help for [cmd]\n\n\n\n## Typical case\n\n 1. [Cell Router](https://easywebapp.github.io/cell-router/)\n\n 2. [Material Cell][1]\n\n\n\n[1]: https://web-cell-ht.ml \"Offical component library of WebCell (based on Material Design lite v1.3)\"\n",
-    "longname": "d:\\OpenSource\\DevCLI\\README.md",
+    "content": "# WebCell DevCLI\n\nDeveloper command-line tool for [WebCell](https://web-cell.tk/)\n\n[![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)\n\n[![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)\n\n\n\n## Feature\n\n 1. Boot current directory as a **WebCell project**\n\n 2. Bundle components to a package with **JS modules** in it\n\n 3. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** as an `Object`, and other assets as **Data URI** in ES module\n\n 4. **Real-time preview** during development in Chrome, Firefox or IE\n\n\n\n## Usage\n\n```Shell\nnpm init web-cell path/to/your_project\n```\n\n### Configuration reference\n\n - [**Source directory**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24)\n\n - [**NPM script**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29)\n\n - [**Babel**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55)\n\n\n### Command\n\n    Usage: web-cell [options] [command]\n\n    Options:\n\n        -V, --version  output the version number\n        -h, --help     output usage information\n\n    Commands:\n\n        boot           Boot current directory as a WebCell project\n        pack           Bundle components to a package with JS modules in it\n        preview        Real-time preview during development\n        help [cmd]     display help for [cmd]\n\n\n\n## Typical case\n\n 1. [Cell Router](https://web-cell.tk/cell-router/)\n\n 2. [Material Cell](https://web-cell-ht.ml)\n",
+    "longname": "D:\\Work\\Open Source\\EasyWebApp\\DevCLI\\README.md",
     "name": "./README.md",
     "static": true,
     "access": "public"
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"web-cell-cli\",\n  \"version\": \"0.7.5\",\n  \"description\": \"Developer command-line tool for WebCell\",\n  \"keywords\": [\n    \"developer\",\n    \"command-line\",\n    \"web-cell\",\n    \"component\",\n    \"package\",\n    \"bundle\"\n  ],\n  \"author\": \"shiy2008@gmail.com\",\n  \"license\": \"AGPL-3.0\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/DevCLI.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/DevCLI/issues\"\n  },\n  \"homepage\": \"https://easywebapp.github.io/DevCLI/\",\n  \"main\": \"source/Component.js\",\n  \"bin\": {\n    \"web-cell\": \"dist/web-cell.js\"\n  },\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^8.0.0\"\n  },\n  \"scripts\": {\n    \"test\": \"mocha --exit\",\n    \"debug\": \"mocha --inspect-brk\",\n    \"lint\": \"eslint ./source/ ./test/ --fix\",\n    \"pack\": \"amd-bundle source/install dist/install\",\n    \"bundle\": \"amd-bundle source/index dist/web-cell\",\n    \"prepublishOnly\": \"npm test  &&  npm run lint  &&  npm run bundle  &&  npm run pack\",\n    \"build\": \"npm run prepublishOnly  &&  esdoc\",\n    \"start\": \"web-server docs/ -o\",\n    \"install\": \"node dist/install\"\n  },\n  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"npm run build  &&  git add .\"\n    }\n  },\n  \"dependencies\": {\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@babel/runtime\": \"^7.1.5\",\n    \"@tech_query/node-toolkit\": \"^0.8.1\",\n    \"amd-bundle\": \"^1.7.4\",\n    \"commander\": \"^2.19.0\",\n    \"cross-spawn\": \"^6.0.5\",\n    \"fs-extra\": \"^7.0.1\",\n    \"jsdom\": \"^13.0.0\",\n    \"less\": \"^3.8.1\",\n    \"node-fetch\": \"^2.3.0\",\n    \"puppeteer-browser\": \"^0.3.7\",\n    \"sass\": \"^1.15.1\",\n    \"simple-git\": \"^1.107.0\",\n    \"stylus\": \"^0.54.5\",\n    \"web-cell\": \"^0.10.10\"\n  },\n  \"peerDependencies\": {\n    \"@babel/plugin-proposal-decorators\": \"^7.1.6\",\n    \"@babel/preset-env\": \"^7.1.6\",\n    \"web-cell\": \"^0.10.10\"\n  },\n  \"devDependencies\": {\n    \"@babel/plugin-proposal-decorators\": \"^7.1.6\",\n    \"@babel/plugin-transform-runtime\": \"^7.1.0\",\n    \"@babel/preset-env\": \"^7.1.6\",\n    \"@babel/register\": \"^7.0.0\",\n    \"babel-eslint\": \"^10.0.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^5.9.0\",\n    \"husky\": \"^1.2.0\",\n    \"koapache\": \"^1.0.4\",\n    \"mocha\": \"^5.2.0\",\n    \"should\": \"^13.2.3\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"@babel/preset-env\"\n    ],\n    \"plugins\": [\n      [\n        \"@babel/plugin-proposal-decorators\",\n        {\n          \"decoratorsBeforeExport\": true\n        }\n      ],\n      \"@babel/plugin-transform-runtime\"\n    ]\n  }\n}\n",
-    "longname": "d:\\OpenSource\\DevCLI\\package.json",
+    "content": "{\n  \"name\": \"web-cell-cli\",\n  \"version\": \"0.7.8\",\n  \"description\": \"Developer command-line tool for WebCell\",\n  \"keywords\": [\n    \"developer\",\n    \"command-line\",\n    \"web-cell\",\n    \"component\",\n    \"package\",\n    \"bundle\"\n  ],\n  \"author\": \"shiy2008@gmail.com\",\n  \"license\": \"AGPL-3.0\",\n  \"homepage\": \"https://web-cell.tk/DevCLI/\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/DevCLI.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/DevCLI/issues\"\n  },\n  \"main\": \"source/Component.js\",\n  \"bin\": {\n    \"web-cell\": \"dist/web-cell.js\"\n  },\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^8.0.0\"\n  },\n  \"scripts\": {\n    \"test\": \"mocha --exit\",\n    \"debug\": \"mocha --inspect-brk\",\n    \"lint\": \"eslint ./source/ ./test/ --fix\",\n    \"pack\": \"amd-bundle source/install dist/install\",\n    \"bundle\": \"amd-bundle source/index dist/web-cell\",\n    \"prepublishOnly\": \"npm test  &&  npm run lint  &&  npm run bundle  &&  npm run pack\",\n    \"build\": \"npm run prepublishOnly  &&  esdoc\",\n    \"start\": \"web-server docs/ -o\",\n    \"install\": \"node dist/install\"\n  },\n  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"npm run build  &&  git add .\"\n    }\n  },\n  \"dependencies\": {\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@babel/runtime\": \"^7.1.5\",\n    \"@tech_query/node-toolkit\": \"^0.8.1\",\n    \"amd-bundle\": \"^1.7.4\",\n    \"commander\": \"^2.19.0\",\n    \"cross-spawn\": \"^6.0.5\",\n    \"fs-extra\": \"^7.0.1\",\n    \"jsdom\": \"^13.0.0\",\n    \"less\": \"^3.8.1\",\n    \"node-fetch\": \"^2.3.0\",\n    \"puppeteer-browser\": \"^0.3.7\",\n    \"sass\": \"^1.15.1\",\n    \"simple-git\": \"^1.107.0\",\n    \"stylus\": \"^0.54.5\",\n    \"web-cell\": \"^0.10.10\"\n  },\n  \"peerDependencies\": {\n    \"@babel/plugin-proposal-decorators\": \"^7.1.6\",\n    \"@babel/preset-env\": \"^7.1.6\",\n    \"web-cell\": \"^0.10.10\"\n  },\n  \"devDependencies\": {\n    \"@babel/plugin-proposal-decorators\": \"^7.1.6\",\n    \"@babel/plugin-transform-runtime\": \"^7.1.0\",\n    \"@babel/preset-env\": \"^7.1.6\",\n    \"@babel/register\": \"^7.0.0\",\n    \"babel-eslint\": \"^10.0.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^5.9.0\",\n    \"husky\": \"^1.2.0\",\n    \"koapache\": \"^1.0.4\",\n    \"mocha\": \"^5.2.0\",\n    \"should\": \"^13.2.3\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"@babel/preset-env\"\n    ],\n    \"plugins\": [\n      [\n        \"@babel/plugin-proposal-decorators\",\n        {\n          \"decoratorsBeforeExport\": true\n        }\n      ],\n      \"@babel/plugin-transform-runtime\"\n    ]\n  }\n}\n",
+    "longname": "D:\\Work\\Open Source\\EasyWebApp\\DevCLI\\package.json",
     "name": "package.json",
     "static": true,
     "access": "public"
   },
   {
-    "__docId__": 90,
+    "__docId__": 88,
     "kind": "testFile",
     "name": "test/index.test.js",
     "content": "import Component from '../source/Component';\n\nimport { stringifyDOM } from 'web-cell';\n\nimport { readFile } from 'fs-extra';\n\nimport { join } from 'path';\n\nimport { toDataURI } from '@tech_query/node-toolkit';\n\n\n/**\n * @test {Component}\n */\ndescribe('Core class',  () => {\n\n    var style, template, fragment;\n\n    /**\n     * @test {Component.parseCSS}\n     */\n    it('Parse CSS files',  async () => {\n\n        const file = 'test/example-js/index.css';\n\n        style = await Component.parseCSS( file );\n\n        style.tagName.should.be.equal('STYLE');\n\n        style.textContent.should.be.equal((await readFile( file )) + '');\n    });\n\n    /**\n     * @test {Component.identifierOf}\n     */\n    it(\n        'Tag name to Class name',\n        () => Component.identifierOf('example-js').should.be.equal('ExampleJs')\n    );\n\n    /**\n     * @test {Component.parseHTML}\n     */\n    it('Parse pure HTML',  async () => {\n\n        const file = 'test/example-js/index.html';\n\n        template = await Component.parseHTML( file );\n\n        template.nodeType.should.be.equal( 11 );\n\n        stringifyDOM( template ).should.be.equal(\n            (await readFile( file )) + ''\n        );\n    });\n\n    describe('Parse mixed HTML',  () => {\n\n        before(async () =>\n            fragment = await Component.parseHTML('test/example-html/index.html')\n        );\n\n        /**\n         * @test {Component.findStyle}\n         * @test {Component.parseCSS}\n         */\n        it('Find & Parse styles',  async () => {\n\n            const styles = Component.findStyle( fragment );\n\n            styles.map(element => element.tagName).should.be.eql([\n                'LINK', 'STYLE'\n            ]);\n\n            const element = await Component.parseCSS(\n                styles[1].textContent,\n                styles[1].type,\n                'test/example-html/index.css'\n            );\n\n            element.textContent.trim().should.be.equal(`\ntextarea {\n  display: block;\n}`.trim()\n            );\n        });\n\n        /**\n         * @test {Component.packJS}\n         */\n        it('Parse script',  () => {\n\n            const code = Component.packJS(join(\n                'test/example-html/', fragment.lastElementChild.getAttribute('src')\n            ));\n\n            (() => eval( code )).should.not.throw( SyntaxError );\n\n            code.should.containEql('\\'ExampleHtml\\'');\n        });\n    });\n\n    /**\n     * @test {Component#toHTML}\n     */\n    it('Bundle to HTML',  async () => {\n\n        const fragment = await (new Component('test/example-html')).toHTML(),\n            tagName = element => element.tagName;\n\n        Array.from(fragment.children, tagName).should.be.eql(\n            ['TEMPLATE', 'SCRIPT']\n        );\n\n        Array.from(fragment.firstElementChild.content.children, tagName)\n            .should.be.eql(['STYLE', 'STYLE', 'TEXTAREA']);\n    });\n\n    /**\n     * @test {Component#toJS}\n     */\n    it('Bundle to JS',  async () => {\n\n        var component = new Component('test/example-js');\n\n        component = await component.toJS();\n\n        component.includes(\n            JSON.stringify( style.textContent ).slice(1, -1)\n        ).should.be.true();\n\n        component.includes(\n            JSON.stringify( stringifyDOM( template ) )\n                .slice(1, -1).replace(/\\\\\"/g, '\"')\n        ).should.be.true();\n\n        component.includes('name: \\'Web components\\'').should.be.true();\n\n        component.includes(\n            toDataURI('test/example-js/icon.svg')\n        ).should.be.true();\n\n        (() => eval( component )).should.not.throw( SyntaxError );\n    });\n});\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/test/index.test.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/test/index.test.js",
     "access": null,
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 91,
+    "__docId__": 89,
     "kind": "test",
     "name": "describe0",
     "testId": 0,
@@ -1554,7 +1513,7 @@
     ]
   },
   {
-    "__docId__": 92,
+    "__docId__": 90,
     "kind": "test",
     "name": "it1",
     "testId": 1,
@@ -1570,7 +1529,7 @@
     ]
   },
   {
-    "__docId__": 93,
+    "__docId__": 91,
     "kind": "test",
     "name": "it2",
     "testId": 2,
@@ -1586,7 +1545,7 @@
     ]
   },
   {
-    "__docId__": 94,
+    "__docId__": 92,
     "kind": "test",
     "name": "it3",
     "testId": 3,
@@ -1602,7 +1561,7 @@
     ]
   },
   {
-    "__docId__": 95,
+    "__docId__": 93,
     "kind": "test",
     "name": "describe4",
     "testId": 4,
@@ -1615,7 +1574,7 @@
     "lineNumber": 57
   },
   {
-    "__docId__": 96,
+    "__docId__": 94,
     "kind": "test",
     "name": "it5",
     "testId": 5,
@@ -1632,7 +1591,7 @@
     ]
   },
   {
-    "__docId__": 97,
+    "__docId__": 95,
     "kind": "test",
     "name": "it6",
     "testId": 6,
@@ -1648,7 +1607,7 @@
     ]
   },
   {
-    "__docId__": 98,
+    "__docId__": 96,
     "kind": "test",
     "name": "it7",
     "testId": 7,
@@ -1664,7 +1623,7 @@
     ]
   },
   {
-    "__docId__": 99,
+    "__docId__": 97,
     "kind": "test",
     "name": "it8",
     "testId": 8,
@@ -1680,18 +1639,18 @@
     ]
   },
   {
-    "__docId__": 100,
+    "__docId__": 98,
     "kind": "testFile",
     "name": "test/template.test.js",
     "content": "import { upgradeHTML } from '../source/utility';\n\nimport { $ } from 'web-cell';\n\n\ndescribe('\"boot\" command',  () => {\n    /**\n     * @test {upgradeHTML}\n     */\n    it('index.html',  () => {\n\n        const document = upgradeHTML(`\n<!DocType HTML>\n<html><head>\n\n</head><body>\n\n</body></html>`\n        );\n\n        $('script[src^=\"node_modules/\"]', document).should.have.length(5);\n\n        $('script[src$=\"min.js\"]', document).should.have.length(4);\n    });\n});\n",
     "static": true,
-    "longname": "d:/OpenSource/DevCLI/test/template.test.js",
+    "longname": "D:/Work/Open Source/EasyWebApp/DevCLI/test/template.test.js",
     "access": null,
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 101,
+    "__docId__": 99,
     "kind": "test",
     "name": "describe9",
     "testId": 9,
@@ -1704,7 +1663,7 @@
     "lineNumber": 6
   },
   {
-    "__docId__": 102,
+    "__docId__": 100,
     "kind": "test",
     "name": "it10",
     "testId": 10,

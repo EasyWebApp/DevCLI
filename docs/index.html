@@ -36,7 +36,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -54,19 +55,16 @@
 <li><p><strong>Real-time preview</strong> during development in Chrome, Firefox or IE</p>
 </li>
 </ol>
-<h2 id="usage">Usage</h2><ol>
-<li><p><code>npm install web-cell-cli -g --production</code></p>
+<h2 id="usage">Usage</h2><pre><code class="lang-Shell"><code class="source-code prettyprint">npm init web-cell path/to/your_project</code>
+</code></pre>
+<h3 id="configuration-reference">Configuration reference</h3><ul>
+<li><p><a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24"><strong>Source directory</strong></a></p>
 </li>
-<li><p><code>cd your_project  &amp;&amp;  web-cell boot</code></p>
+<li><p><a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29"><strong>NPM script</strong></a></p>
 </li>
-<li><p>you may want to refer <a href="https://web-cell-ht.ml" title="Offical component library of WebCell (based on Material Design lite v1.3)">Material Cell</a> to configure the
-<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24"><strong>Source directory</strong></a>,
-<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29"><strong>NPM script</strong></a> or
-<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55"><strong>Babel</strong></a></p>
+<li><p><a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55"><strong>Babel</strong></a></p>
 </li>
-<li><p><code>npm run your_script</code></p>
-</li>
-</ol>
+</ul>
 <h3 id="command">Command</h3><pre><code><code class="source-code prettyprint">Usage: web-cell [options] [command]
 
 Options:
@@ -81,9 +79,9 @@ Commands:
     preview        Real-time preview during development
     help [cmd]     display help for [cmd]</code>
 </code></pre><h2 id="typical-case">Typical case</h2><ol>
-<li><p><a href="https://easywebapp.github.io/cell-router/">Cell Router</a></p>
+<li><p><a href="https://web-cell.tk/cell-router/">Cell Router</a></p>
 </li>
-<li><p><a href="https://web-cell-ht.ml" title="Offical component library of WebCell (based on Material Design lite v1.3)">Material Cell</a></p>
+<li><p><a href="https://web-cell-ht.ml">Material Cell</a></p>
 </li>
 </ol>
 </div>

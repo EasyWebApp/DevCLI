@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime';
 
 import '@babel/polyfill';
 
-import { packageOf, patch } from '@tech_query/node-toolkit';
+import { cache, packageOf, patch } from '@tech_query/node-toolkit';
 
 import 'web-cell/dist/polyfill';
 
@@ -16,11 +16,21 @@ import { join, extname } from 'path';
 
 
 /**
- * `package.json` data of `process.cwd()`
+ * Get `package.json` data of `path` or `process.cwd()`
  *
- * @type {Object}
+ * @type {function(path: ?String): Object}
  */
-export const meta = (packageOf('./test') || '').meta;
+export const metaOf = cache(
+    path  =>  (packageOf(path || './test') || '').meta || { }
+);
+
+
+/**
+ * Get `directories` field of `package.json` in `path` or `process.cwd()`
+ *
+ * @type {function(path: ?String): Object}
+ */
+export const folderOf = cache(path  =>  (metaOf(path) || '').directories || { });
 
 
 /**
@@ -130,6 +140,8 @@ export function upgradeHTML(code) {
 
     for (let {type, name, file, path}  of  library) {
 
+        file = file || name;
+
         var { key, kind } = tagAttribute[ type ], element;
 
         if (! (element = list.find(
@@ -137,7 +149,7 @@ export function upgradeHTML(code) {
         ))) {
             element = page.createElement( type );
 
-            element[key] = `node_modules/${name}/${path || ''}${file || name}${
+            element[key] = `node_modules/${name}/${path || ''}${file}${
                 /\.[^/]+$/.test( file )  ?  ''  :  '.min'
             }.${kind}`;
 

@@ -10,18 +10,13 @@ import LESS from 'less';
 
 import * as SASS from 'sass';
 
-import {meta, parseStylus} from './utility';
+import { parseStylus, folderOf, metaOf } from './utility';
 
 import 'web-cell/dist/polyfill';
 
 import { $, stringifyDOM } from 'web-cell';
 
 import { toDataURI } from '@tech_query/node-toolkit';
-
-
-const directory = meta ? meta.directories : '';
-
-const single_entry = join(directory.lib || '',  'index.js');
 
 
 /**
@@ -130,7 +125,9 @@ export default  class Component {
      */
     static packJS(path) {
 
-        const name = (path === single_entry)  &&  meta.name;
+        const single_entry = join(folderOf().lib || '',  'index.js');
+
+        const name = (path === single_entry)  &&  metaOf().name;
 
         path = path.split('.').slice(0, -1).join('.');
 

@@ -36,7 +36,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-meta">meta</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -44,9 +45,9 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/index.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">#! /usr/bin/env node
 
-import { packageOf, currentModulePath } from &apos;@tech_query/node-toolkit&apos;;
+import { currentModulePath } from &apos;@tech_query/node-toolkit&apos;;
 
-import { meta } from &apos;./utility&apos;;
+import { metaOf, folderOf } from &apos;./utility&apos;;
 
 import Commander from &apos;commander&apos;;
 
@@ -55,10 +56,7 @@ import { pack, boot } from &apos;./command&apos;;
 import PuppeteerBrowser from &apos;puppeteer-browser&apos;;
 
 
-
-const currentPackage = packageOf( currentModulePath() ).meta;
-
-const folder = meta ? meta.directories : &apos;&apos;;
+const currentPackage = metaOf( currentModulePath() ), folder = folderOf();
 
 async function safePack(exit) {
     try {

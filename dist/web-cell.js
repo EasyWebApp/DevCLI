@@ -163,9 +163,6 @@ var _module_ = {
                           default: obj
                       };
             }
-
-            var directory = _utility.meta ? _utility.meta.directories : '';
-            var single_entry = (0, _path.join)(directory.lib || '', 'index.js');
             /**
              * Component packer
              */
@@ -1075,9 +1072,13 @@ var _module_ = {
                             {
                                 key: 'packJS',
                                 value: function packJS(path) {
+                                    var single_entry = (0, _path.join)(
+                                        (0, _utility.folderOf)().lib || '',
+                                        'index.js'
+                                    );
                                     var name =
                                         path === single_entry &&
-                                        _utility.meta.name;
+                                        (0, _utility.metaOf)().name;
                                     path = path
                                         .split('.')
                                         .slice(0, -1)
@@ -1462,7 +1463,7 @@ var _module_ = {
             exports.parseStylus = parseStylus;
             exports.copyFrom = copyFrom;
             exports.upgradeHTML = upgradeHTML;
-            exports.meta = void 0;
+            exports.folderOf = exports.metaOf = void 0;
 
             require('regenerator-runtime/runtime');
 
@@ -1488,12 +1489,27 @@ var _module_ = {
                       };
             }
             /**
-             * `package.json` data of `process.cwd()`
+             * Get `package.json` data of `path` or `process.cwd()`
              *
-             * @type {Object}
+             * @type {function(path: ?String): Object}
              */
 
-            var meta = ((0, _nodeToolkit.packageOf)('./test') || '').meta;
+            var metaOf = (0, _nodeToolkit.cache)(function(path) {
+                return (
+                    ((0, _nodeToolkit.packageOf)(path || './test') || '')
+                        .meta || {}
+                );
+            });
+            /**
+             * Get `directories` field of `package.json` in `path` or `process.cwd()`
+             *
+             * @type {function(path: ?String): Object}
+             */
+
+            exports.metaOf = metaOf;
+            var folderOf = (0, _nodeToolkit.cache)(function(path) {
+                return (metaOf(path) || '').directories || {};
+            });
             /**
              * @param {string} source
              * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
@@ -1501,7 +1517,7 @@ var _module_ = {
              * @return {Promise<string>} CSS source code
              */
 
-            exports.meta = meta;
+            exports.folderOf = folderOf;
 
             function parseStylus(source) {
                 var option =
@@ -1774,6 +1790,7 @@ var _module_ = {
                         name = _library$_i.name,
                         file = _library$_i.file,
                         path = _library$_i.path;
+                    file = file || name;
                     var _tagAttribute$type = tagAttribute[type];
                     key = _tagAttribute$type.key;
                     kind = _tagAttribute$type.kind;
@@ -1787,7 +1804,7 @@ var _module_ = {
                         element[key] = 'node_modules/'
                             .concat(name, '/')
                             .concat(path || '')
-                            .concat(file || name)
+                            .concat(file)
                             .concat(/\.[^/]+$/.test(file) ? '' : '.min', '.')
                             .concat(kind);
                         if (type === 'link') element.rel = 'stylesheet';
@@ -1830,10 +1847,10 @@ var _module_ = {
                       };
             }
 
-            var currentPackage = (0, _nodeToolkit.packageOf)(
-                (0, _nodeToolkit.currentModulePath)()
-            ).meta;
-            var folder = _utility.meta ? _utility.meta.directories : '';
+            var currentPackage = (0, _utility.metaOf)(
+                    (0, _nodeToolkit.currentModulePath)()
+                ),
+                folder = (0, _utility.folderOf)();
 
             function safePack(_x9) {
                 return _safePack.apply(this, arguments);

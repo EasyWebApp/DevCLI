@@ -1,0 +1,26 @@
+{
+  "name": "create-web-cell",
+  "version": "0.1.0",
+  "description": "NPM `init` command adapter of WebCell DevCLI",
+  "keywords": [
+    "command",
+    "adapter",
+    "web-cell",
+    "developer",
+    "cli",
+    "web",
+    "component"
+  ],
+  "author": "shiy2008@gmail.com",
+  "license": "AGPL-3.0",
+  "homepage": "https://web-cell.tk/DevCLI/",
+  "bugs": {
+    "url": "https://github.com/EasyWebApp/DevCLI/issues"
+  },
+  "bin": "index.js",
+  "dependencies": {
+    "cross-spawn": "^6.0.5",
+    "fs-extra": "^7.0.1",
+    "web-cell-cli": "^0.7.8"
+  }
+}

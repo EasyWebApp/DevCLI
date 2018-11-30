@@ -22,17 +22,17 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 ## Usage
 
- 1. `npm install web-cell-cli -g --production`
+```Shell
+npm init web-cell path/to/your_project
+```
 
- 2. `cd your_project  &&  web-cell boot`
+### Configuration reference
 
- 3. you may want to refer [Material Cell][1] to configure the
-    [**Source directory**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24),
-    [**NPM script**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29) or
-    [**Babel**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55)
+ - [**Source directory**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24)
 
- 4. `npm run your_script`
+ - [**NPM script**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29)
 
+ - [**Babel**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55)
 
 
 ### Command
@@ -55,10 +55,6 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 ## Typical case
 
- 1. [Cell Router](https://easywebapp.github.io/cell-router/)
+ 1. [Cell Router](https://web-cell.tk/cell-router/)
 
- 2. [Material Cell][1]
-
-
-
-[1]: https://web-cell-ht.ml "Offical component library of WebCell (based on Material Design lite v1.3)"
+ 2. [Material Cell](https://web-cell-ht.ml)

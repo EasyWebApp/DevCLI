@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
-import { packageOf, currentModulePath } from '@tech_query/node-toolkit';
+import { currentModulePath } from '@tech_query/node-toolkit';
 
-import { meta } from './utility';
+import { metaOf, folderOf } from './utility';
 
 import Commander from 'commander';
 
@@ -11,10 +11,7 @@ import { pack, boot } from './command';
 import PuppeteerBrowser from 'puppeteer-browser';
 
 
-
-const currentPackage = packageOf( currentModulePath() ).meta;
-
-const folder = meta ? meta.directories : '';
+const currentPackage = metaOf( currentModulePath() ), folder = folderOf();
 
 async function safePack(exit) {
     try {
