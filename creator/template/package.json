@@ -1,6 +1,7 @@
 {
     "keywords": [
-        "WebCell",
+        "web-cell",
+        "web",
         "component",
         "SPA"
     ],
@@ -13,11 +14,11 @@
     },
     "scripts": {
         "dev": "web-cell preview",
-        "build": "web-cell pack",
-        "start": "web-server --CORS",
         "format": "prettier --write \"{,!(node_modules|.git|dist|docs)/**/}*.{html,md,css,less,js,json}\"",
         "lint": "eslint . --ignore-pattern dist/ --fix",
-        "test": "npm run format  &&  npm run lint"
+        "build": "npm run format  &&  npm run lint  &&  web-cell pack",
+        "test": "npm run build",
+        "start": "web-server --CORS"
     },
     "husky": {
         "hooks": {
@@ -37,7 +38,7 @@
         "husky": "^1.2.0",
         "koapache": "^1.0.4",
         "prettier": "^1.15.3",
-        "web-cell-cli": "^0.7.9"
+        "web-cell-cli": "^0.8.0"
     },
     "babel": {
         "plugins": [

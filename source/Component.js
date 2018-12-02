@@ -132,7 +132,7 @@ export default  class Component {
         path = path.split('.').slice(0, -1).join('.');
 
         return  (new Package( path )).bundle(
-            name  ||  this.identifierOf( basename( dirname( path ) ) )
+            name  ||  basename( dirname( path ) )
         );
     }
 

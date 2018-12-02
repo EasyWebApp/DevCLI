@@ -19,6 +19,7 @@
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "no-cond-assign": "off",
+        "getter-return": "warn",
         "no-console": [
             "error",
             {

@@ -157,7 +157,8 @@ export  async function boot(cwd = '.') {
 
     if (!(await git.checkIsRepo()))  await git.init();
 
-    spawn('npm',  ['init', '-y'],  {stdio: 'inherit', cwd});
+    if (! existsSync(join(cwd, 'package.json')))
+        spawn('npm',  ['init', '-y'],  {stdio: 'inherit', cwd});
 
     await copyFrom(join(currentModulePath(), '../../template'), cwd);
 

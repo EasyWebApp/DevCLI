@@ -1089,10 +1089,8 @@ var _module_ = {
                                         .join('.');
                                     return new _amdBundle.default(path).bundle(
                                         name ||
-                                            this.identifierOf(
-                                                (0, _path.basename)(
-                                                    (0, _path.dirname)(path)
-                                                )
+                                            (0, _path.basename)(
+                                                (0, _path.dirname)(path)
                                             )
                                     );
                                 }

@@ -96,7 +96,7 @@ textarea {
 
             (() => eval( code )).should.not.throw( SyntaxError );
 
-            code.should.containEql('\'ExampleHtml\'');
+            code.should.containEql('\'example-html\'');
         });
     });
 

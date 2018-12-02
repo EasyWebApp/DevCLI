@@ -498,14 +498,22 @@ var _module_ = {
                                             return git.init();
 
                                         case 8:
-                                            (0, _crossSpawn.default)(
-                                                'npm',
-                                                ['init', '-y'],
-                                                {
-                                                    stdio: 'inherit',
-                                                    cwd: cwd
-                                                }
-                                            );
+                                            if (
+                                                !(0, _fsExtra.existsSync)(
+                                                    (0, _path.join)(
+                                                        cwd,
+                                                        'package.json'
+                                                    )
+                                                )
+                                            )
+                                                (0, _crossSpawn.default)(
+                                                    'npm',
+                                                    ['init', '-y'],
+                                                    {
+                                                        stdio: 'inherit',
+                                                        cwd: cwd
+                                                    }
+                                                );
                                             _context2.next = 11;
                                             return copyFrom(
                                                 (0, _path.join)(

@@ -174,7 +174,7 @@ export default  class Component {
         path = path.split(&apos;.&apos;).slice(0, -1).join(&apos;.&apos;);
 
         return  (new Package( path )).bundle(
-            name  ||  this.identifierOf( basename( dirname( path ) ) )
+            name  ||  basename( dirname( path ) )
         );
     }
 
