@@ -30,12 +30,9 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boot">boot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-copyFrom">copyFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseStylus">parseStylus</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-upgradeHTML">upgradeHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
 </ul>
@@ -45,13 +42,17 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/index.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">#! /usr/bin/env node
 
+import &apos;@babel/polyfill&apos;;
+
 import { currentModulePath } from &apos;@tech_query/node-toolkit&apos;;
 
 import { metaOf, folderOf } from &apos;./utility&apos;;
 
 import Commander from &apos;commander&apos;;
 
-import { pack, boot } from &apos;./command&apos;;
+import { pack } from &apos;./command&apos;;
+
+import spawn from &apos;cross-spawn&apos;;
 
 import PuppeteerBrowser from &apos;puppeteer-browser&apos;;
 
@@ -72,8 +73,13 @@ async function safePack(exit) {
 
 Commander
     .version( currentPackage.version ).description( currentPackage.description )
-    .command(&apos;boot&apos;,  &apos;Boot current directory as a WebCell project&apos;)
-    .on(&apos;command:boot&apos;,  boot)
+    .command(&apos;boot [path]&apos;,  &apos;Boot a directory as a WebCell project&apos;)
+    .on(
+        &apos;command:boot&apos;,
+        ([ path ])  =&gt;  spawn(
+            &apos;npm&apos;,  [&apos;init&apos;, &apos;web-cell&apos;, path],  {stdio: &apos;inherit&apos;}
+        )
+    )
     .command(&apos;pack&apos;,  &apos;Bundle components to a package with JS modules in it&apos;)
     .on(&apos;command:pack&apos;,  safePack.bind(null, true))
     .command(&apos;preview&apos;,  &apos;Real-time preview during development&apos;)

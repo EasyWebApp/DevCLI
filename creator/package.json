@@ -1,0 +1,54 @@
+{
+  "name": "create-web-cell",
+  "version": "0.4.0",
+  "description": "Project creator of WebCell",
+  "keywords": [
+    "project",
+    "creator",
+    "web-cell",
+    "command",
+    "developer",
+    "cli",
+    "web",
+    "component"
+  ],
+  "author": "shiy2008@gmail.com",
+  "license": "AGPL-3.0",
+  "homepage": "https://web-cell.tk/DevCLI/",
+  "bugs": {
+    "url": "https://github.com/EasyWebApp/DevCLI/issues"
+  },
+  "main": "source/core.js",
+  "bin": "dist/index.js",
+  "scripts": {
+    "test": "mocha --exit",
+    "debug": "mocha --inspect-brk",
+    "pack": "amd-bundle source/index dist/index",
+    "build": "npm test  &&  npm run pack",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.1.5",
+    "@tech_query/node-toolkit": "^0.8.2",
+    "cross-spawn": "^6.0.5",
+    "fs-extra": "^7.0.1",
+    "jsdom": "^13.0.0",
+    "node-fetch": "^2.3.0",
+    "simple-git": "^1.107.0",
+    "web-cell": "^0.10.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/register": "^7.0.0",
+    "amd-bundle": "^1.7.4",
+    "mocha": "^5.2.0",
+    "should": "^13.2.3"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}

@@ -1,49 +1,8 @@
-import 'regenerator-runtime/runtime';
-
-import Git from 'simple-git/promise';
-
 import { join, basename } from 'path';
 
-import { currentModulePath } from '@tech_query/node-toolkit';
-
-import {outputFile, readFile, existsSync, statSync, readdir} from 'fs-extra';
-
-import { copyFrom, upgradeHTML } from './utility';
+import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
 
 import Component from './Component';
-
-import 'web-cell/dist/polyfill';
-
-import { stringifyDOM } from 'web-cell';
-
-import spawn from 'cross-spawn';
-
-
-/**
- * Boot current directory as a WebCell project
- */
-export  async function boot() {
-
-    console.time('Boot project');
-
-    const git = Git();
-
-    if (!(await git.checkIsRepo()))  await git.init();
-
-    spawn('npm',  ['init', '-y'],  {stdio: 'inherit'});
-
-    await copyFrom(join(currentModulePath(), '../../template'));
-
-    await outputFile(
-        'index.html',  stringifyDOM( upgradeHTML(await readFile('index.html')) )
-    );
-
-    console.info('--------------------');
-
-    console.timeEnd('Boot project');
-
-    spawn('npm',  ['install'],  {stdio: 'inherit'});
-}
 
 
 /**

@@ -1,12 +1,16 @@
 #! /usr/bin/env node
 
+import '@babel/polyfill';
+
 import { currentModulePath } from '@tech_query/node-toolkit';
 
 import { metaOf, folderOf } from './utility';
 
 import Commander from 'commander';
 
-import { pack, boot } from './command';
+import { pack } from './command';
+
+import spawn from 'cross-spawn';
 
 import PuppeteerBrowser from 'puppeteer-browser';
 
@@ -27,8 +31,13 @@ async function safePack(exit) {
 
 Commander
     .version( currentPackage.version ).description( currentPackage.description )
-    .command('boot',  'Boot current directory as a WebCell project')
-    .on('command:boot',  boot)
+    .command('boot [path]',  'Boot a directory as a WebCell project')
+    .on(
+        'command:boot',
+        ([ path ])  =>  spawn(
+            'npm',  ['init', 'web-cell', path],  {stdio: 'inherit'}
+        )
+    )
     .command('pack',  'Bundle components to a package with JS modules in it')
     .on('command:pack',  safePack.bind(null, true))
     .command('preview',  'Real-time preview during development')

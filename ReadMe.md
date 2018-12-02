@@ -10,7 +10,7 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 ## Feature
 
- 1. Boot current directory as a **WebCell project**
+ 1. Boot a directory as a **WebCell project**
 
  2. Bundle components to a package with **JS modules** in it
 
@@ -46,7 +46,7 @@ npm init web-cell path/to/your_project
 
     Commands:
 
-        boot           Boot current directory as a WebCell project
+        boot [path]    Boot a directory as a WebCell project
         pack           Bundle components to a package with JS modules in it
         preview        Real-time preview during development
         help [cmd]     display help for [cmd]

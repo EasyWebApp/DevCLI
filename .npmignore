@@ -1,6 +1,6 @@
 docs/
 test/
-adapter/
+creator/
 .editorconfig
 .eslintrc.json
 .esdoc.json

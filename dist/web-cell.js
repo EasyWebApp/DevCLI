@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('web-cell', ["regenerator-runtime/runtime","fs-extra","path","amd-bundle","less","sass","web-cell/dist/polyfill","web-cell","@tech_query/node-toolkit","simple-git/promise","cross-spawn","@babel/polyfill","stylus","commander","puppeteer-browser"], factory);
+        define('web-cell', ["regenerator-runtime/runtime","fs-extra","path","amd-bundle","less","sass","web-cell/dist/polyfill","web-cell","@tech_query/node-toolkit","stylus","@babel/polyfill","commander","cross-spawn","puppeteer-browser"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('regenerator-runtime/runtime'),require('fs-extra'),require('path'),require('amd-bundle'),require('less'),require('sass'),require('web-cell/dist/polyfill'),require('web-cell'),require('@tech_query/node-toolkit'),require('simple-git/promise'),require('cross-spawn'),require('@babel/polyfill'),require('stylus'),require('commander'),require('puppeteer-browser'));
+        return  module.exports = factory.call(global,require('regenerator-runtime/runtime'),require('fs-extra'),require('path'),require('amd-bundle'),require('less'),require('sass'),require('web-cell/dist/polyfill'),require('web-cell'),require('@tech_query/node-toolkit'),require('stylus'),require('@babel/polyfill'),require('commander'),require('cross-spawn'),require('puppeteer-browser'));
     else
-        return  this['web-cell'] = factory.call(self,this['regenerator-runtime/runtime'],this['fs-extra'],this['path'],this['amd-bundle'],this['less'],this['sass'],this['web-cell/dist/polyfill'],this['web-cell'],this['@tech_query/node-toolkit'],this['simple-git/promise'],this['cross-spawn'],this['@babel/polyfill'],this['stylus'],this['commander'],this['puppeteer-browser']);
+        return  this['web-cell'] = factory.call(self,this['regenerator-runtime/runtime'],this['fs-extra'],this['path'],this['amd-bundle'],this['less'],this['sass'],this['web-cell/dist/polyfill'],this['web-cell'],this['@tech_query/node-toolkit'],this['stylus'],this['@babel/polyfill'],this['commander'],this['cross-spawn'],this['puppeteer-browser']);
 
-})(function (regenerator_runtime_runtime,fs_extra,path,amd_bundle,less,sass,web_cell_dist_polyfill,web_cell,_tech_query_node_toolkit,simple_git_promise,cross_spawn,_babel_polyfill,stylus,commander,puppeteer_browser) {
+})(function (regenerator_runtime_runtime,fs_extra,path,amd_bundle,less,sass,web_cell_dist_polyfill,web_cell,_tech_query_node_toolkit,stylus,_babel_polyfill,commander,cross_spawn,puppeteer_browser) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -71,6 +71,10 @@ function outPackage(name) {
     }
 
 var _interopRequireDefault2 = require('@babel/runtime/helpers/interopRequireDefault');
+
+var _slicedToArray2 = _interopRequireDefault2(
+    require('@babel/runtime/helpers/slicedToArray')
+);
 
 var _toConsumableArray2 = _interopRequireDefault2(
     require('@babel/runtime/helpers/toConsumableArray')
@@ -1127,31 +1131,14 @@ var _module_ = {
             Object.defineProperty(exports, '__esModule', {
                 value: true
             });
-            exports.boot = boot;
             exports.bundle = bundle;
             exports.pack = pack;
 
-            require('regenerator-runtime/runtime');
-
-            var _promise = _interopRequireDefault(
-                require('simple-git/promise')
-            );
-
             var _path = require('path');
-
-            var _nodeToolkit = require('@tech_query/node-toolkit');
 
             var _fsExtra = require('fs-extra');
 
-            var _utility = require('./utility');
-
             var _Component = _interopRequireDefault(require('./Component'));
-
-            require('web-cell/dist/polyfill');
-
-            var _webCell = require('web-cell');
-
-            var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -1161,113 +1148,12 @@ var _module_ = {
                       };
             }
             /**
-             * Boot current directory as a WebCell project
-             */
-
-            function boot() {
-                return _boot.apply(this, arguments);
-            }
-            /**
              * Bundle components to JS modules
              *
              * @param {string} path - Source directory
              *
              * @return {string[]} Component paths
              */
-
-            function _boot() {
-                _boot = (0, _asyncToGenerator2.default)(
-                    /*#__PURE__*/
-                    _regenerator.default.mark(function _callee6() {
-                        var git;
-                        return _regenerator.default.wrap(
-                            function _callee6$(_context6) {
-                                while (1) {
-                                    switch ((_context6.prev = _context6.next)) {
-                                        case 0:
-                                            console.time('Boot project');
-                                            git = (0, _promise.default)();
-                                            _context6.next = 4;
-                                            return git.checkIsRepo();
-
-                                        case 4:
-                                            if (_context6.sent) {
-                                                _context6.next = 7;
-                                                break;
-                                            }
-
-                                            _context6.next = 7;
-                                            return git.init();
-
-                                        case 7:
-                                            (0, _crossSpawn.default)(
-                                                'npm',
-                                                ['init', '-y'],
-                                                {
-                                                    stdio: 'inherit'
-                                                }
-                                            );
-                                            _context6.next = 10;
-                                            return (0, _utility.copyFrom)(
-                                                (0, _path.join)(
-                                                    (0,
-                                                    _nodeToolkit.currentModulePath)(),
-                                                    '../../template'
-                                                )
-                                            );
-
-                                        case 10:
-                                            _context6.t0 = (0,
-                                            _fsExtra.outputFile);
-                                            _context6.t1 = (0,
-                                            _webCell.stringifyDOM);
-                                            _context6.t2 = (0,
-                                            _utility.upgradeHTML);
-                                            _context6.next = 15;
-                                            return (0, _fsExtra.readFile)(
-                                                'index.html'
-                                            );
-
-                                        case 15:
-                                            _context6.t3 = _context6.sent;
-                                            _context6.t4 = (0, _context6.t2)(
-                                                _context6.t3
-                                            );
-                                            _context6.t5 = (0, _context6.t1)(
-                                                _context6.t4
-                                            );
-                                            _context6.next = 20;
-                                            return (0, _context6.t0)(
-                                                'index.html',
-                                                _context6.t5
-                                            );
-
-                                        case 20:
-                                            console.info(
-                                                '--------------------'
-                                            );
-                                            console.timeEnd('Boot project');
-                                            (0, _crossSpawn.default)(
-                                                'npm',
-                                                ['install'],
-                                                {
-                                                    stdio: 'inherit'
-                                                }
-                                            );
-
-                                        case 23:
-                                        case 'end':
-                                            return _context6.stop();
-                                    }
-                                }
-                            },
-                            _callee6,
-                            this
-                        );
-                    })
-                );
-                return _boot.apply(this, arguments);
-            }
 
             function bundle(_x6) {
                 return _bundle.apply(this, arguments);
@@ -1283,14 +1169,14 @@ var _module_ = {
             function _bundle() {
                 _bundle = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee7(path) {
+                    _regenerator.default.mark(function _callee6(path) {
                         var _result;
 
                         var result, component;
                         return _regenerator.default.wrap(
-                            function _callee7$(_context7) {
+                            function _callee6$(_context6) {
                                 while (1) {
-                                    switch ((_context7.prev = _context7.next)) {
+                                    switch ((_context6.prev = _context6.next)) {
                                         case 0:
                                             result = [];
 
@@ -1302,7 +1188,7 @@ var _module_ = {
                                                     )
                                                 )
                                             ) {
-                                                _context7.next = 11;
+                                                _context6.next = 11;
                                                 break;
                                             }
 
@@ -1313,18 +1199,18 @@ var _module_ = {
                                                 component.name,
                                                 '.js'
                                             );
-                                            _context7.t0 = (0,
+                                            _context6.t0 = (0,
                                             _fsExtra.outputFile);
-                                            _context7.t1 = result[0];
-                                            _context7.next = 8;
+                                            _context6.t1 = result[0];
+                                            _context6.next = 8;
                                             return component.toJS();
 
                                         case 8:
-                                            _context7.t2 = _context7.sent;
-                                            _context7.next = 11;
-                                            return (0, _context7.t0)(
-                                                _context7.t1,
-                                                _context7.t2
+                                            _context6.t2 = _context6.sent;
+                                            _context6.next = 11;
+                                            return (0, _context6.t0)(
+                                                _context6.t1,
+                                                _context6.t2
                                             );
 
                                         case 11:
@@ -1333,58 +1219,58 @@ var _module_ = {
                                                     path
                                                 ).isDirectory()
                                             ) {
-                                                _context7.next = 25;
+                                                _context6.next = 25;
                                                 break;
                                             }
 
-                                            _context7.t3 = (_result = result).concat;
-                                            _context7.t4 = _result;
-                                            _context7.t5 =
+                                            _context6.t3 = (_result = result).concat;
+                                            _context6.t4 = _result;
+                                            _context6.t5 =
                                                 _toConsumableArray2.default;
-                                            _context7.t6 = Promise;
-                                            _context7.next = 18;
+                                            _context6.t6 = Promise;
+                                            _context6.next = 18;
                                             return (0, _fsExtra.readdir)(path);
 
                                         case 18:
-                                            _context7.t7 = function(file) {
+                                            _context6.t7 = function(file) {
                                                 return bundle(
                                                     (0, _path.join)(path, file)
                                                 );
                                             };
 
-                                            _context7.t8 = _context7.sent.map(
-                                                _context7.t7
+                                            _context6.t8 = _context6.sent.map(
+                                                _context6.t7
                                             );
-                                            _context7.next = 22;
-                                            return _context7.t6.all.call(
-                                                _context7.t6,
-                                                _context7.t8
+                                            _context6.next = 22;
+                                            return _context6.t6.all.call(
+                                                _context6.t6,
+                                                _context6.t8
                                             );
 
                                         case 22:
-                                            _context7.t9 = _context7.sent;
-                                            _context7.t10 = (0, _context7.t5)(
-                                                _context7.t9
+                                            _context6.t9 = _context6.sent;
+                                            _context6.t10 = (0, _context6.t5)(
+                                                _context6.t9
                                             );
-                                            result = _context7.t3.apply.call(
-                                                _context7.t3,
-                                                _context7.t4,
-                                                _context7.t10
+                                            result = _context6.t3.apply.call(
+                                                _context6.t3,
+                                                _context6.t4,
+                                                _context6.t10
                                             );
 
                                         case 25:
-                                            return _context7.abrupt(
+                                            return _context6.abrupt(
                                                 'return',
                                                 result
                                             );
 
                                         case 26:
                                         case 'end':
-                                            return _context7.stop();
+                                            return _context6.stop();
                                     }
                                 }
                             },
-                            _callee7,
+                            _callee6,
                             this
                         );
                     })
@@ -1399,19 +1285,19 @@ var _module_ = {
             function _pack() {
                 _pack = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee8(path) {
+                    _regenerator.default.mark(function _callee7(path) {
                         var file;
                         return _regenerator.default.wrap(
-                            function _callee8$(_context8) {
+                            function _callee7$(_context7) {
                                 while (1) {
-                                    switch ((_context8.prev = _context8.next)) {
+                                    switch ((_context7.prev = _context7.next)) {
                                         case 0:
-                                            _context8.next = 2;
+                                            _context7.next = 2;
                                             return bundle(path);
 
                                         case 2:
-                                            file = _context8.sent;
-                                            _context8.next = 5;
+                                            file = _context7.sent;
+                                            _context7.next = 5;
                                             return (0, _fsExtra.outputFile)(
                                                 'dist/index.js',
                                                 file
@@ -1433,18 +1319,18 @@ var _module_ = {
                                             );
 
                                         case 5:
-                                            return _context8.abrupt(
+                                            return _context7.abrupt(
                                                 'return',
                                                 file
                                             );
 
                                         case 6:
                                         case 'end':
-                                            return _context8.stop();
+                                            return _context7.stop();
                                     }
                                 }
                             },
-                            _callee8,
+                            _callee7,
                             this
                         );
                     })
@@ -1461,25 +1347,11 @@ var _module_ = {
                 value: true
             });
             exports.parseStylus = parseStylus;
-            exports.copyFrom = copyFrom;
-            exports.upgradeHTML = upgradeHTML;
             exports.folderOf = exports.metaOf = void 0;
-
-            require('regenerator-runtime/runtime');
-
-            require('@babel/polyfill');
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
-            require('web-cell/dist/polyfill');
-
-            var _webCell = require('web-cell');
-
             var _stylus = _interopRequireDefault(require('stylus'));
-
-            var _fsExtra = require('fs-extra');
-
-            var _path = require('path');
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -1533,300 +1405,14 @@ var _module_ = {
                     });
                 });
             }
-            /**
-             * @private
-             *
-             * @param {String} folder
-             */
-
-            function copyFrom(_x8) {
-                return _copyFrom.apply(this, arguments);
-            }
-
-            function _copyFrom() {
-                _copyFrom = (0, _asyncToGenerator2.default)(
-                    /*#__PURE__*/
-                    _regenerator.default.mark(function _callee9(folder) {
-                        var _iteratorNormalCompletion3,
-                            _didIteratorError3,
-                            _iteratorError3,
-                            _iterator3,
-                            _step3,
-                            file,
-                            _path2,
-                            type;
-
-                        return _regenerator.default.wrap(
-                            function _callee9$(_context9) {
-                                while (1) {
-                                    switch ((_context9.prev = _context9.next)) {
-                                        case 0:
-                                            _iteratorNormalCompletion3 = true;
-                                            _didIteratorError3 = false;
-                                            _iteratorError3 = undefined;
-                                            _context9.prev = 3;
-                                            _context9.next = 6;
-                                            return (0, _fsExtra.readdir)(
-                                                folder
-                                            );
-
-                                        case 6:
-                                            _context9.t0 = Symbol.iterator;
-                                            _iterator3 = _context9.sent[
-                                                _context9.t0
-                                            ]();
-
-                                        case 8:
-                                            if (
-                                                (_iteratorNormalCompletion3 = (_step3 = _iterator3.next())
-                                                    .done)
-                                            ) {
-                                                _context9.next = 36;
-                                                break;
-                                            }
-
-                                            file = _step3.value;
-                                            (_path2 = (0, _path.join)(
-                                                folder,
-                                                file
-                                            )),
-                                                (type = 'Skip');
-
-                                            if (
-                                                (0, _fsExtra.existsSync)(file)
-                                            ) {
-                                                _context9.next = 17;
-                                                break;
-                                            }
-
-                                            _context9.next = 14;
-                                            return (0, _fsExtra.copy)(
-                                                _path2,
-                                                file
-                                            );
-
-                                        case 14:
-                                            type = 'Create';
-                                            _context9.next = 32;
-                                            break;
-
-                                        case 17:
-                                            if (
-                                                !(
-                                                    (0, _path.extname)(file) ===
-                                                    '.json'
-                                                )
-                                            ) {
-                                                _context9.next = 32;
-                                                break;
-                                            }
-
-                                            _context9.t1 = (0,
-                                            _fsExtra.outputJSON);
-                                            _context9.t2 = file;
-                                            _context9.t3 = (0,
-                                            _nodeToolkit.patch);
-                                            _context9.next = 23;
-                                            return (0, _fsExtra.readJSON)(file);
-
-                                        case 23:
-                                            _context9.t4 = _context9.sent;
-                                            _context9.next = 26;
-                                            return (0, _fsExtra.readJSON)(
-                                                _path2
-                                            );
-
-                                        case 26:
-                                            _context9.t5 = _context9.sent;
-                                            _context9.t6 = (0, _context9.t3)(
-                                                _context9.t4,
-                                                _context9.t5
-                                            );
-                                            _context9.t7 = {
-                                                spaces: 4
-                                            };
-                                            _context9.next = 31;
-                                            return (0, _context9.t1)(
-                                                _context9.t2,
-                                                _context9.t6,
-                                                _context9.t7
-                                            );
-
-                                        case 31:
-                                            type = 'Update';
-
-                                        case 32:
-                                            console.info(
-                                                ''
-                                                    .concat(
-                                                        type.padEnd(6),
-                                                        ' --> '
-                                                    )
-                                                    .concat(file)
-                                            );
-
-                                        case 33:
-                                            _iteratorNormalCompletion3 = true;
-                                            _context9.next = 8;
-                                            break;
-
-                                        case 36:
-                                            _context9.next = 42;
-                                            break;
-
-                                        case 38:
-                                            _context9.prev = 38;
-                                            _context9.t8 = _context9['catch'](
-                                                3
-                                            );
-                                            _didIteratorError3 = true;
-                                            _iteratorError3 = _context9.t8;
-
-                                        case 42:
-                                            _context9.prev = 42;
-                                            _context9.prev = 43;
-
-                                            if (
-                                                !_iteratorNormalCompletion3 &&
-                                                _iterator3.return != null
-                                            ) {
-                                                _iterator3.return();
-                                            }
-
-                                        case 45:
-                                            _context9.prev = 45;
-
-                                            if (!_didIteratorError3) {
-                                                _context9.next = 48;
-                                                break;
-                                            }
-
-                                            throw _iteratorError3;
-
-                                        case 48:
-                                            return _context9.finish(45);
-
-                                        case 49:
-                                            return _context9.finish(42);
-
-                                        case 50:
-                                        case 'end':
-                                            return _context9.stop();
-                                    }
-                                }
-                            },
-                            _callee9,
-                            this,
-                            [[3, 38, 42, 50], [43, , 45, 49]]
-                        );
-                    })
-                );
-                return _copyFrom.apply(this, arguments);
-            }
-
-            var tagAttribute = {
-                    script: {
-                        key: 'src',
-                        kind: 'js'
-                    },
-                    link: {
-                        key: 'href',
-                        kind: 'css'
-                    }
-                },
-                library = [
-                    {
-                        name: '@babel/polyfill',
-                        file: 'polyfill',
-                        path: 'dist/',
-                        type: 'script'
-                    },
-                    {
-                        name: 'whatwg-fetch',
-                        file: 'fetch.umd',
-                        path: 'dist/',
-                        type: 'script'
-                    },
-                    {
-                        name: '@webcomponents/webcomponentsjs',
-                        file: 'webcomponents-bundle',
-                        type: 'script'
-                    },
-                    {
-                        name: '@webcomponents/webcomponentsjs',
-                        file: 'custom-elements-es5-adapter',
-                        type: 'script'
-                    },
-                    {
-                        name: 'web-cell',
-                        path: 'dist/',
-                        type: 'script'
-                    }
-                ];
-
-            function equalLibrary(element, type, key, name, file) {
-                var URI = element[key];
-                return (
-                    element.tagName.toLowerCase() === type &&
-                    URI.includes(name) &&
-                    URI.includes(file)
-                );
-            }
-            /**
-             * @private
-             *
-             * @param {String} code - HTML source
-             *
-             * @return {Document}
-             */
-
-            function upgradeHTML(code) {
-                var page = new DOMParser().parseFromString(code, 'text/html');
-                var list = (0, _webCell.$)(Object.keys(tagAttribute), page);
-
-                var _loop = function _loop() {
-                    var _library$_i = library[_i],
-                        type = _library$_i.type,
-                        name = _library$_i.name,
-                        file = _library$_i.file,
-                        path = _library$_i.path;
-                    file = file || name;
-                    var _tagAttribute$type = tagAttribute[type];
-                    key = _tagAttribute$type.key;
-                    kind = _tagAttribute$type.kind;
-
-                    if (
-                        !(element = list.find(function(item) {
-                            return equalLibrary(item, type, key, name, file);
-                        }))
-                    ) {
-                        element = page.createElement(type);
-                        element[key] = 'node_modules/'
-                            .concat(name, '/')
-                            .concat(path || '')
-                            .concat(file)
-                            .concat(/\.[^/]+$/.test(file) ? '' : '.min', '.')
-                            .concat(kind);
-                        if (type === 'link') element.rel = 'stylesheet';
-                    }
-
-                    page.head.append('    ', element, '\n');
-                };
-
-                for (var _i = 0; _i < library.length; _i++) {
-                    var element, key, kind;
-
-                    _loop();
-                }
-
-                return page;
-            }
         }
     },
     './index': {
         base: '.',
         dependency: [],
         factory: function factory(require, exports, module) {
+            require('@babel/polyfill');
+
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
             var _utility = require('./utility');
@@ -1834,6 +1420,8 @@ var _module_ = {
             var _commander = _interopRequireDefault(require('commander'));
 
             var _command = require('./command');
+
+            var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
 
             var _puppeteerBrowser = _interopRequireDefault(
                 require('puppeteer-browser')
@@ -1852,46 +1440,44 @@ var _module_ = {
                 ),
                 folder = (0, _utility.folderOf)();
 
-            function safePack(_x9) {
+            function safePack(_x8) {
                 return _safePack.apply(this, arguments);
             }
 
             function _safePack() {
                 _safePack = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    _regenerator.default.mark(function _callee11(exit) {
+                    _regenerator.default.mark(function _callee9(exit) {
                         return _regenerator.default.wrap(
-                            function _callee11$(_context11) {
+                            function _callee9$(_context9) {
                                 while (1) {
-                                    switch (
-                                        (_context11.prev = _context11.next)
-                                    ) {
+                                    switch ((_context9.prev = _context9.next)) {
                                         case 0:
-                                            _context11.prev = 0;
-                                            _context11.next = 3;
+                                            _context9.prev = 0;
+                                            _context9.next = 3;
                                             return (0, _command.pack)(
                                                 folder.lib
                                             );
 
                                         case 3:
-                                            _context11.next = 9;
+                                            _context9.next = 9;
                                             break;
 
                                         case 5:
-                                            _context11.prev = 5;
-                                            _context11.t0 = _context11['catch'](
+                                            _context9.prev = 5;
+                                            _context9.t0 = _context9['catch'](
                                                 0
                                             );
-                                            console.error(_context11.t0);
+                                            console.error(_context9.t0);
                                             if (exit === true) process.exit(1);
 
                                         case 9:
                                         case 'end':
-                                            return _context11.stop();
+                                            return _context9.stop();
                                     }
                                 }
                             },
-                            _callee11,
+                            _callee9,
                             this,
                             [[0, 5]]
                         );
@@ -1903,8 +1489,16 @@ var _module_ = {
             _commander.default
                 .version(currentPackage.version)
                 .description(currentPackage.description)
-                .command('boot', 'Boot current directory as a WebCell project')
-                .on('command:boot', _command.boot)
+                .command('boot [path]', 'Boot a directory as a WebCell project')
+                .on('command:boot', function(_ref2) {
+                    var _ref3 = (0, _slicedToArray2.default)(_ref2, 1),
+                        path = _ref3[0];
+
+                    return (0,
+                    _crossSpawn.default)('npm', ['init', 'web-cell', path], {
+                        stdio: 'inherit'
+                    });
+                })
                 .command(
                     'pack',
                     'Bundle components to a package with JS modules in it'
@@ -1916,19 +1510,19 @@ var _module_ = {
                     /*#__PURE__*/
                     (0, _asyncToGenerator2.default)(
                         /*#__PURE__*/
-                        _regenerator.default.mark(function _callee10() {
+                        _regenerator.default.mark(function _callee8() {
                             return _regenerator.default.wrap(
-                                function _callee10$(_context10) {
+                                function _callee8$(_context8) {
                                     while (1) {
                                         switch (
-                                            (_context10.prev = _context10.next)
+                                            (_context8.prev = _context8.next)
                                         ) {
                                             case 0:
-                                                _context10.next = 2;
+                                                _context8.next = 2;
                                                 return safePack(true);
 
                                             case 2:
-                                                _context10.next = 4;
+                                                _context8.next = 4;
                                                 return _puppeteerBrowser.default.getPage(
                                                     '.',
                                                     folder.test || 'test/',
@@ -1937,11 +1531,11 @@ var _module_ = {
 
                                             case 4:
                                             case 'end':
-                                                return _context10.stop();
+                                                return _context8.stop();
                                         }
                                     }
                                 },
-                                _callee10,
+                                _callee8,
                                 this
                             );
                         })
@@ -1977,20 +1571,17 @@ var _module_ = {
     '@tech_query/node-toolkit': {
         exports: _tech_query_node_toolkit
     },
-    'simple-git/promise': {
-        exports: simple_git_promise
-    },
-    'cross-spawn': {
-        exports: cross_spawn
+    stylus: {
+        exports: stylus
     },
     '@babel/polyfill': {
         exports: _babel_polyfill
     },
-    stylus: {
-        exports: stylus
-    },
     commander: {
         exports: commander
+    },
+    'cross-spawn': {
+        exports: cross_spawn
     },
     'puppeteer-browser': {
         exports: puppeteer_browser

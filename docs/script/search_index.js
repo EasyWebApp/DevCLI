@@ -1,38 +1,14 @@
 window.esdocSearchIndex = [
   [
-    "",
-    "test-file/test/template.test.js.html#lineNumber6",
-    "\"boot\" command",
-    "test"
-  ],
-  [
-    "upgradehtml source/utility.js~upgradehtml,upgradehtml",
-    "test-file/test/template.test.js.html#lineNumber10",
-    "\"boot\" command index.html",
-    "test"
-  ],
-  [
     "web-cell-cli~component",
     "class/source/Component.js~Component.html",
     "<span>Component</span> <span class=\"search-result-import-path\">web-cell-cli</span>",
     "class"
   ],
   [
-    "web-cell-cli/source/command.js~boot",
-    "function/index.html#static-function-boot",
-    "<span>boot</span> <span class=\"search-result-import-path\">web-cell-cli/source/command.js</span>",
-    "function"
-  ],
-  [
     "web-cell-cli/source/command.js~bundle",
     "function/index.html#static-function-bundle",
     "<span>bundle</span> <span class=\"search-result-import-path\">web-cell-cli/source/command.js</span>",
-    "function"
-  ],
-  [
-    "web-cell-cli/source/utility.js~copyfrom",
-    "function/index.html#static-function-copyFrom",
-    "<span>copyFrom</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
     "function"
   ],
   [
@@ -57,12 +33,6 @@ window.esdocSearchIndex = [
     "web-cell-cli/source/utility.js~parsestylus",
     "function/index.html#static-function-parseStylus",
     "<span>parseStylus</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
-    "function"
-  ],
-  [
-    "web-cell-cli/source/utility.js~upgradehtml",
-    "function/index.html#static-function-upgradeHTML",
-    "<span>upgradeHTML</span> <span class=\"search-result-import-path\">web-cell-cli/source/utility.js</span>",
     "function"
   ],
   [
@@ -561,12 +531,6 @@ window.esdocSearchIndex = [
     "test/index.test.js",
     "test-file/test/index.test.js.html",
     "test/index.test.js",
-    "testFile"
-  ],
-  [
-    "test/template.test.js",
-    "test-file/test/template.test.js.html",
-    "test/template.test.js",
     "testFile"
   ]
 ]

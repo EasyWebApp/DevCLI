@@ -1,6 +1,6 @@
 {
   "name": "web-cell-cli",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "Developer command-line tool for WebCell",
   "keywords": [
     "developer",
@@ -51,17 +51,16 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.1.5",
-    "@tech_query/node-toolkit": "^0.8.1",
+    "@tech_query/node-toolkit": "^0.8.2",
     "amd-bundle": "^1.7.4",
     "commander": "^2.19.0",
     "cross-spawn": "^6.0.5",
     "fs-extra": "^7.0.1",
     "jsdom": "^13.0.0",
-    "less": "^3.8.1",
+    "less": "^3.9.0",
     "node-fetch": "^2.3.0",
     "puppeteer-browser": "^0.3.7",
     "sass": "^1.15.1",
-    "simple-git": "^1.107.0",
     "stylus": "^0.54.5",
     "web-cell": "^0.10.10"
   },

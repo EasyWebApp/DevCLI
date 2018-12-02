@@ -1,9 +1,9 @@
-import { upgradeHTML } from '../source/utility';
+import { upgradeHTML } from '../source/core';
 
 import { $ } from 'web-cell';
 
 
-describe('"boot" command',  () => {
+describe('Core methods',  () => {
     /**
      * @test {upgradeHTML}
      */

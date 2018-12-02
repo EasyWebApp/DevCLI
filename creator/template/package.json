@@ -37,7 +37,7 @@
         "husky": "^1.2.0",
         "koapache": "^1.0.4",
         "prettier": "^1.15.3",
-        "web-cell-cli": "^0.7.8"
+        "web-cell-cli": "^0.7.9"
     },
     "babel": {
         "plugins": [
