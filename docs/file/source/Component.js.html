@@ -201,7 +201,8 @@ export default  class Component {
         for (let sheet  of  Component.findStyle( fragment )) {
 
             let style = await Component.parseCSS(
-                sheet.textContent  ||  join(this.path, sheet.getAttribute(&apos;href&apos;)),
+                (sheet.tagName === &apos;STYLE&apos;)  ?
+                    sheet.textContent  :  join(this.path, sheet.getAttribute(&apos;href&apos;)),
                 sheet.type,
                 this.entry + &apos;.css&apos;
             );

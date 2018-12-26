@@ -1,0 +1,12 @@
+# Node.JS
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# Online platform
+.github/
+
+# OS
+.DS_Store

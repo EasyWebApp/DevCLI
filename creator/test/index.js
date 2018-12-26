@@ -1,7 +1,5 @@
 import { upgradeHTML } from '../source/core';
 
-import { $ } from 'web-cell';
-
 
 describe('Core methods',  () => {
     /**
@@ -9,7 +7,7 @@ describe('Core methods',  () => {
      */
     it('index.html',  () => {
 
-        const document = upgradeHTML(`
+        const { window: { document } } = upgradeHTML(`
 <!DocType HTML>
 <html><head>
 
@@ -18,8 +16,10 @@ describe('Core methods',  () => {
 </body></html>`
         );
 
-        $('script[src^="node_modules/"]', document).should.have.length(5);
+        document.querySelectorAll('script[src^="node_modules/"]')
+            .should.have.length(5);
 
-        $('script[src$="min.js"]', document).should.have.length(4);
+        document.querySelectorAll('script[src$="min.js"]')
+            .should.have.length(4);
     });
 });

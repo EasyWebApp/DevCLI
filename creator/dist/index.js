@@ -6,13 +6,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('index', ["fs-extra","path","@tech_query/node-toolkit","regenerator-runtime/runtime","web-cell/dist/polyfill","web-cell","simple-git/promise","cross-spawn","@babel/polyfill"], factory);
+        define('index', ["path","@tech_query/node-toolkit","fs-extra","simple-git/promise","cross-spawn","jsdom","@babel/polyfill"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('fs-extra'),require('path'),require('@tech_query/node-toolkit'),require('regenerator-runtime/runtime'),require('web-cell/dist/polyfill'),require('web-cell'),require('simple-git/promise'),require('cross-spawn'),require('@babel/polyfill'));
+        return  module.exports = factory.call(global,require('path'),require('@tech_query/node-toolkit'),require('fs-extra'),require('simple-git/promise'),require('cross-spawn'),require('jsdom'),require('@babel/polyfill'));
     else
-        return  this['index'] = factory.call(self,this['fs-extra'],this['path'],this['@tech_query/node-toolkit'],this['regenerator-runtime/runtime'],this['web-cell/dist/polyfill'],this['web-cell'],this['simple-git/promise'],this['cross-spawn'],this['@babel/polyfill']);
+        return  this['index'] = factory.call(self,this['path'],this['@tech_query/node-toolkit'],this['fs-extra'],this['simple-git/promise'],this['cross-spawn'],this['jsdom'],this['@babel/polyfill']);
 
-})(function (fs_extra,path,_tech_query_node_toolkit,regenerator_runtime_runtime,web_cell_dist_polyfill,web_cell,simple_git_promise,cross_spawn,_babel_polyfill) {
+})(function (path,_tech_query_node_toolkit,fs_extra,simple_git_promise,cross_spawn,jsdom,_babel_polyfill) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -70,55 +70,68 @@ function outPackage(name) {
         return module.exports;
     }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-    try {
-        var info = gen[key](arg);
-        var value = info.value;
-    } catch (error) {
-        reject(error);
-        return;
-    }
-    if (info.done) {
-        resolve(value);
-    } else {
-        Promise.resolve(value).then(_next, _throw);
-    }
-}
+var _interopRequireDefault2 = require('@babel/runtime/helpers/interopRequireDefault');
 
-function _asyncToGenerator(fn) {
-    return function() {
-        var self = this,
-            args = arguments;
-        return new Promise(function(resolve, reject) {
-            var gen = fn.apply(self, args);
-            function _next(value) {
-                asyncGeneratorStep(
-                    gen,
-                    resolve,
-                    reject,
-                    _next,
-                    _throw,
-                    'next',
-                    value
-                );
-            }
-            function _throw(err) {
-                asyncGeneratorStep(
-                    gen,
-                    resolve,
-                    reject,
-                    _next,
-                    _throw,
-                    'throw',
-                    err
-                );
-            }
-            _next(undefined);
-        });
-    };
-}
+var _regenerator = _interopRequireDefault2(
+    require('@babel/runtime/regenerator')
+);
+
+var _asyncToGenerator2 = _interopRequireDefault2(
+    require('@babel/runtime/helpers/asyncToGenerator')
+);
 
 var _module_ = {
+    './library': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.library = exports.tagAttribute = void 0;
+            var tagAttribute = {
+                script: {
+                    key: 'src',
+                    kind: 'js'
+                },
+                link: {
+                    key: 'href',
+                    kind: 'css'
+                }
+            };
+            exports.tagAttribute = tagAttribute;
+            var library = [
+                {
+                    name: '@babel/polyfill',
+                    file: 'polyfill',
+                    path: 'dist/',
+                    type: 'script'
+                },
+                {
+                    name: 'whatwg-fetch',
+                    file: 'fetch.umd',
+                    path: 'dist/',
+                    type: 'script'
+                },
+                {
+                    name: '@webcomponents/webcomponentsjs',
+                    file: 'webcomponents-bundle',
+                    type: 'script'
+                },
+                {
+                    name: '@webcomponents/webcomponentsjs',
+                    file: 'custom-elements-es5-adapter',
+                    type: 'script'
+                },
+                {
+                    name: 'web-cell',
+                    path: 'dist/',
+                    type: 'script'
+                }
+            ];
+            exports.library = library;
+        }
+    },
     './core': {
         base: '.',
         dependency: [],
@@ -126,27 +139,28 @@ var _module_ = {
             Object.defineProperty(exports, '__esModule', {
                 value: true
             });
+            exports.packageNameOf = packageNameOf;
+            exports.bootGit = bootGit;
             exports.copyFrom = copyFrom;
+            exports.setRoot = setRoot;
             exports.upgradeHTML = upgradeHTML;
-            exports.boot = boot;
-
-            var _fsExtra = require('fs-extra');
+            exports.meta = void 0;
 
             var _path = require('path');
 
             var _nodeToolkit = require('@tech_query/node-toolkit');
 
-            require('regenerator-runtime/runtime');
-
-            require('web-cell/dist/polyfill');
-
-            var _webCell = require('web-cell');
+            var _fsExtra = require('fs-extra');
 
             var _promise = _interopRequireDefault(
                 require('simple-git/promise')
             );
 
             var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
+
+            var _jsdom = require('jsdom');
+
+            var _library = require('./library');
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule
@@ -156,246 +170,405 @@ var _module_ = {
                       };
             }
             /**
-             * @param {String} folder
-             * @param {String} [cwd='.']
+             * @type {Object}
              */
 
-            function copyFrom(_x) {
-                return _copyFrom.apply(this, arguments);
+            var meta = (0, _nodeToolkit.packageOf)(
+                (0, _nodeToolkit.currentModulePath)()
+            );
+            /**
+             * @param {String} path
+             *
+             * @return {String}
+             */
+
+            exports.meta = meta;
+
+            function packageNameOf(path) {
+                return (0, _path.basename)((0, _path.resolve)(path))
+                    .toLowerCase()
+                    .replace(/[^@\w]+/g, '-');
             }
+            /**
+             * @param {String} path
+             *
+             * @return {SimpleGit}
+             */
 
-            function _copyFrom() {
-                _copyFrom = _asyncToGenerator(
+            function bootGit(_x) {
+                return _bootGit.apply(this, arguments);
+            }
+            /**
+             * @param {String}   template - Path relative from this package
+             * @param {String}   dist     - Path relative from `process.cwd()`
+             * @param {Function} [filter]
+             */
+
+            function _bootGit() {
+                _bootGit = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    regeneratorRuntime.mark(function _callee(folder) {
-                        var cwd,
-                            _iteratorNormalCompletion,
-                            _didIteratorError,
-                            _iteratorError,
-                            _iterator,
-                            _step,
-                            file,
-                            source,
-                            target,
-                            type,
-                            _args = arguments;
-
-                        return regeneratorRuntime.wrap(
+                    _regenerator.default.mark(function _callee(path) {
+                        var git, package_name, userID;
+                        return _regenerator.default.wrap(
                             function _callee$(_context) {
                                 while (1) {
                                     switch ((_context.prev = _context.next)) {
                                         case 0:
-                                            cwd =
-                                                _args.length > 1 &&
-                                                _args[1] !== undefined
-                                                    ? _args[1]
-                                                    : '.';
-                                            _iteratorNormalCompletion = true;
-                                            _didIteratorError = false;
-                                            _iteratorError = undefined;
-                                            _context.prev = 4;
+                                            (0, _fsExtra.ensureDirSync)(path);
+                                            git = (0, _promise.default)(path);
+                                            _context.next = 4;
+                                            return git.checkIsRepo();
+
+                                        case 4:
+                                            if (_context.sent) {
+                                                _context.next = 7;
+                                                break;
+                                            }
+
                                             _context.next = 7;
-                                            return (0, _fsExtra.readdir)(
-                                                folder
-                                            );
+                                            return git.init();
 
                                         case 7:
-                                            _context.t0 = Symbol.iterator;
-                                            _iterator = _context.sent[
-                                                _context.t0
-                                            ]();
+                                            _context.next = 9;
+                                            return git.getRemotes();
 
                                         case 9:
-                                            if (
-                                                (_iteratorNormalCompletion = (_step = _iterator.next())
-                                                    .done)
-                                            ) {
-                                                _context.next = 37;
+                                            if (!_context.sent[0]) {
+                                                _context.next = 11;
                                                 break;
                                             }
 
-                                            file = _step.value;
-                                            (source = (0, _path.join)(
-                                                folder,
-                                                file
-                                            )),
-                                                (target = (0, _path.join)(
-                                                    cwd,
-                                                    file
-                                                )),
-                                                (type = 'Skip');
+                                            return _context.abrupt('return');
 
-                                            if (
-                                                (0, _fsExtra.existsSync)(target)
-                                            ) {
-                                                _context.next = 18;
-                                                break;
-                                            }
+                                        case 11:
+                                            package_name = packageNameOf(path);
+                                            _context.next = 14;
+                                            return git.raw([
+                                                'config',
+                                                '--get',
+                                                'user.name'
+                                            ]);
 
-                                            _context.next = 15;
-                                            return (0, _fsExtra.copy)(
-                                                source,
-                                                target
+                                        case 14:
+                                            userID = _context.sent;
+                                            _context.next = 17;
+                                            return git.addRemote(
+                                                'origin',
+                                                'https://github.com/'
+                                                    .concat(userID.trim(), '/')
+                                                    .concat(
+                                                        package_name,
+                                                        '.git'
+                                                    )
                                             );
 
-                                        case 15:
-                                            type = 'Create';
-                                            _context.next = 33;
-                                            break;
+                                        case 17:
+                                            return _context.abrupt(
+                                                'return',
+                                                git
+                                            );
 
                                         case 18:
-                                            if (
-                                                !(
-                                                    (0, _path.extname)(file) ===
-                                                    '.json'
-                                                )
-                                            ) {
-                                                _context.next = 33;
-                                                break;
-                                            }
-
-                                            _context.t1 = (0,
-                                            _fsExtra.outputJSON);
-                                            _context.t2 = target;
-                                            _context.t3 = (0,
-                                            _nodeToolkit.patch);
-                                            _context.next = 24;
-                                            return (0, _fsExtra.readJSON)(
-                                                target
-                                            );
-
-                                        case 24:
-                                            _context.t4 = _context.sent;
-                                            _context.next = 27;
-                                            return (0, _fsExtra.readJSON)(
-                                                source
-                                            );
-
-                                        case 27:
-                                            _context.t5 = _context.sent;
-                                            _context.t6 = (0, _context.t3)(
-                                                _context.t4,
-                                                _context.t5
-                                            );
-                                            _context.t7 = {
-                                                spaces: 4
-                                            };
-                                            _context.next = 32;
-                                            return (0, _context.t1)(
-                                                _context.t2,
-                                                _context.t6,
-                                                _context.t7
-                                            );
-
-                                        case 32:
-                                            type = 'Update';
-
-                                        case 33:
-                                            console.info(
-                                                ''
-                                                    .concat(
-                                                        type.padEnd(6),
-                                                        ' --> '
-                                                    )
-                                                    .concat(target)
-                                            );
-
-                                        case 34:
-                                            _iteratorNormalCompletion = true;
-                                            _context.next = 9;
-                                            break;
-
-                                        case 37:
-                                            _context.next = 43;
-                                            break;
-
-                                        case 39:
-                                            _context.prev = 39;
-                                            _context.t8 = _context['catch'](4);
-                                            _didIteratorError = true;
-                                            _iteratorError = _context.t8;
-
-                                        case 43:
-                                            _context.prev = 43;
-                                            _context.prev = 44;
-
-                                            if (
-                                                !_iteratorNormalCompletion &&
-                                                _iterator.return != null
-                                            ) {
-                                                _iterator.return();
-                                            }
-
-                                        case 46:
-                                            _context.prev = 46;
-
-                                            if (!_didIteratorError) {
-                                                _context.next = 49;
-                                                break;
-                                            }
-
-                                            throw _iteratorError;
-
-                                        case 49:
-                                            return _context.finish(46);
-
-                                        case 50:
-                                            return _context.finish(43);
-
-                                        case 51:
                                         case 'end':
                                             return _context.stop();
                                     }
                                 }
                             },
                             _callee,
+                            this
+                        );
+                    })
+                );
+                return _bootGit.apply(this, arguments);
+            }
+
+            function copyFrom(_x2, _x3, _x4) {
+                return _copyFrom.apply(this, arguments);
+            }
+            /**
+             * @param {String}    path - Project root
+             * @param {SimpleGit} git  - Git repository instance of `path`
+             */
+
+            function _copyFrom() {
+                _copyFrom = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee2(
+                        template,
+                        dist,
+                        filter
+                    ) {
+                        var setting,
+                            _iteratorNormalCompletion2,
+                            _didIteratorError2,
+                            _iteratorError2,
+                            _iterator2,
+                            _step2,
+                            file,
+                            source,
+                            target;
+
+                        return _regenerator.default.wrap(
+                            function _callee2$(_context2) {
+                                while (1) {
+                                    switch ((_context2.prev = _context2.next)) {
+                                        case 0:
+                                            template = (0, _path.join)(
+                                                meta.path,
+                                                template
+                                            );
+                                            _context2.next = 3;
+                                            return (0, _fsExtra.copy)(
+                                                template,
+                                                dist,
+                                                {
+                                                    overwrite: false,
+                                                    filter: filter
+                                                }
+                                            );
+
+                                        case 3:
+                                            setting = (0, _fsExtra.readdirSync)(
+                                                template
+                                            ).filter(function(file) {
+                                                return (
+                                                    (0, _path.extname)(file) ===
+                                                    '.json'
+                                                );
+                                            });
+                                            _iteratorNormalCompletion2 = true;
+                                            _didIteratorError2 = false;
+                                            _iteratorError2 = undefined;
+                                            _context2.prev = 7;
+                                            _iterator2 = setting[
+                                                Symbol.iterator
+                                            ]();
+
+                                        case 9:
+                                            if (
+                                                (_iteratorNormalCompletion2 = (_step2 = _iterator2.next())
+                                                    .done)
+                                            ) {
+                                                _context2.next = 27;
+                                                break;
+                                            }
+
+                                            file = _step2.value;
+                                            (source = (0, _path.join)(
+                                                template,
+                                                file
+                                            )),
+                                                (target = (0, _path.join)(
+                                                    dist,
+                                                    file
+                                                ));
+                                            _context2.t0 = (0,
+                                            _fsExtra.outputJSON);
+                                            _context2.t1 = target;
+                                            _context2.t2 = (0,
+                                            _nodeToolkit.patch);
+                                            _context2.next = 17;
+                                            return (0, _fsExtra.readJSON)(
+                                                target
+                                            );
+
+                                        case 17:
+                                            _context2.t3 = _context2.sent;
+                                            _context2.next = 20;
+                                            return (0, _fsExtra.readJSON)(
+                                                source
+                                            );
+
+                                        case 20:
+                                            _context2.t4 = _context2.sent;
+                                            _context2.t5 = (0, _context2.t2)(
+                                                _context2.t3,
+                                                _context2.t4
+                                            );
+                                            _context2.next = 24;
+                                            return (0, _context2.t0)(
+                                                _context2.t1,
+                                                _context2.t5
+                                            );
+
+                                        case 24:
+                                            _iteratorNormalCompletion2 = true;
+                                            _context2.next = 9;
+                                            break;
+
+                                        case 27:
+                                            _context2.next = 33;
+                                            break;
+
+                                        case 29:
+                                            _context2.prev = 29;
+                                            _context2.t6 = _context2['catch'](
+                                                7
+                                            );
+                                            _didIteratorError2 = true;
+                                            _iteratorError2 = _context2.t6;
+
+                                        case 33:
+                                            _context2.prev = 33;
+                                            _context2.prev = 34;
+
+                                            if (
+                                                !_iteratorNormalCompletion2 &&
+                                                _iterator2.return != null
+                                            ) {
+                                                _iterator2.return();
+                                            }
+
+                                        case 36:
+                                            _context2.prev = 36;
+
+                                            if (!_didIteratorError2) {
+                                                _context2.next = 39;
+                                                break;
+                                            }
+
+                                            throw _iteratorError2;
+
+                                        case 39:
+                                            return _context2.finish(36);
+
+                                        case 40:
+                                            return _context2.finish(33);
+
+                                        case 41:
+                                        case 'end':
+                                            return _context2.stop();
+                                    }
+                                }
+                            },
+                            _callee2,
                             this,
-                            [[4, 39, 43, 51], [44, , 46, 50]]
+                            [[7, 29, 33, 41], [34, , 36, 40]]
                         );
                     })
                 );
                 return _copyFrom.apply(this, arguments);
             }
 
-            var tagAttribute = {
-                    script: {
-                        key: 'src',
-                        kind: 'js'
-                    },
-                    link: {
-                        key: 'href',
-                        kind: 'css'
-                    }
-                },
-                library = [
-                    {
-                        name: '@babel/polyfill',
-                        file: 'polyfill',
-                        path: 'dist/',
-                        type: 'script'
-                    },
-                    {
-                        name: 'whatwg-fetch',
-                        file: 'fetch.umd',
-                        path: 'dist/',
-                        type: 'script'
-                    },
-                    {
-                        name: '@webcomponents/webcomponentsjs',
-                        file: 'webcomponents-bundle',
-                        type: 'script'
-                    },
-                    {
-                        name: '@webcomponents/webcomponentsjs',
-                        file: 'custom-elements-es5-adapter',
-                        type: 'script'
-                    },
-                    {
-                        name: 'web-cell',
-                        path: 'dist/',
-                        type: 'script'
-                    }
-                ];
+            function setRoot(_x5, _x6) {
+                return _setRoot.apply(this, arguments);
+            }
+
+            function _setRoot() {
+                _setRoot = (0, _asyncToGenerator2.default)(
+                    /*#__PURE__*/
+                    _regenerator.default.mark(function _callee3(path, git) {
+                        var ignore_0, ignore_1, config, meta;
+                        return _regenerator.default.wrap(
+                            function _callee3$(_context3) {
+                                while (1) {
+                                    switch ((_context3.prev = _context3.next)) {
+                                        case 0:
+                                            _context3.next = 2;
+                                            return copyFrom('./template', path);
+
+                                        case 2:
+                                            (ignore_0 = (0, _path.join)(
+                                                path,
+                                                '.gitignore'
+                                            )),
+                                                (ignore_1 = (0, _path.join)(
+                                                    path,
+                                                    'gitignore'
+                                                ));
+                                            if (
+                                                (0, _fsExtra.existsSync)(
+                                                    ignore_0
+                                                )
+                                            )
+                                                (0, _fsExtra.removeSync)(
+                                                    ignore_1
+                                                );
+                                            else
+                                                (0, _fsExtra.moveSync)(
+                                                    ignore_1,
+                                                    ignore_0
+                                                );
+
+                                            if (
+                                                (0, _nodeToolkit.findFile)(
+                                                    /ReadMe(\.(md|markdown))?/i,
+                                                    path
+                                                )
+                                            ) {
+                                                _context3.next = 7;
+                                                break;
+                                            }
+
+                                            _context3.next = 7;
+                                            return (0, _fsExtra.outputFile)(
+                                                (0, _path.join)(
+                                                    path,
+                                                    'ReadMe.md'
+                                                ),
+                                                '# '.concat(
+                                                    packageNameOf(path),
+                                                    '\n\nWebCell project generated by [create-web-cell](https://web-cell.tk/create-web-cell/)'
+                                                )
+                                            );
+
+                                        case 7:
+                                            config = (0, _path.join)(
+                                                path,
+                                                'package.json'
+                                            );
+                                            _context3.next = 10;
+                                            return (0, _fsExtra.readJSON)(
+                                                config
+                                            );
+
+                                        case 10:
+                                            meta = _context3.sent;
+                                            _context3.next = 13;
+                                            return git.raw([
+                                                'config',
+                                                '--get',
+                                                'user.email'
+                                            ]);
+
+                                        case 13:
+                                            meta.author = _context3.sent.trim();
+                                            _context3.next = 16;
+                                            return (0, _fsExtra.outputJSON)(
+                                                config,
+                                                meta
+                                            );
+
+                                        case 16:
+                                            _crossSpawn.default.sync(
+                                                'npm',
+                                                ['init', '-y'],
+                                                {
+                                                    stdio: 'inherit',
+                                                    cwd: path
+                                                }
+                                            );
+
+                                            (0, _fsExtra.ensureDirSync)(
+                                                (0, _path.join)(
+                                                    path,
+                                                    meta.directories.lib
+                                                )
+                                            );
+
+                                        case 18:
+                                        case 'end':
+                                            return _context3.stop();
+                                    }
+                                }
+                            },
+                            _callee3,
+                            this
+                        );
+                    })
+                );
+                return _setRoot.apply(this, arguments);
+            }
 
             function equalLibrary(element, type, key, name, file) {
                 var URI = element[key];
@@ -408,53 +581,114 @@ var _module_ = {
             /**
              * @param {String} code - HTML source
              *
-             * @return {Document}
+             * @return {JSDOM}
              */
 
             function upgradeHTML(code) {
-                var page = new DOMParser().parseFromString(code, 'text/html');
-                var list = (0, _webCell.$)(Object.keys(tagAttribute), page);
+                var page = new _jsdom.JSDOM(code);
+                var document = page.window.document;
+                var list = Array.from(
+                    document.querySelectorAll(
+                        Object.keys(_library.tagAttribute)
+                    )
+                );
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
 
-                var _loop = function _loop() {
-                    var _library$_i = library[_i],
-                        type = _library$_i.type,
-                        name = _library$_i.name,
-                        file = _library$_i.file,
-                        path = _library$_i.path;
-                    file = file || name;
-                    var _tagAttribute$type = tagAttribute[type];
-                    key = _tagAttribute$type.key;
-                    kind = _tagAttribute$type.kind;
+                try {
+                    var _loop = function _loop() {
+                        var _step$value = _step.value,
+                            type = _step$value.type,
+                            name = _step$value.name,
+                            file = _step$value.file,
+                            path = _step$value.path;
+                        file = file || name;
+                        var _library$tagAttribute = _library.tagAttribute[type];
+                        key = _library$tagAttribute.key;
+                        kind = _library$tagAttribute.kind;
 
-                    if (
-                        !(element = list.find(function(item) {
-                            return equalLibrary(item, type, key, name, file);
-                        }))
+                        if (
+                            !(element = list.find(function(item) {
+                                return equalLibrary(
+                                    item,
+                                    type,
+                                    key,
+                                    name,
+                                    file
+                                );
+                            }))
+                        ) {
+                            element = document.createElement(type);
+                            element[key] = 'node_modules/'
+                                .concat(name, '/')
+                                .concat(path || '')
+                                .concat(file)
+                                .concat(
+                                    /\.[^/]+$/.test(file) ? '' : '.min',
+                                    '.'
+                                )
+                                .concat(kind);
+                            if (type === 'link') element.rel = 'stylesheet';
+                        }
+
+                        document.head.append('    ', element, '\n');
+                    };
+
+                    for (
+                        var _iterator = _library.library[Symbol.iterator](),
+                            _step;
+                        !(_iteratorNormalCompletion = (_step = _iterator.next())
+                            .done);
+                        _iteratorNormalCompletion = true
                     ) {
-                        element = page.createElement(type);
-                        element[key] = 'node_modules/'
-                            .concat(name, '/')
-                            .concat(path || '')
-                            .concat(file)
-                            .concat(/\.[^/]+$/.test(file) ? '' : '.min', '.')
-                            .concat(kind);
-                        if (type === 'link') element.rel = 'stylesheet';
+                        var element, key, kind;
+
+                        _loop();
                     }
-
-                    page.head.append('    ', element, '\n');
-                };
-
-                for (var _i = 0; _i < library.length; _i++) {
-                    var element, key, kind;
-
-                    _loop();
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (
+                            !_iteratorNormalCompletion &&
+                            _iterator.return != null
+                        ) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
                 }
 
                 return page;
             }
+        }
+    },
+    './index': {
+        base: '.',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            require('@babel/polyfill');
 
-            var Git_ignore =
-                '# Node.JS\nnode_modules/\n\n# IDE\n.vscode/\n.idea/\n\n# Online platform\n.github/\n\n# OS\n.DS_Store';
+            var _core = require('./core');
+
+            var _path = require('path');
+
+            var _fsExtra = require('fs-extra');
+
+            var _crossSpawn = _interopRequireDefault(require('cross-spawn'));
+
+            function _interopRequireDefault(obj) {
+                return obj && obj.__esModule
+                    ? obj
+                    : {
+                          default: obj
+                      };
+            }
             /**
              * Boot a directory as a WebCell project
              *
@@ -466,111 +700,70 @@ var _module_ = {
             }
 
             function _boot() {
-                _boot = _asyncToGenerator(
+                _boot = (0, _asyncToGenerator2.default)(
                     /*#__PURE__*/
-                    regeneratorRuntime.mark(function _callee2() {
+                    _regenerator.default.mark(function _callee4() {
                         var cwd,
-                            git,
                             entry,
-                            _args2 = arguments;
-                        return regeneratorRuntime.wrap(
-                            function _callee2$(_context2) {
+                            _args4 = arguments;
+                        return _regenerator.default.wrap(
+                            function _callee4$(_context4) {
                                 while (1) {
-                                    switch ((_context2.prev = _context2.next)) {
+                                    switch ((_context4.prev = _context4.next)) {
                                         case 0:
                                             cwd =
-                                                _args2.length > 0 &&
-                                                _args2[0] !== undefined
-                                                    ? _args2[0]
+                                                _args4.length > 0 &&
+                                                _args4[0] !== undefined
+                                                    ? _args4[0]
                                                     : '.';
                                             console.time('Boot project');
-                                            git = (0, _promise.default)(cwd);
-                                            _context2.next = 5;
-                                            return git.checkIsRepo();
+                                            _context4.t0 = (0, _core.setRoot);
+                                            _context4.t1 = cwd;
+                                            _context4.next = 6;
+                                            return (0, _core.bootGit)(cwd);
 
-                                        case 5:
-                                            if (_context2.sent) {
-                                                _context2.next = 8;
-                                                break;
-                                            }
-
-                                            _context2.next = 8;
-                                            return git.init();
-
-                                        case 8:
-                                            if (
-                                                !(0, _fsExtra.existsSync)(
-                                                    (0, _path.join)(
-                                                        cwd,
-                                                        'package.json'
-                                                    )
-                                                )
-                                            )
-                                                (0, _crossSpawn.default)(
-                                                    'npm',
-                                                    ['init', '-y'],
-                                                    {
-                                                        stdio: 'inherit',
-                                                        cwd: cwd
-                                                    }
-                                                );
-                                            _context2.next = 11;
-                                            return copyFrom(
-                                                (0, _path.join)(
-                                                    (0,
-                                                    _nodeToolkit.currentModulePath)(),
-                                                    '../../template'
-                                                ),
-                                                cwd
+                                        case 6:
+                                            _context4.t2 = _context4.sent;
+                                            _context4.next = 9;
+                                            return (0, _context4.t0)(
+                                                _context4.t1,
+                                                _context4.t2
                                             );
 
-                                        case 11:
+                                        case 9:
                                             entry = (0, _path.join)(
                                                 cwd,
                                                 'index.html'
                                             );
-                                            _context2.t0 = (0,
+                                            _context4.t3 = (0,
                                             _fsExtra.outputFile);
-                                            _context2.t1 = entry;
-                                            _context2.t2 = (0,
-                                            _webCell.stringifyDOM);
-                                            _context2.t3 = upgradeHTML;
-                                            _context2.next = 18;
+                                            _context4.t4 = entry;
+                                            _context4.t5 = (0,
+                                            _core.upgradeHTML);
+                                            _context4.next = 15;
                                             return (0, _fsExtra.readFile)(
                                                 entry
                                             );
 
-                                        case 18:
-                                            _context2.t4 = _context2.sent;
-                                            _context2.t5 = (0, _context2.t3)(
-                                                _context2.t4
-                                            );
-                                            _context2.t6 = (0, _context2.t2)(
-                                                _context2.t5
-                                            );
-                                            _context2.next = 23;
-                                            return (0, _context2.t0)(
-                                                _context2.t1,
-                                                _context2.t6
+                                        case 15:
+                                            _context4.t6 = _context4.sent;
+                                            _context4.t7 = (0, _context4.t5)(
+                                                _context4.t6
+                                            ).serialize();
+                                            _context4.next = 19;
+                                            return (0, _context4.t3)(
+                                                _context4.t4,
+                                                _context4.t7
                                             );
 
-                                        case 23:
+                                        case 19:
                                             console.info(
                                                 '--------------------'
                                             );
                                             console.timeEnd('Boot project');
                                             console.info('');
-                                            _context2.next = 28;
-                                            return (0, _fsExtra.outputFile)(
-                                                (0, _path.join)(
-                                                    cwd,
-                                                    '.gitignore'
-                                                ),
-                                                Git_ignore
-                                            );
 
-                                        case 28:
-                                            (0, _crossSpawn.default)(
+                                            _crossSpawn.default.sync(
                                                 'npm',
                                                 ['install'],
                                                 {
@@ -579,38 +772,31 @@ var _module_ = {
                                                 }
                                             );
 
-                                        case 29:
+                                            _crossSpawn.default.sync(
+                                                'npm',
+                                                ['run', 'format'],
+                                                {
+                                                    stdio: 'inherit',
+                                                    cwd: cwd
+                                                }
+                                            );
+
+                                        case 24:
                                         case 'end':
-                                            return _context2.stop();
+                                            return _context4.stop();
                                     }
                                 }
                             },
-                            _callee2,
+                            _callee4,
                             this
                         );
                     })
                 );
                 return _boot.apply(this, arguments);
             }
+
+            boot(process.argv[2] || process.cwd());
         }
-    },
-    './index': {
-        base: '.',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            require('@babel/polyfill');
-
-            var _fsExtra = require('fs-extra');
-
-            var _core = require('./core');
-
-            var cwd = process.argv[2];
-            if (cwd) (0, _fsExtra.ensureDirSync)(cwd);
-            (0, _core.boot)(cwd);
-        }
-    },
-    'fs-extra': {
-        exports: fs_extra
     },
     path: {
         exports: path
@@ -618,20 +804,17 @@ var _module_ = {
     '@tech_query/node-toolkit': {
         exports: _tech_query_node_toolkit
     },
-    'regenerator-runtime/runtime': {
-        exports: regenerator_runtime_runtime
-    },
-    'web-cell/dist/polyfill': {
-        exports: web_cell_dist_polyfill
-    },
-    'web-cell': {
-        exports: web_cell
+    'fs-extra': {
+        exports: fs_extra
     },
     'simple-git/promise': {
         exports: simple_git_promise
     },
     'cross-spawn': {
         exports: cross_spawn
+    },
+    jsdom: {
+        exports: jsdom
     },
     '@babel/polyfill': {
         exports: _babel_polyfill

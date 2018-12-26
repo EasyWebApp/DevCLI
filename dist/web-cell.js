@@ -262,15 +262,17 @@ var _module_ = {
                                                                         _step.value;
                                                                     _context.next = 13;
                                                                     return Component.parseCSS(
-                                                                        sheet.textContent ||
-                                                                            (0,
-                                                                            _path.join)(
-                                                                                this
-                                                                                    .path,
-                                                                                sheet.getAttribute(
-                                                                                    'href'
-                                                                                )
-                                                                            ),
+                                                                        sheet.tagName ===
+                                                                        'STYLE'
+                                                                            ? sheet.textContent
+                                                                            : (0,
+                                                                              _path.join)(
+                                                                                  this
+                                                                                      .path,
+                                                                                  sheet.getAttribute(
+                                                                                      'href'
+                                                                                  )
+                                                                              ),
                                                                         sheet.type,
                                                                         this
                                                                             .entry +
@@ -402,9 +404,11 @@ var _module_ = {
                                         )
                                     );
 
-                                    return function toHTML() {
+                                    function toHTML() {
                                         return _toHTML.apply(this, arguments);
-                                    };
+                                    }
+
+                                    return toHTML;
                                 })()
                                 /**
                                  * @protected
@@ -546,9 +550,11 @@ var _module_ = {
                                         )
                                     );
 
-                                    return function assetOf(_x) {
+                                    function assetOf(_x) {
                                         return _assetOf.apply(this, arguments);
-                                    };
+                                    }
+
+                                    return assetOf;
                                 })()
                                 /**
                                  * @return {string} JS version bundle of this component
@@ -769,9 +775,11 @@ var _module_ = {
                                         )
                                     );
 
-                                    return function toJS() {
+                                    function toJS() {
                                         return _toJS.apply(this, arguments);
-                                    };
+                                    }
+
+                                    return toJS;
                                 })()
                             }
                         ],
@@ -836,12 +844,14 @@ var _module_ = {
                                         )
                                     );
 
-                                    return function parseHTML(_x2) {
+                                    function parseHTML(_x2) {
                                         return _parseHTML.apply(
                                             this,
                                             arguments
                                         );
-                                    };
+                                    }
+
+                                    return parseHTML;
                                 })()
                                 /**
                                  * @param {string}  source - File path or Style source code
@@ -1013,9 +1023,11 @@ var _module_ = {
                                         )
                                     );
 
-                                    return function parseCSS(_x3, _x4, _x5) {
+                                    function parseCSS(_x3, _x4, _x5) {
                                         return _parseCSS.apply(this, arguments);
-                                    };
+                                    }
+
+                                    return parseCSS;
                                 })()
                                 /**
                                  * @param {DocumentFragment} fragment

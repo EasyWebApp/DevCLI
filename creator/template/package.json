@@ -26,16 +26,16 @@
         }
     },
     "dependencies": {
-        "@babel/polyfill": "^7.0.0",
+        "@babel/polyfill": "^7.2.5",
         "@webcomponents/webcomponentsjs": "^2.2.1",
-        "web-cell": "^0.10.10",
+        "web-cell": "^0.10.12",
         "whatwg-fetch": "^3.0.0"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-decorators": "^7.1.6",
+        "@babel/plugin-proposal-decorators": "^7.2.3",
         "babel-eslint": "^10.0.1",
-        "eslint": "^5.9.0",
-        "husky": "^1.2.0",
+        "eslint": "^5.11.0",
+        "husky": "^1.2.1",
         "koapache": "^1.0.4",
         "prettier": "^1.15.3",
         "web-cell-cli": "^0.8.0"
@@ -49,5 +49,9 @@
                 }
             ]
         ]
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true
     }
 }
