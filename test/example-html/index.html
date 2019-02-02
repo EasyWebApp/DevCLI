@@ -1,12 +1,14 @@
 <template>
     <style type="text/less">
-        @import (less, reference) '../../docs/css/test.css';
+        @import (less, reference) './index.css';
 
-        textarea {
-            display:    block;
+        textarea:extend(.input) {
+            display:  block;
         }
     </style>
-    <textarea onchange="${host.bubbleOut.bind( host )}">Hello, ${view.name}!</textarea>
+    <textarea onchange="${host.bubbleOut.bind( host )}">
+        Hello, ${view.name}!
+    </textarea>
 </template>
 
 <link rel="stylesheet" href="../example-js/index.css">

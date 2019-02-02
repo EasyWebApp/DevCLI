@@ -39,17 +39,17 @@ npm init web-cell path/to/your_project
 
     Usage: web-cell [options] [command]
 
-    Options:
+    Developer command-line tool for WebCell
 
-        -V, --version  output the version number
-        -h, --help     output usage information
+    Options:
+        -V, --version          output the version number
+        -h, --help             output usage information
 
     Commands:
-
-        boot [path]    Boot a directory as a WebCell project
-        pack           Bundle components to a package with JS modules in it
-        preview        Real-time preview during development
-        help [cmd]     display help for [cmd]
+        boot [path] [options]  Boot a directory as a WebCell project
+        pack                   Bundle components to a package with JS modules in it
+        preview                Real-time preview during development
+        help [cmd]             display help for [cmd]
 
 
 

@@ -4,4 +4,5 @@ creator/
 .editorconfig
 .eslintrc.json
 .esdoc.json
+.travis.yml
 .github/

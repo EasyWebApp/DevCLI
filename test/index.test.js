@@ -80,6 +80,9 @@ describe('Core class',  () => {
 
             element.textContent.trim().should.be.equal(`
 textarea {
+  outline: none;
+}
+textarea {
   display: block;
 }`.trim()
             );
