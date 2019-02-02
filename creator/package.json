@@ -1,6 +1,6 @@
 {
   "name": "create-web-cell",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Project creator of WebCell",
   "keywords": [
     "project",
@@ -18,36 +18,46 @@
   "bugs": {
     "url": "https://github.com/EasyWebApp/DevCLI/issues"
   },
-  "main": "source/core.js",
+  "main": "dist/core.js",
   "bin": "dist/index.js",
+  "engines": {
+    "node": "^6.3.0"
+  },
   "scripts": {
     "test": "mocha --exit",
     "debug": "mocha --inspect-brk",
-    "pack": "amd-bundle source/index dist/index",
+    "pack": "babel source/ -d dist/ -s",
     "build": "npm test  &&  npm run pack",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@babel/runtime": "^7.2.0",
-    "@tech_query/node-toolkit": "^0.8.2",
-    "cross-spawn": "^6.0.5",
+    "@babel/runtime": "^7.3.1",
+    "@tech_query/node-toolkit": "^0.9.0",
+    "commander": "^2.19.0",
+    "create-es-pack": "^0.4.3",
     "fs-extra": "^7.0.1",
-    "jsdom": "^13.1.0",
-    "simple-git": "^1.107.0"
+    "jsdom": "^13.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "amd-bundle": "^1.7.4",
     "mocha": "^5.2.0",
     "should": "^13.2.3"
   },
   "babel": {
     "presets": [
-      "@babel/preset-env"
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "6.3.0"
+          }
+        }
+      ]
     ],
     "plugins": [
       "@babel/plugin-transform-runtime"
