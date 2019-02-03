@@ -1,6 +1,6 @@
 {
   "name": "create-web-cell",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Project creator of WebCell",
   "keywords": [
     "project",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@babel/runtime": "^7.3.1",
-    "@tech_query/node-toolkit": "^0.9.0",
+    "@tech_query/node-toolkit": "^0.9.1",
     "commander": "^2.19.0",
     "create-es-pack": "^0.4.3",
     "fs-extra": "^7.0.1",

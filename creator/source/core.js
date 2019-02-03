@@ -1,5 +1,5 @@
 import {
-    packageOf, currentModulePath, patch, spawn, step
+    packageOf, currentModulePath, spawn, step, ensureCommand
 } from '@tech_query/node-toolkit';
 
 import { JSDOM } from 'jsdom';
@@ -29,6 +29,8 @@ function equalLibrary(element, type, key, name, file) {
         URI.includes( name )  &&  URI.includes( file );
 }
 
+const preTag = ['META', 'TITLE', 'BASE', 'LINK'];
+
 /**
  * @param {String} code - HTML source
  *
@@ -41,10 +43,14 @@ export function upgradeHTML(code) {
     const { window: { document } } = page;
 
     const list = Array.from(
-        document.querySelectorAll( Object.keys( tagAttribute ) )
-    );
+            document.querySelectorAll( Object.keys( tagAttribute ) )
+        ),
+        point = [ ].filter.call(
+            document.head.childNodes,
+            node  =>  (preTag.includes( node.tagName ) || (node.nodeType === 8))
+        ).slice(-1)[0];
 
-    for (let {type, name, file, path}  of  library) {
+    const script = library.map(({type, name, file, path})  =>  {
 
         file = file || name;
 
@@ -62,8 +68,13 @@ export function upgradeHTML(code) {
             if (type === 'link')  element.rel = 'stylesheet';
         }
 
-        document.head.append('    ',  element,  '\n');
-    }
+        return element;
+    });
+
+    if ( point )
+        point.after(... script);
+    else
+        document.head.append(... script);
 
     return page;
 }
@@ -113,6 +124,8 @@ export  async function boot(cwd = '.',  remote) {
         removeSync( join(cwd, 'package-lock.json') );
 
         await spawn('npm',  ['install'],  child_option);
+
+        await ensureCommand('web-cell');
     });
 
     await step('Git commit',  async () => {

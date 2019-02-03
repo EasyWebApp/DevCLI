@@ -39,7 +39,7 @@
     "prepublishOnly": "npm test  &&  npm run lint  &&  npm run pack",
     "build": "npm run prepublishOnly  &&  esdoc",
     "start": "web-server docs/ -o",
-    "install": "node dist/install"
+    "install": "npm run pack  &&  node dist/install"
   },
   "husky": {
     "hooks": {
