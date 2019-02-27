@@ -1,6 +1,6 @@
 import Component from '../source/Component';
 
-import { stringifyDOM } from 'web-cell';
+import { stringifyDOM } from 'dom-renderer';
 
 import { readFile } from 'fs-extra';
 

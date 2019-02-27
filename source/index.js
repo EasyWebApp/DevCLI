@@ -2,18 +2,21 @@
 
 import '@babel/polyfill';
 
-import { currentModulePath, spawn } from '@tech_query/node-toolkit';
-
-import { metaOf, folderOf } from './utility';
-
 import Commander from 'commander';
+
+import { spawn } from '@tech_query/node-toolkit';
+
+import { folderOf } from './utility';
 
 import { pack } from './command';
 
 import PuppeteerBrowser from 'puppeteer-browser';
 
+import config from '../package.json';
 
-const currentPackage = metaOf( currentModulePath() ), folder = folderOf();
+
+const meta = JSON.parse( config ), folder = folderOf();
+
 
 async function safePack(exit) {
     try {
@@ -29,8 +32,8 @@ async function safePack(exit) {
 
 Commander
     .name('web-cell')
-    .version( currentPackage.version )
-    .description( currentPackage.description )
+    .version( meta.version )
+    .description( meta.description )
     .command('boot [path] [options]',  'Boot a directory as a WebCell project')
     .on(
         'command:boot',

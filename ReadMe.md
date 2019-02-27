@@ -3,6 +3,7 @@
 Developer command-line tool for [WebCell](https://web-cell.tk/)
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)
+[![Build Status](https://travis-ci.com/EasyWebApp/DevCLI.svg?branch=master)](https://travis-ci.com/EasyWebApp/DevCLI)
 
 [![NPM](https://nodei.co/npm/web-cell-cli.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell-cli/)
 
@@ -23,7 +24,8 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 ## Usage
 
 ```Shell
-npm init web-cell path/to/your_project
+npm init web-cell path/to/your_project \
+    --remote https://github.com/your_id/repo_name.git
 ```
 
 ### Configuration reference
@@ -58,3 +60,7 @@ npm init web-cell path/to/your_project
  1. [Cell Router](https://web-cell.tk/cell-router/)
 
  2. [Material Cell](https://web-cell-ht.ml)
+
+ 3. [GitHub Web widget](https://tech-query.me/GitHub-Web-Widget/)
+
+ 4. [Month picker](https://tech-query.me/month-picker/)

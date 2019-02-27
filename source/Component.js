@@ -1,4 +1,6 @@
-import 'regenerator-runtime/runtime';
+import 'dom-renderer/dist/polyfill';
+
+import { stringifyDOM } from 'dom-renderer';
 
 import {readFile, readdir, statSync, outputFile, remove} from 'fs-extra';
 
@@ -6,15 +8,9 @@ import {join, basename, dirname, extname} from 'path';
 
 import Package from 'amd-bundle';
 
-import LESS from 'less';
+import * as Parser from './parser';
 
-import * as SASS from 'sass';
-
-import { parseStylus, folderOf, metaOf } from './utility';
-
-import 'web-cell/dist/polyfill';
-
-import { $, stringifyDOM } from 'web-cell';
+import { folderOf, metaOf } from './utility';
 
 import { toDataURI } from '@tech_query/node-toolkit';
 
@@ -68,23 +64,7 @@ export default  class Component {
         if (! source.includes('\n'))
             source = await readFile(base = source) + '';
 
-        const paths = [dirname( base )];
-
-        switch ( type ) {
-            case 'css':       style = source;  break;
-            case 'sass':
-            case 'scss':
-                style = SASS.renderSync({
-                    data:          source,
-                    includePaths:  paths
-                }).css;
-                break;
-            case 'less':
-                style = (await LESS.render(source,  { paths })).css;
-                break;
-            case 'stylus':
-                style = await parseStylus(source,  { paths });
-        }
+        style = Parser[type]  &&  await Parser[type](source, dirname( base ));
 
         return  style && Object.assign(
             document.createElement('style'),  {textContent: style}
@@ -98,13 +78,11 @@ export default  class Component {
      */
     static findStyle(fragment) {
 
-        return  $('link[rel="stylesheet"]', fragment).concat(
-            [ ].concat(
-                ... $('template', fragment).map(
-                    template  =>  $('style', template.content)
-                )
-            )
-        );
+        return  [ ].concat.apply([ ],  Array.from(
+            fragment.querySelectorAll('link[rel="stylesheet"], template'),
+            tag  =>  tag.content ?
+                Array.from( tag.content.querySelectorAll('style') )  :  tag
+        ));
     }
 
     /**
@@ -137,18 +115,6 @@ export default  class Component {
     }
 
     /**
-     * @param {string} path
-     *
-     * @return {Element}
-     */
-    static parseJS(path) {
-
-        return  Object.assign(document.createElement('script'), {
-            text:  `\n${this.packJS( path )}\n`
-        });
-    }
-
-    /**
      * @return {DocumentFragment} HTML version bundle of this component
      */
     async toHTML() {
@@ -177,9 +143,11 @@ export default  class Component {
         const script = fragment.querySelector('script');
 
         if ( script )
-            script.replaceWith(
-                Component.parseJS( join(this.path, script.getAttribute('src')) )
-            );
+            script.replaceWith(Object.assign(document.createElement('script'), {
+                text:  `\n${
+                    Component.packJS( join(this.path, script.getAttribute('src')) )
+                }\n`
+            }));
 
         return fragment;
     }
@@ -195,6 +163,7 @@ export default  class Component {
 
         switch ( extname( file ).slice(1) ) {
             case 'html':
+            case 'htm':
                 file = stringifyDOM(await this.toHTML());  break;
             case 'css':
             case 'less':
@@ -206,6 +175,9 @@ export default  class Component {
                 return;
             case 'json':
                 return  (await readFile( file )) + '';
+            case 'yaml':
+            case 'yml':
+                return  Parser.yaml((await readFile( file )) + '');
             default:
                 file = toDataURI( file );
         }

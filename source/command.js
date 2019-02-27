@@ -1,8 +1,8 @@
 import { join, basename } from 'path';
 
-import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
-
 import Component from './Component';
+
+import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
 
 
 /**
