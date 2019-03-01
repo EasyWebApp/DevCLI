@@ -50,7 +50,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@babel/runtime": "^7.3.4",
-    "@tech_query/node-toolkit": "^0.9.2",
+    "@tech_query/node-toolkit": "^0.9.3",
     "amd-bundle": "^1.7.7",
     "commander": "^2.19.0",
     "dom-renderer": "^0.8.0",

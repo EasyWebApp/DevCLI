@@ -1,6 +1,6 @@
 {
   "name": "create-web-cell",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Project creator of WebCell",
   "keywords": [
     "project",
@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@babel/runtime": "^7.3.1",
-    "@tech_query/node-toolkit": "^0.9.1",
+    "@babel/runtime": "^7.3.4",
+    "@tech_query/node-toolkit": "^0.9.3",
     "commander": "^2.19.0",
     "create-es-pack": "^0.4.3",
     "fs-extra": "^7.0.1",
@@ -41,11 +41,12 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
-    "mocha": "^5.2.0",
+    "babel-plugin-inline-import": "^3.0.0",
+    "mocha": "^6.0.2",
     "should": "^13.2.3"
   },
   "babel": {
@@ -60,6 +61,14 @@
       ]
     ],
     "plugins": [
+      [
+        "babel-plugin-inline-import",
+        {
+          "extensions": [
+            ".json"
+          ]
+        }
+      ],
       "@babel/plugin-transform-runtime"
     ]
   }

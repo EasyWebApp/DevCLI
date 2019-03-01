@@ -1,5 +1,5 @@
 import {
-    packageOf, currentModulePath, spawn, step, ensureCommand
+    currentModulePath, spawn, step, ensureCommand
 } from '@tech_query/node-toolkit';
 
 import { JSDOM } from 'jsdom';
@@ -15,12 +15,6 @@ import {
 import { boot as bootES } from 'create-es-pack/dist/command';
 
 
-/**
- * @type {Object}
- */
-export  const creator_meta = packageOf( currentModulePath() );
-
-
 function equalLibrary(element, type, key, name, file) {
 
     const URI = element[ key ];
@@ -29,7 +23,9 @@ function equalLibrary(element, type, key, name, file) {
         URI.includes( name )  &&  URI.includes( file );
 }
 
-const preTag = ['META', 'TITLE', 'BASE', 'LINK'];
+const { filter } = [ ],
+    this_module = currentModulePath(),
+    preTag = ['META', 'TITLE', 'BASE', 'LINK'];
 
 /**
  * @param {String} code - HTML source
@@ -45,7 +41,7 @@ export function upgradeHTML(code) {
     const list = Array.from(
             document.querySelectorAll( Object.keys( tagAttribute ) )
         ),
-        point = [ ].filter.call(
+        point = filter.call(
             document.head.childNodes,
             node  =>  (preTag.includes( node.tagName ) || (node.nodeType === 8))
         ).slice(-1)[0];
@@ -62,8 +58,8 @@ export function upgradeHTML(code) {
             element = document.createElement( type );
 
             element[key] = `node_modules/${name}/${path || ''}${file}${
-                /\.[^/]+$/.test( file )  ?  ''  :  '.min'
-            }.${kind}`;
+                /\.\w+$/.test( file )  ?  ''  :  `.min.${kind}`
+            }`;
 
             if (type === 'link')  element.rel = 'stylesheet';
         }
@@ -82,20 +78,20 @@ export function upgradeHTML(code) {
 
 export  async function setRoot(cwd) {
 
-    for (let name  of  ['package', '.eslintrc']) {
+    ['package', '.eslintrc'].forEach(name => {
 
-        let file = join(cwd,  name + '.json');
+        var file = join(cwd,  name + '.json');
 
         writeJSONSync(
             file,
             Object.assign(
                 readJSONSync( file ),
-                readJSONSync( join(creator_meta.path, `template/${name}.json`) )
+                readJSONSync( join(this_module, `../../template/${name}.json`) )
             )
         );
-    }
+    });
 
-    await copy(join(creator_meta.path, 'template/'),  cwd,  {overwrite: false});
+    await copy(join(this_module, '../../template/'),  cwd,  {overwrite: false});
 
     const file = join(cwd, 'index.html');
 
@@ -108,8 +104,9 @@ export  async function setRoot(cwd) {
  *
  * @param {String}     cwd      - Project path
  * @param {String|URL} [remote] - URL of Git repository
+ * @param {?Boolean}   app      - Add extensions for WebSite or WebApp
  */
-export  async function boot(cwd = '.',  remote) {
+export  async function boot(cwd = '.',  remote,  app) {
 
     console.time('Boot project');
 
@@ -125,10 +122,19 @@ export  async function boot(cwd = '.',  remote) {
 
         await spawn('npm',  ['install'],  child_option);
 
+        if ( app )
+            await spawn(
+                'npm',  ['install', 'cell-router', 'data-scheme'],  child_option
+            );
+
         await ensureCommand('web-cell');
     });
 
     await step('Git commit',  async () => {
+
+        await spawn(
+            'web-cell', ['new', 'cell-hello', 'name,value'],  child_option
+        );
 
         await spawn('git',  ['add', '.'],  child_option);
 

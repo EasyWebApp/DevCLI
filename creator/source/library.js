@@ -18,19 +18,18 @@ export const library = [
         type:  'script'
     },
     {
-        name:  'whatwg-fetch',
-        file:  'fetch.umd',
-        path:  'dist/',
-        type:  'script'
-    },
-    {
         name:  '@webcomponents/webcomponentsjs',
         file:  'webcomponents-bundle',
         type:  'script'
     },
     {
         name:  '@webcomponents/webcomponentsjs',
-        file:  'custom-elements-es5-adapter',
+        file:  'custom-elements-es5-adapter.js',
+        type:  'script'
+    },
+    {
+        name:  'dom-renderer',
+        path:  'dist/',
         type:  'script'
     },
     {

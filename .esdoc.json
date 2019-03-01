@@ -1,11 +1,15 @@
 {
-    "index": "ReadMe.md",
+    "index": "./ReadMe.md",
     "source": "./source",
     "destination": "./docs",
     "plugins": [
         {
             "name": "esdoc-standard-plugin",
             "option": {
+                "accessor": {
+                    "access": ["public", "protected"],
+                    "autoPrivate": false
+                },
                 "test": {
                     "source": "./test",
                     "interfaces": ["describe", "it"],
@@ -14,13 +18,16 @@
             }
         },
         {
+            "name": "esdoc-external-webapi-plugin",
+            "option": {
+                "enable": true
+            }
+        },
+        {
             "name": "esdoc-ecmascript-proposal-plugin",
             "option": {
                 "all": true
             }
-        },
-        {
-            "name": "esdoc-external-webapi-plugin"
         }
     ]
 }

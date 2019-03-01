@@ -2,12 +2,14 @@
 
 import '@babel/polyfill';
 
-import { creator_meta, boot } from './core';
+import { boot } from './core';
 
 import Commander from 'commander';
 
+import config from '../package.json';
 
-const { meta } = creator_meta;
+
+const meta = JSON.parse( config );
 
 
 Commander
@@ -18,7 +20,8 @@ Commander
         'Git URL of a Remote repository',
         /^(git|https?).+/
     )
+    .option('-A, --app',  'Add extensions for WebSite or WebApp')
     .parse( process.argv );
 
 
-boot(process.argv[2] || process.cwd(),  Commander.remote);
+boot(process.argv[2] || process.cwd(),  Commander.remote,  Commander.app);
