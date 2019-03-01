@@ -8,7 +8,7 @@ import { spawn } from '@tech_query/node-toolkit';
 
 import { folderOf } from './utility';
 
-import { pack } from './command';
+import { create, pack } from './command';
 
 import PuppeteerBrowser from 'puppeteer-browser';
 
@@ -40,6 +40,15 @@ Commander
         parameter => spawn(
             'npm',  ['init', 'web-cell'].concat( parameter ),  {stdio: 'inherit'}
         )
+    )
+    .command(
+        'new <name> [attributes]',
+        `Create a Component from Code template
+                         (Attributes should be separated by commas)`
+    )
+    .on(
+        'command:new',
+        ([name, keys])  =>  create(name, folder.lib, (keys || '').split(','))
     )
     .command('pack',  'Bundle components to a package with JS modules in it')
     .on('command:pack',  safePack.bind(null, true))

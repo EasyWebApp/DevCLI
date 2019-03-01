@@ -12,12 +12,7 @@ import icon from './icon.svg';
 @component({ template, style, data })
 export default  class ExampleJs extends HTMLElement {
 
-    constructor() {
-
-        super();
-
-        this.buildDOM();
-    }
+    constructor() {  super().construct();  }
 
     get value() {  return this.$('textarea')[0].value;  }
 

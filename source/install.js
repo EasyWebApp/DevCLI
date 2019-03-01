@@ -1,14 +1,8 @@
 #! /usr/bin/env node
 
-import { getNPMConfig, setNPMConfig } from '@tech_query/node-toolkit';
+const { getNPMConfig, setNPMConfig } = require('@tech_query/node-toolkit');
 
-var browser;
-
-
-for (let name  of  ['chrome', 'firefox'])  if (getNPMConfig( name )) {
-
-    browser = name;    break;
-}
+var browser = ['chrome', 'firefox'].find(name => getNPMConfig( name ));
 
 
 if (browser = browser  ||  ((process.platform === 'win32') && 'IE'))

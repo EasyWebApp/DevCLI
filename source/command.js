@@ -1,8 +1,27 @@
 import { join, basename } from 'path';
 
+import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
+
 import Component from './Component';
 
-import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
+import { index_html, index_js } from './template';
+
+
+/**
+ * @param {String}   name      - Tag name
+ * @param {String}   path      - Root of Source codes
+ * @param {String[]} [keys=[]] - Defined HTML attributes
+ */
+export  async function create(name, path, keys) {
+
+    await outputFile(join(path, name, 'index.html'),  index_html());
+
+    console.info(`√ Generated ${name}/index.html`);
+
+    await outputFile(join(path, name, 'index.js'),  index_js(name, keys));
+
+    console.info(`√ Generated ${name}/index.js`);
+}
 
 
 /**

@@ -3,7 +3,7 @@ import {component} from 'web-cell';
 
 export default  component(class ExampleHtml extends HTMLElement {
 
-    constructor() {  super().buildDOM();  }
+    constructor() {  super().construct();  }
 
     static get data() {  return  {name: 'Web components'};  }
 

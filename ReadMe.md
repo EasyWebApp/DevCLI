@@ -13,19 +13,30 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
  1. Boot a directory as a **WebCell project**
 
- 2. Bundle components to a package with **JS modules** in it
+ 2. Create a Component from Code template
 
- 3. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** as an `Object`, and other assets as **Data URI** in ES module
+ 3. Bundle components to a package with **JS modules** in it
 
- 4. **Real-time preview** during development in Chrome, Firefox or IE
+ 4. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** as an `Object`, and other assets as **Data URI** in ES module
+
+ 5. **Real-time preview** during development in Chrome, Firefox or IE
 
 
 
 ## Usage
 
+
+### Create a Project
+
 ```Shell
 npm init web-cell path/to/your_project \
     --remote https://github.com/your_id/repo_name.git
+```
+
+### Create a Component
+
+```Shell
+web-cell new your-tag attr1,attr2
 ```
 
 ### Configuration reference
@@ -44,14 +55,16 @@ npm init web-cell path/to/your_project \
     Developer command-line tool for WebCell
 
     Options:
-        -V, --version          output the version number
-        -h, --help             output usage information
+        -V, --version            output the version number
+        -h, --help               output usage information
 
     Commands:
-        boot [path] [options]  Boot a directory as a WebCell project
-        pack                   Bundle components to a package with JS modules in it
-        preview                Real-time preview during development
-        help [cmd]             display help for [cmd]
+        boot [path] [options]    Boot a directory as a WebCell project
+        new <name> [attributes]  Create a Component from Code template
+                                 (Attributes should be separated by commas)
+        pack                     Bundle components to a package with JS modules in it
+        preview                  Real-time preview during development
+        help [cmd]               display help for [cmd]
 
 
 

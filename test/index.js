@@ -31,14 +31,6 @@ describe('Core class',  () => {
     });
 
     /**
-     * @test {Component.identifierOf}
-     */
-    it(
-        'Tag name to Class name',
-        () => Component.identifierOf('example-js').should.be.equal('ExampleJs')
-    );
-
-    /**
      * @test {Component.parseHTML}
      */
     it('Parse pure HTML',  async () => {
