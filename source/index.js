@@ -8,7 +8,7 @@ import { spawn } from '@tech_query/node-toolkit';
 
 import { folderOf } from './utility';
 
-import { create, pack } from './command';
+import { createCell, createRouter, pack } from './command';
 
 import PuppeteerBrowser from 'puppeteer-browser';
 
@@ -44,11 +44,19 @@ Commander
     .command(
         'new <name> [attributes]',
         `Create a Component from Code template
-                         (Attributes should be separated by commas)`
+                           (Attributes should be separated by commas)`
+    )
+    .on('command:new',  ([name, keys]) =>
+        createCell(name,  folder.lib,  (keys || '').split(','),  true)
+    )
+    .command(
+        'new-router <name> [pages]',
+        `Create a Router from Code template
+                           (Pages should be separated by commas)`
     )
     .on(
-        'command:new',
-        ([name, keys])  =>  create(name, folder.lib, (keys || '').split(','))
+        'command:new-router',
+        ([name, page])  =>  createRouter(name, folder.lib, (page || '').split(','))
     )
     .command('pack',  'Bundle components to a package with JS modules in it')
     .on('command:pack',  safePack.bind(null, true))

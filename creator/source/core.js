@@ -102,11 +102,13 @@ export  async function setRoot(cwd) {
 /**
  * Boot a directory as a WebCell project
  *
- * @param {String}     cwd      - Project path
- * @param {String|URL} [remote] - URL of Git repository
- * @param {?Boolean}   app      - Add extensions for WebSite or WebApp
+ * @param {String}     [cwd='.'] - Project path
+ * @param {String|URL} [remote]  - URL of Git repository
+ * @param {String[]}   [app=[]]  - Router/Page names for Web-site/app
  */
-export  async function boot(cwd = '.',  remote,  app) {
+export  async function boot(cwd,remote, app) {
+
+    cwd = cwd || '.',  app = app || [ ];
 
     console.time('Boot project');
 
@@ -122,7 +124,7 @@ export  async function boot(cwd = '.',  remote,  app) {
 
         await spawn('npm',  ['install'],  child_option);
 
-        if ( app )
+        if ( app[0] )
             await spawn(
                 'npm',  ['install', 'cell-router', 'data-scheme'],  child_option
             );
@@ -130,11 +132,19 @@ export  async function boot(cwd = '.',  remote,  app) {
         await ensureCommand('web-cell');
     });
 
-    await step('Git commit',  async () => {
+    await step('Component template',  async () => {
 
         await spawn(
             'web-cell', ['new', 'cell-hello', 'name,value'],  child_option
         );
+
+        if ( app[0] )
+            await spawn(
+                'web-cell', ['new-router', 'app', app + ''],  child_option
+            );
+    });
+
+    await step('Git commit',  async () => {
 
         await spawn('git',  ['add', '.'],  child_option);
 

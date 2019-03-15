@@ -20,8 +20,15 @@ Commander
         'Git URL of a Remote repository',
         /^(git|https?).+/
     )
-    .option('-A, --app',  'Add extensions for WebSite or WebApp')
+    .option(
+        '-A, --app [pages]',
+        'Router/Page names for Web-site/app (Pages should be separated by commas)'
+    )
     .parse( process.argv );
 
 
-boot(process.argv[2] || process.cwd(),  Commander.remote,  Commander.app);
+boot(
+    Commander.args[0] || process.cwd(),
+    Commander.remote,
+    ((typeof Commander.app === 'string') ? Commander.app : 'index').split(',')
+);

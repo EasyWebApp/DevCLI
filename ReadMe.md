@@ -17,7 +17,7 @@ Developer command-line tool for [WebCell](https://web-cell.tk/)
 
  3. Bundle components to a package with **JS modules** in it
 
- 4. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** as an `Object`, and other assets as **Data URI** in ES module
+ 4. Support to import **HTML** & **CSS** (LESS, SASS/SCSS or Stylus) as a `String`, **JSON** & **YAML** as an `Object`, and other assets as **Data URI** in ES module
 
  5. **Real-time preview** during development in Chrome, Firefox or IE
 
@@ -39,6 +39,12 @@ npm init web-cell path/to/your_project \
 web-cell new your-tag attr1,attr2
 ```
 
+### Create a Router & Pages
+
+```Shell
+web-cell new-router router_prefix page1,page2
+```
+
 ### Configuration reference
 
  - [**Source directory**](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24)
@@ -55,16 +61,18 @@ web-cell new your-tag attr1,attr2
     Developer command-line tool for WebCell
 
     Options:
-        -V, --version            output the version number
-        -h, --help               output usage information
+        -V, --version              output the version number
+        -h, --help                 output usage information
 
     Commands:
-        boot [path] [options]    Boot a directory as a WebCell project
-        new <name> [attributes]  Create a Component from Code template
-                                 (Attributes should be separated by commas)
-        pack                     Bundle components to a package with JS modules in it
-        preview                  Real-time preview during development
-        help [cmd]               display help for [cmd]
+        boot [path] [options]      Boot a directory as a WebCell project
+        new <name> [attributes]    Create a Component from Code template
+                                   (Attributes should be separated by commas)
+        new-router <name> [pages]  Create a Router from Code template
+                                   (Pages should be separated by commas)
+        pack                       Bundle components to a package with JS modules in it
+        preview                    Real-time preview during development
+        help [cmd]                 display help for [cmd]
 
 
 

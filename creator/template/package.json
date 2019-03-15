@@ -26,8 +26,8 @@
     "dependencies": {
         "@babel/polyfill": "^7.2.5",
         "@webcomponents/webcomponentsjs": "^2.2.7",
-        "dom-renderer": "^0.8.0",
-        "web-cell": "^1.0.0-alpha"
+        "dom-renderer": "^0.8.1",
+        "web-cell": "^1.0.0"
     },
     "devDependencies": {
         "@babel/plugin-proposal-decorators": "^7.3.0",
@@ -35,12 +35,12 @@
         "@babel/register": "^7.0.0",
         "acorn": "6.1.1",
         "babel-eslint": "^10.0.1",
-        "eslint": "^5.14.1",
+        "eslint": "^5.15.2",
         "husky": "^1.3.1",
         "koapache": "^1.0.6",
         "mocha": "^6.0.2",
         "prettier": "^1.16.4",
-        "puppeteer-browser": "^0.3.7",
+        "puppeteer-browser": "^0.3.8",
         "should": "^13.2.3"
     },
     "babel": {

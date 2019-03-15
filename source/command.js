@@ -4,15 +4,18 @@ import {outputFile, existsSync, statSync, readdir} from 'fs-extra';
 
 import Component from './Component';
 
-import { index_html, index_js } from './template';
+import { index_html, index_js, router_js } from './template';
+
+import { addComponent } from './utility';
 
 
 /**
  * @param {String}   name      - Tag name
  * @param {String}   path      - Root of Source codes
  * @param {String[]} [keys=[]] - Defined HTML attributes
+ * @param {?Boolean} preload   - Insert Component tag to Entry HTML
  */
-export  async function create(name, path, keys) {
+export  async function createCell(name, path, keys, preload) {
 
     await outputFile(join(path, name, 'index.html'),  index_html());
 
@@ -21,6 +24,27 @@ export  async function create(name, path, keys) {
     await outputFile(join(path, name, 'index.js'),  index_js(name, keys));
 
     console.info(`√ Generated ${name}/index.js`);
+
+    if ( preload )  await addComponent(join(path, '../index.html'),  name);
+}
+
+
+/**
+ * @param {String}   name      - Prefix of Tag name
+ * @param {String}   path      - Root of Source codes
+ * @param {String[]} [page=[]] - Router/Page names of Web-site/app
+ */
+export  async function createRouter(name, path, page) {
+
+    const tag = `${name}-router`;
+
+    await outputFile(join(path, tag, 'index.js'),  router_js(name, page));
+
+    console.info(`√ Generated ${tag}/index.js`);
+
+    await addComponent(join(path, '../index.html'),  tag);
+
+    for (let name of page)  await createCell(`page-${name}`, path);
 }
 
 

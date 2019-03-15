@@ -10,6 +10,7 @@ Project creator of [WebCell](https://web-cell.tk/)
 
 ```Shell
 npm init web-cell path/to/your_project \
+    --app
     --remote https://git-example.com/your_id/repo_name.git
 ```
 
@@ -22,5 +23,5 @@ npm init web-cell path/to/your_project \
     Options:
         -V, --version       output the version number
         -r, --remote <URL>  Git URL of a Remote repository
-        -A, --app           Add extensions for WebSite or WebApp
+        -A, --app [pages]   Router/Page names for Web-site/app (Pages should be separated by commas)
         -h, --help          output usage information

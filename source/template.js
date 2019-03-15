@@ -54,3 +54,32 @@ ${
     attributeChangedCallback() { }` : ''}
 }`);
 }
+
+
+/**
+ * @private
+ *
+ * @param {String}   name
+ * @param {String[]} page
+ *
+ * @return {String}
+ */
+export  function router_js(name, page) {
+
+    return `import { component } from 'web-cell';
+
+import HTMLRouter, { load } from 'cell-router';
+
+
+@component()
+export default  class ${identifierOf(name, true)}Router extends HTMLRouter {
+${page.map(name => {
+
+        name = name.toLowerCase();
+
+        return `
+    @load('/${name}')
+    ${name}Page() {  return '<page-${name} />';  }
+`;})}
+}`;
+}
