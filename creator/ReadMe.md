@@ -1,6 +1,6 @@
 # Create WebCell
 
-Project creator of [WebCell](https://web-cell.tk/)
+Project creator of [WebCell](https://web-cell.dev/)
 
 [![NPM](https://nodei.co/npm/create-web-cell.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/create-web-cell/)
 

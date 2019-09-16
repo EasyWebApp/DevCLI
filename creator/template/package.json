@@ -24,28 +24,35 @@
         }
     },
     "dependencies": {
-        "@babel/polyfill": "^7.2.5",
-        "@webcomponents/webcomponentsjs": "^2.2.7",
-        "dom-renderer": "^0.8.1",
-        "web-cell": "^1.0.0"
+        "@babel/polyfill": "^7.6.0",
+        "@webcomponents/webcomponentsjs": "^2.2.10",
+        "dom-renderer": "^1.0.3",
+        "web-cell": "^1.2.1"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-decorators": "^7.3.0",
-        "@babel/preset-env": "^7.3.4",
-        "@babel/register": "^7.0.0",
-        "acorn": "6.1.1",
-        "babel-eslint": "^10.0.1",
-        "eslint": "^5.15.2",
-        "husky": "^1.3.1",
+        "@babel/plugin-proposal-decorators": "^7.6.0",
+        "@babel/preset-env": "^7.6.0",
+        "@babel/register": "^7.6.0",
+        "acorn": "^7.0.0",
+        "babel-eslint": "^10.0.3",
+        "eslint": "^6.4.0",
+        "husky": "^3.0.5",
         "koapache": "^1.0.6",
-        "mocha": "^6.0.2",
-        "prettier": "^1.16.4",
+        "mocha": "^6.2.0",
+        "prettier": "^1.18.2",
         "puppeteer-browser": "^0.3.8",
         "should": "^13.2.3"
     },
     "babel": {
         "presets": [
-            "@babel/preset-env"
+            [
+                "@babel/preset-env",
+                {
+                    "targets": {
+                        "ie": 11
+                    }
+                }
+            ]
         ],
         "plugins": [
             [

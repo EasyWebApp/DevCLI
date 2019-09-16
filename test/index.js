@@ -116,9 +116,7 @@ textarea {
      */
     it('Bundle to JS',  async () => {
 
-        var component = new Component('test/example-js');
-
-        component = await component.toJS();
+        var component = await (new Component('test/example-js')).toJS();
 
         component.includes(
             JSON.stringify( style.textContent ).slice(1, -1)

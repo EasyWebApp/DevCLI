@@ -1,6 +1,6 @@
 # WebCell DevCLI
 
-Developer command-line tool for [WebCell](https://web-cell.tk/)
+Developer command-line tool for [WebCell](https://web-cell.dev/)
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/DevCLI.svg)](https://david-dm.org/EasyWebApp/DevCLI)
 [![Build Status](https://travis-ci.com/EasyWebApp/DevCLI.svg?branch=master)](https://travis-ci.com/EasyWebApp/DevCLI)
@@ -78,7 +78,7 @@ web-cell new-router router_prefix page1,page2
 
 ## Typical case
 
- 1. [Cell Router](https://web-cell.tk/cell-router/)
+ 1. [Cell Router](https://web-cell.dev/cell-router/)
 
  2. [Material Cell](https://web-cell-ht.ml)
 

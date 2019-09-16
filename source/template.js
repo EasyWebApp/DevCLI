@@ -66,7 +66,7 @@ ${
  */
 export  function router_js(name, page) {
 
-    return `import { component } from 'web-cell';
+    return prettify(`import { component } from 'web-cell';
 
 import HTMLRouter, { load } from 'cell-router';
 
@@ -80,6 +80,6 @@ ${page.map(name => {
         return `
     @load('/${name}')
     ${name}Page() {  return '<page-${name} />';  }
-`;})}
-}`;
+`;}).join('\n')}
+}`);
 }
