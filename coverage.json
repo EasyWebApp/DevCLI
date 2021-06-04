@@ -1,0 +1,52 @@
+{
+  "coverage": "79.41%",
+  "expectCount": 34,
+  "actualCount": 27,
+  "files": {
+    "source/Component.js": {
+      "expectCount": 13,
+      "actualCount": 10,
+      "undocumentLines": [
+        27,
+        29,
+        31
+      ]
+    },
+    "source/command.js": {
+      "expectCount": 4,
+      "actualCount": 4,
+      "undocumentLines": []
+    },
+    "source/index.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        18,
+        21
+      ]
+    },
+    "source/install.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        5
+      ]
+    },
+    "source/parser.js": {
+      "expectCount": 6,
+      "actualCount": 6,
+      "undocumentLines": []
+    },
+    "source/template.js": {
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
+    },
+    "source/utility.js": {
+      "expectCount": 4,
+      "actualCount": 4,
+      "undocumentLines": []
+    }
+  }
+}

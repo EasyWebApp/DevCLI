@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | web-cell-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Developer command-line tool for WebCell"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell-cli"><meta property="twitter:description" content="Developer command-line tool for WebCell"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/DevCLI"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCell">createCell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRouter">createRouter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addComponent">addComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-identifierOf">identifierOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="webcell-devcli">WebCell DevCLI</h1><p>Developer command-line tool for <a href="https://web-cell.dev/">WebCell</a></p>
+<p><a href="https://david-dm.org/EasyWebApp/DevCLI"><img src="https://david-dm.org/EasyWebApp/DevCLI.svg" alt="NPM Dependency"></a>
+<a href="https://travis-ci.com/EasyWebApp/DevCLI"><img src="https://travis-ci.com/EasyWebApp/DevCLI.svg?branch=master" alt="Build Status"></a></p>
+<p><a href="https://nodei.co/npm/web-cell-cli/"><img src="https://nodei.co/npm/web-cell-cli.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
+<h2 id="feature">Feature</h2><ol>
+<li><p>Boot a directory as a <strong>WebCell project</strong></p>
+</li>
+<li><p>Create a Component from Code template</p>
+</li>
+<li><p>Bundle components to a package with <strong>JS modules</strong> in it</p>
+</li>
+<li><p>Support to import <strong>HTML</strong> &amp; <strong>CSS</strong> (LESS, SASS/SCSS or Stylus) as a <code>String</code>, <strong>JSON</strong> &amp; <strong>YAML</strong> as an <code>Object</code>, and other assets as <strong>Data URI</strong> in ES module</p>
+</li>
+<li><p><strong>Real-time preview</strong> during development in Chrome, Firefox or IE</p>
+</li>
+</ol>
+<h2 id="usage">Usage</h2><h3 id="create-a-project">Create a Project</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">npm init web-cell path/to/your_project \
+    --remote https://github.com/your_id/repo_name.git</code>
+</code></pre>
+<h3 id="create-a-component">Create a Component</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">web-cell new your-tag attr1,attr2</code>
+</code></pre>
+<h3 id="create-a-router--amp--pages">Create a Router &amp; Pages</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">web-cell new-router router_prefix page1,page2</code>
+</code></pre>
+<h3 id="configuration-reference">Configuration reference</h3><ul>
+<li><p><a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24"><strong>Source directory</strong></a></p>
+</li>
+<li><p><a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L29"><strong>NPM script</strong></a></p>
+</li>
+<li><p><a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L55"><strong>Babel</strong></a></p>
+</li>
+</ul>
+<h3 id="command">Command</h3><pre><code><code class="source-code prettyprint">Usage: web-cell [options] [command]
+
+Developer command-line tool for WebCell
+
+Options:
+    -V, --version              output the version number
+    -h, --help                 output usage information
+
+Commands:
+    boot [path] [options]      Boot a directory as a WebCell project
+    new &lt;name&gt; [attributes]    Create a Component from Code template
+                               (Attributes should be separated by commas)
+    new-router &lt;name&gt; [pages]  Create a Router from Code template
+                               (Pages should be separated by commas)
+    pack                       Bundle components to a package with JS modules in it
+    preview                    Real-time preview during development
+    help [cmd]                 display help for [cmd]</code>
+</code></pre><h2 id="typical-case">Typical case</h2><ol>
+<li><p><a href="https://web-cell.dev/cell-router/">Cell Router</a></p>
+</li>
+<li><p><a href="https://web-cell-ht.ml">Material Cell</a></p>
+</li>
+<li><p><a href="https://tech-query.me/GitHub-Web-Widget/">GitHub Web widget</a></p>
+</li>
+<li><p><a href="https://tech-query.me/month-picker/">Month picker</a></p>
+</li>
+</ol>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

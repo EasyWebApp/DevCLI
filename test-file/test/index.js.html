@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">test/index.js | web-cell-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Developer command-line tool for WebCell"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell-cli"><meta property="twitter:description" content="Developer command-line tool for WebCell"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/DevCLI"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCell">createCell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRouter">createRouter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addComponent">addComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-identifierOf">identifierOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;../source/Component&apos;;
+
+import { stringifyDOM } from &apos;dom-renderer&apos;;
+
+import { readFile } from &apos;fs-extra&apos;;
+
+import { join } from &apos;path&apos;;
+
+import { toDataURI } from &apos;@tech_query/node-toolkit&apos;;
+
+
+/**
+ * @test {Component}
+ */
+describe(&apos;Core class&apos;,  () =&gt; {
+
+    var style, template, fragment;
+
+    /**
+     * @test {Component.parseCSS}
+     */
+    it(&apos;Parse CSS files&apos;,  async () =&gt; {
+
+        const file = &apos;test/example-js/index.css&apos;;
+
+        style = await Component.parseCSS( file );
+
+        style.tagName.should.be.equal(&apos;STYLE&apos;);
+
+        style.textContent.should.be.equal((await readFile( file )) + &apos;&apos;);
+    });
+
+    /**
+     * @test {Component.parseHTML}
+     */
+    it(&apos;Parse pure HTML&apos;,  async () =&gt; {
+
+        const file = &apos;test/example-js/index.html&apos;;
+
+        template = await Component.parseHTML( file );
+
+        template.nodeType.should.be.equal( 11 );
+
+        stringifyDOM( template ).should.be.equal(
+            (await readFile( file )) + &apos;&apos;
+        );
+    });
+
+    describe(&apos;Parse mixed HTML&apos;,  () =&gt; {
+
+        before(async () =&gt;
+            fragment = await Component.parseHTML(&apos;test/example-html/index.html&apos;)
+        );
+
+        /**
+         * @test {Component.findStyle}
+         * @test {Component.parseCSS}
+         */
+        it(&apos;Find &amp; Parse styles&apos;,  async () =&gt; {
+
+            const styles = Component.findStyle( fragment );
+
+            styles.map(element =&gt; element.tagName).should.be.eql([
+                &apos;LINK&apos;, &apos;STYLE&apos;
+            ]);
+
+            const element = await Component.parseCSS(
+                styles[1].textContent,
+                styles[1].type,
+                &apos;test/example-html/index.css&apos;
+            );
+
+            element.textContent.trim().should.be.equal(`
+textarea {
+  outline: none;
+}
+textarea {
+  display: block;
+}`.trim()
+            );
+        });
+
+        /**
+         * @test {Component.packJS}
+         */
+        it(&apos;Parse script&apos;,  () =&gt; {
+
+            const code = Component.packJS(join(
+                &apos;test/example-html/&apos;, fragment.lastElementChild.getAttribute(&apos;src&apos;)
+            ));
+
+            (() =&gt; eval( code )).should.not.throw( SyntaxError );
+
+            code.should.containEql(&apos;\&apos;example-html\&apos;&apos;);
+        });
+    });
+
+    /**
+     * @test {Component#toHTML}
+     */
+    it(&apos;Bundle to HTML&apos;,  async () =&gt; {
+
+        const fragment = await (new Component(&apos;test/example-html&apos;)).toHTML(),
+            tagName = element =&gt; element.tagName;
+
+        Array.from(fragment.children, tagName).should.be.eql(
+            [&apos;TEMPLATE&apos;, &apos;SCRIPT&apos;]
+        );
+
+        Array.from(fragment.firstElementChild.content.children, tagName)
+            .should.be.eql([&apos;STYLE&apos;, &apos;STYLE&apos;, &apos;TEXTAREA&apos;]);
+    });
+
+    /**
+     * @test {Component#toJS}
+     */
+    it(&apos;Bundle to JS&apos;,  async () =&gt; {
+
+        var component = await (new Component(&apos;test/example-js&apos;)).toJS();
+
+        component.includes(
+            JSON.stringify( style.textContent ).slice(1, -1)
+        ).should.be.true();
+
+        component.includes(
+            JSON.stringify( stringifyDOM( template ) )
+                .slice(1, -1).replace(/\\&quot;/g, &apos;&quot;&apos;)
+        ).should.be.true();
+
+        component.includes(&apos;name: \&apos;Web components\&apos;&apos;).should.be.true();
+
+        component.includes(
+            toDataURI(&apos;test/example-js/icon.svg&apos;)
+        ).should.be.true();
+
+        (() =&gt; eval( component )).should.not.throw( SyntaxError );
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
