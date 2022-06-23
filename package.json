@@ -62,7 +62,7 @@
     "commander": "^3.0.1",
     "dom-renderer": "^1.0.3",
     "fs-extra": "^8.1.0",
-    "jsdom": "^14.1.0",
+    "jsdom": "^16.5.0",
     "less": "^3.10.3",
     "puppeteer-browser": "^0.3.8",
     "sass": "^1.22.12",
