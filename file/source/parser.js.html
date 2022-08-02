@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">source/parser.js | web-cell-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Developer command-line tool for WebCell"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell-cli"><meta property="twitter:description" content="Developer command-line tool for WebCell"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/DevCLI"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCell">createCell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRouter">createRouter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addComponent">addComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-identifierOf">identifierOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">source/parser.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import LESS from &apos;less&apos;;
+
+import * as SASS from &apos;sass&apos;;
+
+import Stylus from &apos;stylus&apos;;
+
+import YAML from &apos;yaml&apos;;
+
+
+/**
+ * @private
+ *
+ * @param {String} raw
+ *
+ * @return {String}
+ */
+export function css(raw) {  return raw;  }
+
+
+/**
+ * @private
+ *
+ * @param {String} raw
+ * @param {String} path
+ * @param {Object} [option] - http://lesscss.org/usage/#less-options
+ *
+ * @return {String}
+ */
+export async function less(raw, path, option) {
+
+    return  (await LESS.render(raw,  { paths: [path], ...option })).css;
+}
+
+
+/**
+ * @private
+ *
+ * @param {String} raw
+ * @param {String} path
+ * @param {Object} [option] - https://github.com/sass/node-sass#options
+ *
+ * @return {String}
+ */
+export function sass(raw, path, option) {
+
+    return  SASS.renderSync({ data: raw,  includePaths: [path],  ... option }).css;
+}
+
+/**
+ * @private
+ *
+ * @type {Function}
+ */
+export const scss = sass;
+
+
+/**
+ * @private
+ *
+ * @param {string} raw
+ * @param {String} path
+ * @param {Object} [option] - https://github.com/stylus/stylus/blob/HEAD/docs/js.md
+ *
+ * @return {Promise&lt;string&gt;} CSS source code
+ */
+export function stylus(raw,  path,  option = { }) {
+
+    return  new Promise((resolve, reject) =&gt; Stylus.render(
+        raw,
+        { paths: [path], ...option },
+        (error, CSS)  =&gt;  error ? reject( error ) : resolve( CSS )
+    ));
+}
+
+
+/**
+ * @private
+ *
+ * @param {String} raw
+ * @param {Object} [option] - https://eemeli.org/yaml/#options
+ *
+ * @return {String}
+ */
+export function yaml(raw, option) {  return  YAML.parse(raw, option);  }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

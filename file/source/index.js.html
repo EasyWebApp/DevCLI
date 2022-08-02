@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">source/index.js | web-cell-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Developer command-line tool for WebCell"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell-cli"><meta property="twitter:description" content="Developer command-line tool for WebCell"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/DevCLI"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCell">createCell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRouter">createRouter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addComponent">addComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-identifierOf">identifierOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">source/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">#! /usr/bin/env node
+
+import &apos;@babel/polyfill&apos;;
+
+import Commander from &apos;commander&apos;;
+
+import { spawn } from &apos;@tech_query/node-toolkit&apos;;
+
+import { folderOf } from &apos;./utility&apos;;
+
+import { createCell, createRouter, pack } from &apos;./command&apos;;
+
+import PuppeteerBrowser from &apos;puppeteer-browser&apos;;
+
+import config from &apos;../package.json&apos;;
+
+
+const meta = JSON.parse( config ), folder = folderOf();
+
+
+async function safePack(exit) {
+    try {
+        await pack( folder.lib );
+
+    } catch (error) {
+
+        console.error( error );
+
+        if (exit === true)  process.exit( 1 );
+    }
+}
+
+Commander
+    .name(&apos;web-cell&apos;)
+    .version( meta.version )
+    .description( meta.description )
+    .command(&apos;boot [path] [options]&apos;,  &apos;Boot a directory as a WebCell project&apos;)
+    .on(
+        &apos;command:boot&apos;,
+        parameter =&gt; spawn(
+            &apos;npm&apos;,  [&apos;init&apos;, &apos;web-cell&apos;].concat( parameter ),  {stdio: &apos;inherit&apos;}
+        )
+    )
+    .command(
+        &apos;new &lt;name&gt; [attributes]&apos;,
+        `Create a Component from Code template
+                           (Attributes should be separated by commas)`
+    )
+    .on(&apos;command:new&apos;,  ([name, keys]) =&gt;
+        createCell(name,  folder.lib,  (keys || &apos;&apos;).split(&apos;,&apos;),  true)
+    )
+    .command(
+        &apos;new-router &lt;name&gt; [pages]&apos;,
+        `Create a Router from Code template
+                           (Pages should be separated by commas)`
+    )
+    .on(
+        &apos;command:new-router&apos;,
+        ([name, page])  =&gt;  createRouter(name, folder.lib, (page || &apos;&apos;).split(&apos;,&apos;))
+    )
+    .command(&apos;pack&apos;,  &apos;Bundle components to a package with JS modules in it&apos;)
+    .on(&apos;command:pack&apos;,  safePack.bind(null, true))
+    .command(&apos;preview&apos;,  &apos;Real-time preview during development&apos;)
+    .on(&apos;command:preview&apos;,  async () =&gt; {
+
+        await safePack( true );
+
+        await PuppeteerBrowser.getPage(
+            &apos;.&apos;,  folder.test || &apos;test/&apos;,  safePack
+        );
+    })
+    .parse( process.argv );
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

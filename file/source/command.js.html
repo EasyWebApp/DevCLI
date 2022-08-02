@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">source/command.js | web-cell-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Developer command-line tool for WebCell"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell-cli"><meta property="twitter:description" content="Developer command-line tool for WebCell"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/DevCLI"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bundle">bundle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCell">createCell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRouter">createRouter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-pack">pack</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addComponent">addComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-identifierOf">identifierOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-folderOf">folderOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-metaOf">metaOf</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">source/command.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { join, basename } from &apos;path&apos;;
+
+import {outputFile, existsSync, statSync, readdir} from &apos;fs-extra&apos;;
+
+import Component from &apos;./Component&apos;;
+
+import { index_html, index_js, router_js } from &apos;./template&apos;;
+
+import { addComponent } from &apos;./utility&apos;;
+
+
+/**
+ * @param {String}   name      - Tag name
+ * @param {String}   path      - Root of Source codes
+ * @param {String[]} [keys=[]] - Defined HTML attributes
+ * @param {?Boolean} preload   - Insert Component tag to Entry HTML
+ */
+export  async function createCell(name, path, keys, preload) {
+
+    await outputFile(join(path, name, &apos;index.html&apos;),  index_html());
+
+    console.info(`&#x221A; Generated ${name}/index.html`);
+
+    await outputFile(join(path, name, &apos;index.js&apos;),  index_js(name, keys));
+
+    console.info(`&#x221A; Generated ${name}/index.js`);
+
+    if ( preload )  await addComponent(join(path, &apos;../index.html&apos;),  name);
+}
+
+
+/**
+ * @param {String}   name      - Prefix of Tag name
+ * @param {String}   path      - Root of Source codes
+ * @param {String[]} [page=[]] - Router/Page names of Web-site/app
+ */
+export  async function createRouter(name, path, page) {
+
+    const tag = `${name}-router`;
+
+    await outputFile(join(path, tag, &apos;index.js&apos;),  router_js(name, page));
+
+    console.info(`&#x221A; Generated ${tag}/index.js`);
+
+    await addComponent(join(path, &apos;../index.html&apos;),  tag);
+
+    for (let name of page)  await createCell(`page-${name}`, path);
+}
+
+
+/**
+ * Bundle components to JS modules
+ *
+ * @param {string} path - Source directory
+ *
+ * @return {string[]} Component paths
+ */
+export  async function bundle(path) {
+
+    var result = [ ];
+
+    if (existsSync( join(path, &apos;index.js&apos;) )) {
+
+        const component = new Component( path );
+
+        result[0] = `dist/${component.name}.js`;
+
+        await outputFile(result[0],  await component.toJS());
+    }
+
+    if (statSync( path ).isDirectory())
+        result = result.concat(... await Promise.all(
+            (await readdir( path )).map(file  =&gt;  bundle( join(path, file) ))
+        ));
+
+    return result;
+}
+
+
+/**
+ * Bundle components into a JS package
+ *
+ * @param {string} path - Source directory
+ *
+ * @return {string[]} Component paths
+ */
+export  async function pack(path) {
+
+    const file = await bundle( path );
+
+    await outputFile(
+        &apos;dist/index.js&apos;,
+        file.map(item =&gt; {
+
+            item = basename( item );
+
+            console.info(`&#x221A; Component &quot;${item}&quot; is packed in`);
+
+            return  `export * from &apos;./${item}&apos;;`;
+
+        }).join(&apos;\n&apos;)
+    );
+
+    return file;
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
