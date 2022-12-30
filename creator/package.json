@@ -46,7 +46,7 @@
     "@babel/preset-env": "^7.6.0",
     "@babel/register": "^7.6.0",
     "babel-plugin-inline-import": "^3.0.0",
-    "mocha": "^6.2.0",
+    "mocha": "^10.2.0",
     "should": "^13.2.3"
   },
   "babel": {
